@@ -1,4 +1,4 @@
-package me.winter.trapgame.shared;
+package me.winter.trapgame.shared.packet;
 
 /**
  * Represents a packet sent from server to client

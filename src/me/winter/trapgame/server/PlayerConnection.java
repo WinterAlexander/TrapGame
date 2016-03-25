@@ -1,6 +1,6 @@
 package me.winter.trapgame.server;
 
-import me.winter.trapgame.shared.Packet;
+import me.winter.trapgame.shared.packet.Packet;
 
 import java.io.*;
 import java.net.Socket;

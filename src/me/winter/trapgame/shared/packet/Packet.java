@@ -1,4 +1,4 @@
-package me.winter.trapgame.shared;
+package me.winter.trapgame.shared.packet;
 
 import java.io.Serializable;
 
