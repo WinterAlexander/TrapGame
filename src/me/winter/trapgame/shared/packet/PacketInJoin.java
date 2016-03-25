@@ -9,7 +9,7 @@ package me.winter.trapgame.shared.packet;
  *
  * Created by winter on 25/03/16.
  */
-public class PacketInJoin
+public class PacketInJoin extends Packet
 {
 	private String playerName;
 

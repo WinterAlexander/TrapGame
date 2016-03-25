@@ -5,7 +5,7 @@ package me.winter.trapgame.shared.packet;
  * Used when a client sends a chat message to the server
  * Created by winter on 25/03/16.
  */
-public class PacketInChat
+public class PacketInChat extends Packet
 {
 	private String message;
 

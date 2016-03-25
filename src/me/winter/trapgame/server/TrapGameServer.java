@@ -16,7 +16,7 @@ public class TrapGameServer
 	/**
 	 * Starts the server with a new instance of TrapGameServer
 	 *
-	 * @param args
+	 * @param args Exec string arguments
 	 */
 	public static void main(String[] args)
 	{
@@ -38,5 +38,52 @@ public class TrapGameServer
 	public TrapGameServer()
 	{
 
+	}
+
+	public void join(Player player)
+	{
+		getPlayers().add(player);
+		broadcast(player + " has joined the game.");
+		getState().join(player);
+	}
+
+	public void leave(Player player)
+	{
+		getPlayers().remove(player);
+		broadcast(player + " has left the game.");
+		getState().leave(player);
+	}
+
+	public boolean isAvailable(String playerName)
+	{
+		for(Player player : getPlayers())
+			if(player.getName().equalsIgnoreCase(playerName))
+				return false;
+		return true;
+	}
+
+	public void broadcast(String message)
+	{
+		getPlayers().forEach(player -> player.sendMessage(message));
+	}
+
+	public State getState()
+	{
+		return state;
+	}
+
+	public void setState(State state)
+	{
+		this.state = state;
+	}
+
+	public List<Player> getPlayers()
+	{
+		return players;
+	}
+
+	public ServerConnection getConnection()
+	{
+		return connection;
 	}
 }

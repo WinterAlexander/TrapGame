@@ -9,7 +9,7 @@ import java.awt.*;
  *
  * Created by winter on 25/03/16.
  */
-public class PacketOutPlace
+public class PacketOutPlace extends Packet
 {
 	private int playerId;
 	private Point location;

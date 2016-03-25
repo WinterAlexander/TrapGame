@@ -7,7 +7,7 @@ package me.winter.trapgame.shared.packet;
  *
  * Created by winter on 25/03/16.
  */
-public class PacketOutKick
+public class PacketOutKick extends Packet
 {
 	private String message;
 

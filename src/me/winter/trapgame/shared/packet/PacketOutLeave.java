@@ -6,7 +6,7 @@ package me.winter.trapgame.shared.packet;
  *
  * Created by winter on 25/03/16.
  */
-public class PacketOutLeave
+public class PacketOutLeave extends Packet
 {
 	private int playerId;
 

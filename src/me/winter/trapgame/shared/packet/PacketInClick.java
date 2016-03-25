@@ -8,7 +8,7 @@ import java.awt.*;
  *
  * Created by winter on 25/03/16.
  */
-public class PacketInClick
+public class PacketInClick extends Packet
 {
 	private Point location;
 

@@ -9,7 +9,7 @@ import me.winter.trapgame.shared.PlayerInfo;
  *
  * Created by winter on 25/03/16.
  */
-public class PacketOutJoin
+public class PacketOutJoin extends Packet
 {
 	private PlayerInfo player;
 
