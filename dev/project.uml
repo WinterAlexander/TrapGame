@@ -1,0 +1,38 @@
+//server only
+[Main||static main():void]
+
+[TrapGameServer|state:State;players:List;serverConnection:ServerConnection|getPlayerFromIp():Player;broadcast():void]
+[ServerConnection|serverSocket;ServerSocket|receiveSocket():void]
+
+[State|join():void;leave():void;start():void]
+[State]^-.-[StandbyState||]
+[State]^-.-[WaitingState|timer:int|end():void]
+[State]^-.-[GameState|boardContent:Map|place():void]
+
+[Player|info:PlayerInfo;connection:PlayerConnection|sendMessage():void;kick():void;getIP:InetAddress]
+[PlayerConnection|socket:Socket;reader:BufferedReader;writer:PrintWriter|sendPacket():void;receivePacket():void]
+
+//shared
+[java.io.Serializable]^-.-[Packet||]
+[java.io.Serializable]^-.-[PlayerInfo|playerId:int;name:string;color:Color;stats:PlayerStats|]
+[java.io.Serializable]^-.-[PlayerStats|wins:int;loses:int;draws:int|getWinLoseRatio():float]
+
+[Packet]^-[PacketOutChat|message:String|]
+[Packet]^-[PacketOutKick|message:String|]
+[Packet]^-[PacketOutJoin|player:PlayerInfo|]
+[Packet]^-[PacketOutLeave|playerId:int|]
+[Packet]^-[PacketOutPlace|playerId:int|location:Point]
+
+[Packet]^-[PacketInChat|message:String|]
+[Packet]^-[PacketInJoin|player:String|]
+[Packet]^-[PacketInLeave|message:String|]
+[Packet]^-[PacketInClick|location:Point|]
+
+//client only
+[Main||static main():void]
+
+[java.swing.JFrame]^-[TrapGameContainer||]
+[java.swing.JPanel]^-[TrapGameMenu||]
+[java.swing.JPanel]^-[TrapGameBoard|content:Map|players:List;connection:ClientConnection|join():void;leave():void;sendMessage():void;place():void]
+
+[ClientConnection|socket:Socket|connectTo():void;sendPacket():void;receivePacket():void]
