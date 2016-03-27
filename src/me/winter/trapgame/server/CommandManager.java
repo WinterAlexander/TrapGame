@@ -2,6 +2,7 @@ package me.winter.trapgame.server;
 
 import me.winter.trapgame.server.command.Command;
 import me.winter.trapgame.server.command.HelpCommand;
+import me.winter.trapgame.server.command.SkipCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CommandManager
 		this.server = server;
 		commands = new ArrayList<>();
 		commands.add(new HelpCommand());
+		commands.add(new SkipCommand());
 	}
 
 	public void execute(Player player, String input)
