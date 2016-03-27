@@ -24,7 +24,7 @@ public class TrapGameServer
 	/**
 	 * Starts the server with a new instance of TrapGameServer
 	 *
-	 * @param args Execution string arguments usage: java -jar TrapGame.jar minPlayers maxPlayers boardWidth boardHeight
+	 * @param args Execution string arguments usage: java -jar TrapGameServer.jar minPlayers maxPlayers boardWidth boardHeight
 	 */
 	public static void main(String[] args)
 	{
@@ -74,8 +74,8 @@ public class TrapGameServer
 		players = new ArrayList<>();
 		connection = new ServerConnection(this, 1254);
 		statsManager = new StatsManager(this, new File("stats"));
-		setMinPlayers(minPlayers);
 		setMaxPlayers(maxPlayers);
+		setMinPlayers(minPlayers);
 		this.maxPlayers = maxPlayers;
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
