@@ -98,7 +98,6 @@ public class PlayerConnection
 
 		try
 		{
-			socket.getOutputStream().close();
 			getSocket().close();
 		}
 		catch(IOException ex)

@@ -35,6 +35,7 @@ public class TrapGameClient extends JFrame
 	}
 
 	private Scheduler scheduler;
+	private ClientConnection connection;
 
 	private TrapGameMenu menu;
 	private TrapGameBoard board;
@@ -48,14 +49,17 @@ public class TrapGameClient extends JFrame
 		super("TrapGame");
 
 		scheduler = new Scheduler();
+		connection = new ClientConnection(this);
 
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 
-		setSize((int)(dimension.getWidth() / 2), (int)(dimension.getHeight() / 2));
+		setSize((int)dimension.getWidth() / 2, (int)dimension.getHeight() / 2);
+		setLocation((int)dimension.getWidth() / 2 - getWidth() / 2, (int)dimension.getHeight() / 2 - getHeight() / 2);
+
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		menu = new TrapGameMenu();
-		board = new TrapGameBoard();
+		menu = new TrapGameMenu(this);
+		board = new TrapGameBoard(this);
 
 		setContentPane(menu);
 
@@ -68,8 +72,45 @@ public class TrapGameClient extends JFrame
 			getScheduler().update();
 	}
 
+	public void goToMenu()
+	{
+		if(getContentPane() != menu)
+			setContentPane(menu);
+	}
+
+	public void goToBoard()
+	{
+		if(getContentPane() != board)
+			setContentPane(board);
+	}
+
+	public boolean inMenu()
+	{
+		return getContentPane() == menu;
+	}
+
+	public boolean inBoard()
+	{
+		return getContentPane() == board;
+	}
+
 	public Scheduler getScheduler()
 	{
 		return scheduler;
+	}
+
+	public ClientConnection getConnection()
+	{
+		return connection;
+	}
+
+	public TrapGameMenu getMenu()
+	{
+		return menu;
+	}
+
+	public TrapGameBoard getBoard()
+	{
+		return board;
 	}
 }

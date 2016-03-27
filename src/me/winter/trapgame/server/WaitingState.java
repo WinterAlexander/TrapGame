@@ -46,6 +46,8 @@ public class WaitingState extends State
 	{
 		switch(--timer)
 		{
+			case 25:
+			case 20:
 			case 15:
 			case 10:
 			case 5:

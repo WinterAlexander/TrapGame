@@ -1,11 +1,11 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.Scheduler;
-import me.winter.trapgame.shared.packet.PacketOutBoardSize;
+import me.winter.trapgame.shared.packet.PacketOutWelcome;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
 import me.winter.trapgame.shared.packet.PacketOutLeave;
 import me.winter.trapgame.util.StringUtil;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
 import java.io.File;
@@ -24,30 +24,34 @@ public class TrapGameServer
 	/**
 	 * Starts the server with a new instance of TrapGameServer
 	 *
-	 * @param args Execution string arguments usage: java -jar TrapGameServer.jar minPlayers maxPlayers boardWidth boardHeight
+	 * @param args Execution string arguments usage: java -jar TrapGameServer.jar port minPlayers maxPlayers boardWidth boardHeight
 	 */
 	public static void main(String[] args)
 	{
 		try
 		{
+			int port = 1254;
 			int minPlayers = 2;
 			int maxPlayers = 8;
 			int boardWidth = 12;
 			int boardHeight = 12;
 
 			if(args.length > 0 && StringUtil.isInt(args[0]))
-				minPlayers = Integer.parseInt(args[0]);
+				port = Integer.parseInt(args[0]);
 
 			if(args.length > 1 && StringUtil.isInt(args[1]))
-				maxPlayers = Integer.parseInt(args[1]);
+				minPlayers = Integer.parseInt(args[1]);
 
 			if(args.length > 2 && StringUtil.isInt(args[2]))
-				boardWidth = Integer.parseInt(args[2]);
+				maxPlayers = Integer.parseInt(args[2]);
 
 			if(args.length > 3 && StringUtil.isInt(args[3]))
-				boardHeight = Integer.parseInt(args[3]);
+				boardWidth = Integer.parseInt(args[3]);
 
-			new TrapGameServer(minPlayers, maxPlayers, boardWidth, boardHeight).start();
+			if(args.length > 4 && StringUtil.isInt(args[4]))
+				boardHeight = Integer.parseInt(args[4]);
+
+			new TrapGameServer(port, minPlayers, maxPlayers, boardWidth, boardHeight).start();
 		}
 		catch(Throwable ex)
 		{
@@ -67,12 +71,12 @@ public class TrapGameServer
 	private int minPlayers, maxPlayers;
 	private int boardWidth, boardHeight;
 
-	public TrapGameServer(int minPlayers, int maxPlayers, int boardWidth, int boardHeight)
+	public TrapGameServer(int port, int minPlayers, int maxPlayers, int boardWidth, int boardHeight)
 	{
 		scheduler = new Scheduler();
 		state = new StandbyState(this);
 		players = new ArrayList<>();
-		connection = new ServerConnection(this, 1254);
+		connection = new ServerConnection(this, port);
 		statsManager = new StatsManager(this, new File("stats"));
 		setMaxPlayers(maxPlayers);
 		setMinPlayers(minPlayers);
@@ -103,17 +107,17 @@ public class TrapGameServer
 			return;
 		}
 
-		getPlayers().add(player);
 		getConnection().sendToAll(new PacketOutJoin(player.getInfo()));
-		player.getConnection().sendPacket(new PacketOutBoardSize(this.boardWidth, this.boardHeight));
-		broadcast(player + " has joined the game.");
+		getPlayers().add(player);
+		player.getConnection().sendPacket(new PacketOutWelcome(player.getId(), getPlayersInfo(), this.boardWidth, this.boardHeight));
+		broadcast(player.getName() + " has joined the game.");
 		getState().join(player);
 	}
 
 	public void leave(Player player)
 	{
 		getPlayers().remove(player);
-		broadcast(player + " has left the game.");
+		broadcast(player.getName() + " has left the game.");
 		getState().leave(player);
 		getConnection().sendToAll(new PacketOutLeave(player.getId()));
 	}
@@ -142,6 +146,16 @@ public class TrapGameServer
 			if(player.getId() == playerId)
 				return false;
 		return true;
+	}
+
+	public List<PlayerInfo> getPlayersInfo()
+	{
+		List<PlayerInfo> players = new ArrayList<>();
+
+		for(Player player : getPlayers())
+			players.add(player.getInfo());
+
+		return players;
 	}
 
 	public Color getColor(int id)
