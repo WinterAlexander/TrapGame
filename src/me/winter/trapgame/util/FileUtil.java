@@ -1,8 +1,7 @@
 package me.winter.trapgame.util;
 
-import org.newdawn.slick.util.ResourceLoader;
-
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -63,7 +62,7 @@ public class FileUtil
 		return System.getProperty("user.dir");
 	}
 
-	public static void copyFromArchive(String file, File directory, boolean force)
+	/*public static void copyFromArchive(String file, File directory, boolean force)
 	{
 		if(!ResourceLoader.resourceExists(file))
 			return;
@@ -95,5 +94,5 @@ public class FileUtil
 		{
 			throw new RuntimeException("Can't copy " + file + " from archive to " + directory.getAbsolutePath(), e);
 		}
-	}
+	}*/
 }

@@ -2,6 +2,9 @@ package me.winter.trapgame.server;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +25,7 @@ public class TrapGameServer
 	{
 		try
 		{
-			new TrapGameServer();
+			new TrapGameServer(2, 8);
 		}
 		catch(Throwable ex)
 		{
@@ -31,13 +34,23 @@ public class TrapGameServer
 		}
 	}
 
+	private static final Color[] COLORS = new Color[]{Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN, Color.PINK, Color.ORANGE, Color.BLUE, Color.BLACK};
+
 	private State state;
 	private List<Player> players;
 	private ServerConnection connection;
+	private StatsManager statsManager;
 
-	public TrapGameServer()
+	private int minPlayers, maxPlayers;
+
+	public TrapGameServer(int minPlayers, int maxPlayers)
 	{
-
+		state = null;//new StandbyState();
+		players = new ArrayList<>();
+		connection = new ServerConnection(this, 1254);
+		statsManager = new StatsManager(this, new File("stats"));
+		this.minPlayers = minPlayers;
+		this.maxPlayers = maxPlayers;
 	}
 
 	public void join(Player player)
@@ -60,6 +73,32 @@ public class TrapGameServer
 			if(player.getName().equalsIgnoreCase(playerName))
 				return false;
 		return true;
+	}
+
+	public int generateNewPlayerId()
+	{
+		int id = 0;
+
+		while(!isAvailable(id))
+			id++;
+
+		return id;
+	}
+
+	private boolean isAvailable(int playerId)
+	{
+		for(Player player : getPlayers())
+			if(player.getId() == playerId)
+				return false;
+		return true;
+	}
+
+	public Color getColor(int id)
+	{
+		if(id < COLORS.length)
+			return COLORS[id];
+
+		return new Color(COLORS[id].getRed() + id, COLORS[id].getGreen() + id, COLORS[id].getBlue());
 	}
 
 	public void broadcast(String message)
@@ -85,5 +124,36 @@ public class TrapGameServer
 	public ServerConnection getConnection()
 	{
 		return connection;
+	}
+
+	public StatsManager getStatsManager()
+	{
+		return statsManager;
+	}
+
+	public int getMinPlayers()
+	{
+		return minPlayers;
+	}
+
+	public void setMinPlayers(int minPlayers)
+	{
+		if(minPlayers < 0 || minPlayers > maxPlayers)
+			throw new IllegalArgumentException("min should be > 0 and < max");
+
+		this.minPlayers = minPlayers;
+	}
+
+	public int getMaxPlayers()
+	{
+		return maxPlayers;
+	}
+
+	public void setMaxPlayers(int maxPlayers)
+	{
+		if(maxPlayers < 0 || maxPlayers < minPlayers)
+			throw new IllegalArgumentException("max should be > 0 and > min");
+
+		this.maxPlayers = maxPlayers;
 	}
 }

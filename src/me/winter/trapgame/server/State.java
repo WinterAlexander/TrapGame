@@ -5,22 +5,35 @@ package me.winter.trapgame.server;
  *
  * Created by winter on 25/03/16.
  */
-public interface State
+public abstract class State
 {
+	private TrapGameServer server;
+
+	public State(TrapGameServer server)
+	{
+		this.server = server;
+	}
+
 	/**
 	 * Called when a player joins the game
-	 * @param player
+	 * @param player the player that joins
 	 */
-	void join(Player player);
+	public abstract void join(Player player);
 
 	/**
 	 * Called when a player leaves the game or gets kicked, or lost connection
-	 * @param player
+	 * @param player the player that leaves
 	 */
-	void leave(Player player);
+	public abstract void leave(Player player);
 
 	/**
 	 * Called just after the state has been changed
 	 */
-	void start();
+	public abstract void start();
+
+
+	public TrapGameServer getServer()
+	{
+		return server;
+	}
 }

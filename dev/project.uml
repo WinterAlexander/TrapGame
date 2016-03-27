@@ -1,13 +1,14 @@
 //server only
 [Main||static main():void]
 
-[TrapGameServer|state:State;players:List;serverConnection:ServerConnection|getPlayerFromIp():Player;broadcast():void]
-[ServerConnection|serverSocket;ServerSocket|receiveSocket():void]
+[TrapGameServer|minPlayers:int;maxPlayers:int;state:State;players:List;serverConnection:ServerConnection;statsManager:StatsManager|getPlayerFromIp():Player;broadcast():void]
+[ServerConnection|server:TrapGameServer;serverSocket;ServerSocket|receiveSocket():void;sendToAll():]
+[StatsManager|server:TrapGameServer;directory:File|load():PlayerStats;save():void]
 
-[State|join():void;leave():void;start():void]
-[State]^-.-[StandbyState||]
-[State]^-.-[WaitingState|timer:int|end():void]
-[State]^-.-[GameState|boardContent:Map|place():void]
+[State|server:TrapGameServer|join():void;leave():void;start():void]
+[State]^-[StandbyState||]
+[State]^-[WaitingState|timer:int|end():void]
+[State]^-[GameState|boardContent:Map|place():void]
 
 [Player|info:PlayerInfo;connection:PlayerConnection|sendMessage():void;kick():void;getIP:InetAddress]
 [PlayerConnection|socket:Socket;reader:BufferedReader;writer:PrintWriter|sendPacket():void;receivePacket():void]

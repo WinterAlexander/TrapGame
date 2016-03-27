@@ -1,7 +1,9 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.packet.Packet;
 import me.winter.trapgame.shared.packet.PacketInJoin;
+import me.winter.trapgame.shared.packet.PacketOutJoin;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,18 +23,20 @@ public class ServerConnection
 	private ServerSocket serverSocket;
 	private boolean acceptNewClients;
 
-	public ServerConnection(TrapGameServer server, int port) throws IOException
+	public ServerConnection(TrapGameServer server, int port)
 	{
-		this.server = server;
-		serverSocket = new ServerSocket(port);
+		try
+		{
+			this.server = server;
+			serverSocket = new ServerSocket(port);
 
-		new Thread(this::acceptClients).start();
-		acceptNewClients = true;
-	}
-
-	public ServerSocket getServerSocket()
-	{
-		return serverSocket;
+			new Thread(this::acceptClients).start();
+			acceptNewClients = true;
+		}
+		catch(IOException exception)
+		{
+			throw new ExceptionInInitializerError(exception);
+		}
 	}
 
 	private void acceptClients()
@@ -48,6 +52,13 @@ public class ServerConnection
 			while(!server.isAvailable(name))
 				name += "_";
 
+			int id = server.generateNewPlayerId();
+
+			PlayerInfo info = new PlayerInfo(id, name, server.getColor(id), server.getStatsManager().load(name));
+
+			sendToAll(new PacketOutJoin(info));
+			server.join(new Player(server, info, socket));
+
 		}
 		catch(ClassCastException classCastEx)
 		{
@@ -59,5 +70,15 @@ public class ServerConnection
 			System.err.println("An internal error occured while trying to accept a new client's connection");
 			ex.printStackTrace(System.err);
 		}
+	}
+
+	public void sendToAll(Packet packet)
+	{
+		server.getPlayers().forEach(player -> player.getConnection().sendPacket(packet));
+	}
+
+	public ServerSocket getServerSocket()
+	{
+		return serverSocket;
 	}
 }

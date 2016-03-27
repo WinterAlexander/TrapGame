@@ -5,6 +5,7 @@ import me.winter.trapgame.shared.packet.PacketOutChat;
 import me.winter.trapgame.shared.packet.PacketOutKick;
 
 import java.net.InetAddress;
+import java.net.Socket;
 
 /**
  * Represents a player connected to the server
@@ -18,9 +19,16 @@ public class Player
 	private PlayerInfo info;
 	private PlayerConnection connection;
 
-	public Player(TrapGameServer server)
+	public Player(TrapGameServer server, PlayerInfo info, Socket socket)
 	{
 		this.server = server;
+		this.info = info;
+		this.connection = new PlayerConnection(this, socket);
+	}
+
+	public int getId()
+	{
+		return info.getPlayerId();
 	}
 
 	public String getName()
