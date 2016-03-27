@@ -1,12 +1,12 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.PacketOutStatus;
 import me.winter.trapgame.util.CollectionUtil;
 import me.winter.trapgame.util.SortingUtil;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a state of the game when players are playing (clicking the board)
@@ -34,6 +34,7 @@ public class GameState extends State
 	{
 		if(getServer().getPlayers().size() < getServer().getMinPlayers())
 		{
+			getServer().getConnection().sendToAll(new PacketOutStatus(PacketOutStatus.GAME_STOP));
 			getServer().setState(new StandbyState(getServer()));
 			getServer().getState().start();
 		}
@@ -42,6 +43,7 @@ public class GameState extends State
 	@Override
 	public void start()
 	{
+		getServer().broadcast("The game starts, good luck !");
 		getServer().getConnection().sendToAll(new PacketOutStatus(PacketOutStatus.GAME_START));
 	}
 
@@ -54,29 +56,46 @@ public class GameState extends State
 		|| boardContent.containsKey(point))
 			return false;
 
+		if(boardContent.values().contains(player)
+				&& boardContent.get(new Point(point.x + 1, point.y)) != player
+				&& boardContent.get(new Point(point.x - 1, point.y)) != player
+				&& boardContent.get(new Point(point.x, point.y + 1)) != player
+				&& boardContent.get(new Point(point.x, point.y - 1)) != player)
+			return false;
 
 		boardContent.put(point, player);
 
 		if(boardContent.size() == getServer().getBoardWidth() * getServer().getBoardHeight())
-		{
-			Player[] players = boardContent.values().toArray(new Player[boardContent.values().size()]);
-			int[] scores = new int[players.length];
+			getServer().getScheduler().addTask(new Task(0, false, this::skip));
 
-			for(int i = 0; i < players.length; i++)
-				scores[i] = CollectionUtil.occurrences(players[i], boardContent.values());
 
-			SortingUtil.quickSort(players, scores);
-
-			String message = "Game is finished, " +  players[0] + " has won the game !";
-
-			for(int i = 0; i < players.length; i++)
-				message += "\n " + (i + 1) + ": " + players[i] + " Score: " + scores[i];
-
-			getServer().broadcast(message);
-
-			getServer().setState(new WaitingState(getServer()));
-			getServer().getState().start();
-		}
 		return true;
+	}
+
+	@Override
+	public void skip()
+	{
+		Set<Player> uniquePlayers = new HashSet<>(boardContent.values());
+
+		Player[] players = uniquePlayers.toArray(new Player[uniquePlayers.size()]);
+		int[] scores = new int[players.length];
+
+		for(int i = 0; i < players.length; i++)
+			scores[i] = CollectionUtil.occurrences(players[i], boardContent.values());
+
+		SortingUtil.quickSort(players, scores);
+		SortingUtil.reverse(players);
+		SortingUtil.reverse(scores);
+
+		String message = "Game is finished, " + (players.length > 0 && players[0] != null ? players[0].getName() : null) + " has won the game !";
+
+		for(int i = 0; i < players.length; i++)
+			message += "\n " + (i + 1) + ": " + players[i].getName() + " Score: " + scores[i];
+
+		getServer().broadcast(message);
+
+		getServer().getConnection().sendToAll(new PacketOutStatus(PacketOutStatus.GAME_STOP));
+		getServer().setState(new WaitingState(getServer()));
+		getServer().getState().start();
 	}
 }

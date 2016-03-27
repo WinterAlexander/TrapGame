@@ -9,6 +9,7 @@ package me.winter.trapgame.shared.packet;
 public class PacketOutStatus extends Packet
 {
 	public static final int GAME_START = 0;
+	public static final int GAME_STOP = 1;
 
 	private int status;
 

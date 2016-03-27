@@ -55,8 +55,9 @@ public class TrapGameServer
 		}
 		catch(Throwable ex)
 		{
-			System.err.println("A fatal error occured and stopped the server. Stack Trace:");
+			System.err.println("A fatal error occurred and stopped the server. Stack Trace:");
 			ex.printStackTrace(System.err);
+			System.exit(0);
 		}
 	}
 
@@ -67,6 +68,7 @@ public class TrapGameServer
 	private List<Player> players;
 	private ServerConnection connection;
 	private StatsManager statsManager;
+	private CommandManager commandManager;
 
 	private int minPlayers, maxPlayers;
 	private int boardWidth, boardHeight;
@@ -78,17 +80,21 @@ public class TrapGameServer
 		players = new ArrayList<>();
 		connection = new ServerConnection(this, port);
 		statsManager = new StatsManager(this, new File("stats"));
+		commandManager = new CommandManager(this);
+
 		setMaxPlayers(maxPlayers);
 		setMinPlayers(minPlayers);
 		this.maxPlayers = maxPlayers;
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
+
 	}
 
 	public void start()
 	{
 		System.out.println("TrapGame server should now be operational.");
 
+		scheduler.start();
 		while(true)
 			scheduler.update();
 	}
@@ -201,6 +207,11 @@ public class TrapGameServer
 	public StatsManager getStatsManager()
 	{
 		return statsManager;
+	}
+
+	public CommandManager getCommandManager()
+	{
+		return commandManager;
 	}
 
 	public int getMinPlayers()

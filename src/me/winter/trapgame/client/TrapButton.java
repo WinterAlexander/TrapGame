@@ -20,7 +20,7 @@ public class TrapButton extends JButton
 
 	public TrapButton(TrapGameBoard board, Point point)
 	{
-		super(point.getX() + ", " + point.getY());
+		super((int)point.getX() + ", " + (int)point.getY());
 		this.board = board;
 		this.point = point;
 

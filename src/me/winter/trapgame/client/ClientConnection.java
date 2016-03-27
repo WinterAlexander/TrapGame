@@ -1,5 +1,6 @@
 package me.winter.trapgame.client;
 
+import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.*;
 import me.winter.trapgame.util.StringUtil;
 
@@ -100,7 +101,10 @@ public class ClientConnection
 		if(packet instanceof PacketOutStatus)
 		{
 			if(((PacketOutStatus)packet).getStatus() == PacketOutStatus.GAME_START)
-				client.getBoard().unlockBoard();
+				client.getBoard().start();
+
+			if(((PacketOutStatus)packet).getStatus() == PacketOutStatus.GAME_STOP)
+				client.getBoard().stop();
 			return;
 		}
 
@@ -115,7 +119,11 @@ public class ClientConnection
 			client.getBoard().dispose();
 			client.goToMenu();
 			JOptionPane.showMessageDialog(client, "You have been kicked out of the server, reason: \n" + ((PacketOutKick)packet).getMessage(), "You have been kicked !", JOptionPane.WARNING_MESSAGE);
+			return;
 		}
+
+		System.err.println("The packet sent by server isn't appropriate:");
+		System.err.println(packet.getClass().getName());
 	}
 
 	private void acceptInput()
@@ -140,6 +148,7 @@ public class ClientConnection
 
 	public void close()
 	{
+		client.getBoard().dispose();
 		client.goToMenu();
 
 		if(socket == null || socket.isClosed())

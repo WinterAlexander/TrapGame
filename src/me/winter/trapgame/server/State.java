@@ -31,6 +31,11 @@ public abstract class State
 	 */
 	public abstract void start();
 
+	/**
+	 * Force to go on the next state
+	 */
+	public abstract void skip();
+
 
 	public TrapGameServer getServer()
 	{

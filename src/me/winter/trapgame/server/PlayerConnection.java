@@ -64,7 +64,7 @@ public class PlayerConnection
 	{
 		if(packet instanceof PacketInChat)
 		{
-			player.chat(((PacketInChat)packet).getMessage());
+			player.getServer().getCommandManager().execute(player, ((PacketInChat)packet).getMessage());
 			return;
 		}
 
@@ -79,10 +79,14 @@ public class PlayerConnection
 
 			if(((GameState)state).place(getPlayer(), location))
 				getPlayer().getServer().getConnection().sendToAll(new PacketOutPlace(getPlayer().getId(), location));
+			return;
 		}
 
 		if(packet instanceof PacketInLeave)
+		{
 			close();
+			return;
+		}
 
 		System.err.println("The packet sent by " + getPlayer().getName() + " isn't appropriate:");
 		System.err.println(packet.getClass().getName());

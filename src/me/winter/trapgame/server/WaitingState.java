@@ -30,6 +30,7 @@ public class WaitingState extends State
 	{
 		if(getServer().getPlayers().size() < getServer().getMinPlayers())
 		{
+			getServer().getScheduler().cancel(task);
 			getServer().setState(new StandbyState(getServer()));
 			getServer().getState().start();
 		}
@@ -40,6 +41,14 @@ public class WaitingState extends State
 	{
 		getServer().getScheduler().addTask(task);
 		getServer().broadcast("There's now enough players, the game will start in " + timer + " second" + (timer > 1 ? "s" : "") + ".");
+	}
+
+	@Override
+	public void skip()
+	{
+		getServer().getScheduler().cancel(task);
+		getServer().setState(new GameState(getServer()));
+		getServer().getState().start();
 	}
 
 	private void tick()
@@ -59,9 +68,7 @@ public class WaitingState extends State
 				return;
 
 			case 0:
-				getServer().getScheduler().cancel(task);
-				getServer().setState(new GameState(getServer()));
-				getServer().getState().start();
+				skip();
 		}
 	}
 

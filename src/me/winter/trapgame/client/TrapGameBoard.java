@@ -5,6 +5,10 @@ import me.winter.trapgame.shared.Task;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +44,49 @@ public class TrapGameBoard extends JPanel
 		JPanel chatContainer = new JPanel();
 		chatContainer.setLayout(new BorderLayout());
 
+		JButton disconnect = new JButton("Disconnect");
+		disconnect.addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+				getContainer().getConnection().close();
+				dispose();
+				getContainer().goToMenu();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+
+			}
+		});
+		chatContainer.add(disconnect, BorderLayout.NORTH);
 		chatContainer.add(chat, BorderLayout.CENTER);
+
+		JScrollPane scroll = new JScrollPane(chat);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+		chatContainer.add(scroll, BorderLayout.EAST);
 		chatContainer.add(new ChatInput(this), BorderLayout.SOUTH);
 
 		add(chatContainer, BorderLayout.EAST);
@@ -61,6 +107,7 @@ public class TrapGameBoard extends JPanel
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
 
+		playBoard.removeAll();
 		playBoard.setLayout(new GridLayout(boardWidth, boardHeight));
 
 		for(int i = 0; i < boardWidth; i++)
@@ -70,12 +117,35 @@ public class TrapGameBoard extends JPanel
 				playBoard.add(new TrapButton(this, new Point(i, j)));
 			}
 		}
+		revalidate();
+		repaint();
+	}
+
+	public void start()
+	{
+		reset();
+		setBoardLocked(false);
+	}
+
+	public void stop()
+	{
+		setBoardLocked(true);
+		if(boardContent.size() == boardWidth * boardHeight)
+			getContainer().getScheduler().addTask(new Task(5000, false, this::reset));
+		else
+			reset();
 	}
 
 	public void reset()
 	{
 		boardContent.clear();
 		boardLocked = true;
+		for(Component component : playBoard.getComponents())
+			if(component instanceof TrapButton)
+				component.setBackground(null);
+
+		revalidate();
+		repaint();
 	}
 
 	public void dispose()
@@ -86,6 +156,8 @@ public class TrapGameBoard extends JPanel
 		boardWidth = -1;
 		boardHeight = -1;
 		boardLocked = true;
+		playBoard.removeAll();
+		chat.reset();
 	}
 
 	public PlayerInfo getClient()
@@ -133,24 +205,27 @@ public class TrapGameBoard extends JPanel
 		if(boardLocked)
 			return;
 
+		PlayerInfo player = getPlayer(playerId);
+
 		if(point.getX() < 0 || point.getY() < 0
 				|| point.getX() >= getBoardWidth()
 				|| point.getY() >= getBoardHeight()
 				|| boardContent.containsKey(point))
 			return;
 
+		if(boardContent.values().contains(player)
+				&& boardContent.get(new Point(point.x + 1, point.y)) != player
+				&& boardContent.get(new Point(point.x - 1, point.y)) != player
+				&& boardContent.get(new Point(point.x, point.y + 1)) != player
+				&& boardContent.get(new Point(point.x, point.y - 1)) != player)
+			return;
 
-		boardContent.put(point, getPlayer(playerId));
+
+		boardContent.put(point, player);
 
 		for(Component component : playBoard.getComponents())
 			if(component instanceof TrapButton && ((TrapButton)component).getPoint().equals(point))
-				component.setBackground(getPlayer(playerId).getColor());
-
-		if(boardContent.size() == getBoardWidth() * getBoardHeight())
-		{
-			boardLocked = true;
-			getContainer().getScheduler().addTask(new Task(5000, false, this::reset));
-		}
+				component.setBackground(player.getColor());
 
 	}
 
@@ -164,9 +239,9 @@ public class TrapGameBoard extends JPanel
 		return boardLocked;
 	}
 
-	public void unlockBoard()
+	public void setBoardLocked(boolean locked)
 	{
-		boardLocked = false;
+		boardLocked = locked;
 	}
 
 	public int getBoardWidth()

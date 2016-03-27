@@ -22,6 +22,7 @@ public class TrapGameClient extends JFrame
 	{
 		try
 		{
+			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); sucks
 			new TrapGameClient().start();
 		}
 		catch(Throwable throwable)//catch copied from NewX
@@ -68,20 +69,30 @@ public class TrapGameClient extends JFrame
 
 	public void start()
 	{
+		getScheduler().start();
+
 		while(isValid())
 			getScheduler().update();
 	}
 
 	public void goToMenu()
 	{
-		if(getContentPane() != menu)
-			setContentPane(menu);
+		if(getContentPane() == menu)
+			return;
+
+		setContentPane(menu);
+		revalidate();
+		repaint();
 	}
 
 	public void goToBoard()
 	{
-		if(getContentPane() != board)
-			setContentPane(board);
+		if(getContentPane() == board)
+			return;
+
+		setContentPane(board);
+		revalidate();
+		repaint();
 	}
 
 	public boolean inMenu()

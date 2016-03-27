@@ -17,8 +17,7 @@ public class StandbyState extends State
 	{
 		if(getServer().getPlayers().size() >= getServer().getMinPlayers())
 		{
-			getServer().setState(new WaitingState(getServer()));
-			getServer().getState().start();
+			skip();
 			return;
 		}
 
@@ -37,5 +36,12 @@ public class StandbyState extends State
 	public void start()
 	{
 		getServer().broadcast("Sorry, there's not enough players anymore to play. Please wait.");
+	}
+
+	@Override
+	public void skip()
+	{
+		getServer().setState(new WaitingState(getServer()));
+		getServer().getState().start();
 	}
 }

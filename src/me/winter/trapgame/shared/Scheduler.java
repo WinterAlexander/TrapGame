@@ -59,6 +59,14 @@ public class Scheduler
 		{
 			try
 			{
+				if(task.getDelay() == 0)
+				{
+					task.run();
+					if(!task.isRepeating())
+						cancel(task);
+					continue;
+				}
+
 				int turns = (int) (((System.nanoTime() / 1_000_000 - this.pauseTime) - task.getLastWork()) / task.getDelay());
 				if(!task.isRepeating() && turns >= 1)
 				{
@@ -75,7 +83,8 @@ public class Scheduler
 			catch(Exception ex)
 			{
 				cancel(task);
-				System.err.println("Error in scheduler with task " + task.toString());
+				if(task != null)
+					System.err.println("Error in scheduler with task " + task.toString());
 				ex.printStackTrace(System.err);
 			}
 		}

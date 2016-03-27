@@ -41,7 +41,8 @@ public class ChatInput extends JTextField
 				if(e.getKeyCode() != KeyEvent.VK_ENTER)
 					return;
 
-				board.getContainer().getConnection().sendPacket(new PacketInChat(ChatInput.this.getText()));
+				if(getText().length() > 0)
+					board.getContainer().getConnection().sendPacket(new PacketInChat(ChatInput.this.getText()));
 				ChatInput.this.setText("");
 			}
 		});

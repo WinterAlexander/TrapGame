@@ -115,4 +115,34 @@ public class SortingUtil
 		if(i < right)
 			quickSort(data, array, i, right);
 	}
+
+	public static void reverse(Object[] array)
+	{
+		for(int i = 0; i < array.length / 2; i++)
+		{
+			Object temp = array[i];
+			array[i] = array[array.length - i - 1];
+			array[array.length - i - 1] = temp;
+		}
+	}
+
+	public static void reverse(int[] array)
+	{
+		for(int i = 0; i < array.length / 2; i++)
+		{
+			int temp = array[i];
+			array[i] = array[array.length - i - 1];
+			array[array.length - i - 1] = temp;
+		}
+	}
+
+	public static void reverse(double[] array)
+	{
+		for(int i = 0; i < array.length / 2; i++)
+		{
+			double temp = array[i];
+			array[i] = array[array.length - i - 1];
+			array[array.length - i - 1] = temp;
+		}
+	}
 }
