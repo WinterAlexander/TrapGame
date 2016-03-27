@@ -36,6 +36,6 @@ public class StandbyState extends State
 	@Override
 	public void start()
 	{
-		getServer().broadcast("There's not enough players to start a game. Please wait.");
+		getServer().broadcast("Sorry, there's not enough players anymore to play. Please wait.");
 	}
 }

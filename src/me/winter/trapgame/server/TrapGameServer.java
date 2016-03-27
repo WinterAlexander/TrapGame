@@ -1,5 +1,6 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.shared.Scheduler;
 import me.winter.trapgame.shared.packet.PacketOutBoardSize;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
 import me.winter.trapgame.shared.packet.PacketOutLeave;
@@ -46,7 +47,7 @@ public class TrapGameServer
 			if(args.length > 3 && StringUtil.isInt(args[3]))
 				boardHeight = Integer.parseInt(args[3]);
 
-			new TrapGameServer(minPlayers, maxPlayers, boardWidth, boardHeight);
+			new TrapGameServer(minPlayers, maxPlayers, boardWidth, boardHeight).start();
 		}
 		catch(Throwable ex)
 		{
@@ -57,6 +58,7 @@ public class TrapGameServer
 
 	private static final Color[] COLORS = new Color[]{Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN, Color.PINK, Color.ORANGE, Color.BLUE, Color.BLACK};
 
+	private Scheduler scheduler;
 	private State state;
 	private List<Player> players;
 	private ServerConnection connection;
@@ -67,7 +69,8 @@ public class TrapGameServer
 
 	public TrapGameServer(int minPlayers, int maxPlayers, int boardWidth, int boardHeight)
 	{
-		state = null;//new StandbyState();
+		scheduler = new Scheduler();
+		state = new StandbyState(this);
 		players = new ArrayList<>();
 		connection = new ServerConnection(this, 1254);
 		statsManager = new StatsManager(this, new File("stats"));
@@ -78,11 +81,25 @@ public class TrapGameServer
 		this.boardHeight = boardHeight;
 	}
 
+	public void start()
+	{
+		System.out.println("TrapGame server should now be operational.");
+
+		while(true)
+			scheduler.update();
+	}
+
 	public void join(Player player)
 	{
 		if(getPlayers().size() >= maxPlayers)
 		{
 			player.kick("Sorry, the server reached the maximum of players.");
+			return;
+		}
+
+		if(getState() instanceof GameState)
+		{
+			player.kick("Sorry, please wait the end of that game to join.");
 			return;
 		}
 
@@ -137,7 +154,14 @@ public class TrapGameServer
 
 	public void broadcast(String message)
 	{
+		System.out.println("[Broadcast] " + message);
+
 		getPlayers().forEach(player -> player.sendMessage(message));
+	}
+
+	public Scheduler getScheduler()
+	{
+		return scheduler;
 	}
 
 	public State getState()
