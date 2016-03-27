@@ -22,7 +22,9 @@
 [Packet]^-[PacketOutKick|message:String|]
 [Packet]^-[PacketOutJoin|player:PlayerInfo|]
 [Packet]^-[PacketOutLeave|playerId:int|]
-[Packet]^-[PacketOutPlace|playerId:int|location:Point]
+[Packet]^-[PacketOutPlace|playerId:int;location:Point|]
+[Packet]^-[PacketOutGameStart||]
+[Packet]^-[PacketOutBoardSize|width:int;height:int|]
 
 [Packet]^-[PacketInChat|message:String|]
 [Packet]^-[PacketInJoin|player:String|]

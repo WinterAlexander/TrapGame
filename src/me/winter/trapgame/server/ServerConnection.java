@@ -56,7 +56,6 @@ public class ServerConnection
 
 			PlayerInfo info = new PlayerInfo(id, name, server.getColor(id), server.getStatsManager().load(name));
 
-			sendToAll(new PacketOutJoin(info));
 			server.join(new Player(server, info, socket));
 
 		}

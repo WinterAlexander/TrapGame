@@ -49,6 +49,7 @@ public class Player
 	public void kick(String message)
 	{
 		getConnection().sendPacket(new PacketOutKick(message));
+		getConnection().close();
 	}
 
 	public InetAddress getIpAddress()
@@ -66,18 +67,9 @@ public class Player
 		return info;
 	}
 
-	public void setInfo(PlayerInfo info)
-	{
-		this.info = info;
-	}
-
 	public PlayerConnection getConnection()
 	{
 		return connection;
 	}
 
-	public void setConnection(PlayerConnection connection)
-	{
-		this.connection = connection;
-	}
 }

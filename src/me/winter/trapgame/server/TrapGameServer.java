@@ -1,5 +1,9 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.shared.packet.PacketOutBoardSize;
+import me.winter.trapgame.shared.packet.PacketOutJoin;
+import me.winter.trapgame.shared.packet.PacketOutLeave;
+import me.winter.trapgame.util.StringUtil;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
@@ -19,13 +23,30 @@ public class TrapGameServer
 	/**
 	 * Starts the server with a new instance of TrapGameServer
 	 *
-	 * @param args Exec string arguments
+	 * @param args Execution string arguments usage: java -jar TrapGame.jar minPlayers maxPlayers boardWidth boardHeight
 	 */
 	public static void main(String[] args)
 	{
 		try
 		{
-			new TrapGameServer(2, 8);
+			int minPlayers = 2;
+			int maxPlayers = 8;
+			int boardWidth = 12;
+			int boardHeight = 12;
+
+			if(args.length > 0 && StringUtil.isInt(args[0]))
+				minPlayers = Integer.parseInt(args[0]);
+
+			if(args.length > 1 && StringUtil.isInt(args[1]))
+				maxPlayers = Integer.parseInt(args[1]);
+
+			if(args.length > 2 && StringUtil.isInt(args[2]))
+				boardWidth = Integer.parseInt(args[2]);
+
+			if(args.length > 3 && StringUtil.isInt(args[3]))
+				boardHeight = Integer.parseInt(args[3]);
+
+			new TrapGameServer(minPlayers, maxPlayers, boardWidth, boardHeight);
 		}
 		catch(Throwable ex)
 		{
@@ -42,20 +63,32 @@ public class TrapGameServer
 	private StatsManager statsManager;
 
 	private int minPlayers, maxPlayers;
+	private int boardWidth, boardHeight;
 
-	public TrapGameServer(int minPlayers, int maxPlayers)
+	public TrapGameServer(int minPlayers, int maxPlayers, int boardWidth, int boardHeight)
 	{
 		state = null;//new StandbyState();
 		players = new ArrayList<>();
 		connection = new ServerConnection(this, 1254);
 		statsManager = new StatsManager(this, new File("stats"));
-		this.minPlayers = minPlayers;
+		setMinPlayers(minPlayers);
+		setMaxPlayers(maxPlayers);
 		this.maxPlayers = maxPlayers;
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
 	}
 
 	public void join(Player player)
 	{
+		if(getPlayers().size() >= maxPlayers)
+		{
+			player.kick("Sorry, the server reached the maximum of players.");
+			return;
+		}
+
 		getPlayers().add(player);
+		getConnection().sendToAll(new PacketOutJoin(player.getInfo()));
+		player.getConnection().sendPacket(new PacketOutBoardSize(this.boardWidth, this.boardHeight));
 		broadcast(player + " has joined the game.");
 		getState().join(player);
 	}
@@ -65,6 +98,7 @@ public class TrapGameServer
 		getPlayers().remove(player);
 		broadcast(player + " has left the game.");
 		getState().leave(player);
+		getConnection().sendToAll(new PacketOutLeave(player.getId()));
 	}
 
 	public boolean isAvailable(String playerName)
@@ -155,5 +189,25 @@ public class TrapGameServer
 			throw new IllegalArgumentException("max should be > 0 and > min");
 
 		this.maxPlayers = maxPlayers;
+	}
+
+	public int getBoardHeight()
+	{
+		return boardHeight;
+	}
+
+	public void setBoardHeight(int boardHeight)
+	{
+		this.boardHeight = boardHeight;
+	}
+
+	public int getBoardWidth()
+	{
+		return boardWidth;
+	}
+
+	public void setBoardWidth(int boardWidth)
+	{
+		this.boardWidth = boardWidth;
 	}
 }

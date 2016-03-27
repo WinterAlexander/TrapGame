@@ -15,7 +15,16 @@ public class StandbyState extends State
 	@Override
 	public void join(Player player)
 	{
-		player.sendMessage("There's not enough players to start the game. ");
+		if(getServer().getPlayers().size() >= getServer().getMinPlayers())
+		{
+			getServer().setState(new WaitingState(getServer()));
+			getServer().getState().start();
+			return;
+		}
+
+		int amount = getServer().getMinPlayers() - getServer().getPlayers().size();
+
+		getServer().broadcast("The game need " + amount + " more player" + (amount > 1 ? "1" : "") + " to start.");
 	}
 
 	@Override
@@ -27,6 +36,6 @@ public class StandbyState extends State
 	@Override
 	public void start()
 	{
-
+		getServer().broadcast("There's not enough players to start a game. Please wait.");
 	}
 }
