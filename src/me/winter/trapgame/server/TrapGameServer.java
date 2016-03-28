@@ -113,12 +113,6 @@ public class TrapGameServer
 			return;
 		}
 
-		if(getState() instanceof GameState)
-		{
-			player.kick("Sorry, please wait the end of that game to join.");
-			return;
-		}
-
 		getConnection().sendToAll(new PacketOutJoin(player.getInfo()));
 		getPlayers().add(player);
 		player.getConnection().sendPacket(new PacketOutWelcome(player.getId(), getPlayersInfo(), this.boardWidth, this.boardHeight));

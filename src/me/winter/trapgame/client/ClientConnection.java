@@ -4,6 +4,7 @@ import me.winter.trapgame.shared.packet.*;
 import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -117,6 +119,14 @@ public class ClientConnection
 		if(packet instanceof PacketOutPlace)
 		{
 			client.getBoard().place(((PacketOutPlace)packet).getPlayerId(), ((PacketOutPlace)packet).getLocation());
+			return;
+		}
+
+		if(packet instanceof PacketOutSpectator)
+		{
+			client.getBoard().setSpectator(true);
+			for(Map.Entry<Point, Integer> entry : ((PacketOutSpectator)packet).getBoardContent().entrySet())
+				client.getBoard().place(entry.getValue(), entry.getKey());
 			return;
 		}
 

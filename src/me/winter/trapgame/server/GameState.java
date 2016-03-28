@@ -1,12 +1,14 @@
 package me.winter.trapgame.server;
 
 import me.winter.trapgame.shared.Task;
+import me.winter.trapgame.shared.packet.PacketOutSpectator;
 import me.winter.trapgame.shared.packet.PacketOutStatus;
 import me.winter.trapgame.util.CollectionUtil;
 import me.winter.trapgame.util.SortingUtil;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Represents a state of the game when players are playing (clicking the board)
@@ -15,23 +17,27 @@ import java.util.*;
  */
 public class GameState extends State
 {
+	private List<Player> spectators;
 	private Map<Point, Player> boardContent;
 
 	public GameState(TrapGameServer server)
 	{
 		super(server);
 		this.boardContent = new HashMap<>();
+		this.spectators = new ArrayList<>();
 	}
 
 	@Override
 	public void join(Player player)
 	{
-		throw new IllegalStateException("Can't join during game");
+		spectators.add(player);
+		player.getConnection().sendPacket(new PacketOutSpectator(boardContent));
 	}
 
 	@Override
 	public void leave(Player player)
 	{
+		spectators.remove(player);
 		if(getServer().getPlayers().size() < getServer().getMinPlayers())
 		{
 			getServer().getConnection().sendToAll(new PacketOutStatus(PacketOutStatus.GAME_STOP));
@@ -50,6 +56,9 @@ public class GameState extends State
 
 	public boolean place(Player player, Point point)
 	{
+		if(spectators.contains(player))
+			return false;
+
 		if(point.getX() < 0 || point.getY() < 0
 		|| point.getX() >= getServer().getBoardWidth()
 		|| point.getY() >= getServer().getBoardHeight()

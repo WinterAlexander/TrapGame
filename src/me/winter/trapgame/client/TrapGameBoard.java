@@ -1,12 +1,9 @@
 package me.winter.trapgame.client;
 
 import me.winter.trapgame.shared.PlayerInfo;
-import me.winter.trapgame.shared.Task;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
@@ -31,7 +28,7 @@ public class TrapGameBoard extends JPanel
 	private int playerId;
 
 	private int boardWidth, boardHeight;
-	private boolean boardLocked;
+	private boolean boardLocked, spectator;
 
 	public TrapGameBoard(TrapGameClient container)
 	{
@@ -130,6 +127,7 @@ public class TrapGameBoard extends JPanel
 	public void stop()
 	{
 		setBoardLocked(true);
+		spectator = false;
 	}
 
 	public void reset()
@@ -196,7 +194,7 @@ public class TrapGameBoard extends JPanel
 
 	public void place(int playerId, Point point)
 	{
-		if(boardLocked)
+		if(boardLocked && !spectator)
 			return;
 
 		PlayerInfo player = getPlayer(playerId);
@@ -207,13 +205,6 @@ public class TrapGameBoard extends JPanel
 				|| boardContent.containsKey(point))
 			return;
 
-		if(boardContent.values().contains(player)
-				&& boardContent.get(new Point(point.x + 1, point.y)) != player
-				&& boardContent.get(new Point(point.x - 1, point.y)) != player
-				&& boardContent.get(new Point(point.x, point.y + 1)) != player
-				&& boardContent.get(new Point(point.x, point.y - 1)) != player)
-			return;
-
 
 		boardContent.put(point, player);
 
@@ -222,7 +213,6 @@ public class TrapGameBoard extends JPanel
 				component.setBackground(player.getColor());
 
 	}
-
 	public TrapGameClient getContainer()
 	{
 		return container;
@@ -251,5 +241,15 @@ public class TrapGameBoard extends JPanel
 	public Chat getChat()
 	{
 		return chat;
+	}
+
+	public boolean isSpectator()
+	{
+		return spectator;
+	}
+
+	public void setSpectator(boolean spectator)
+	{
+		this.spectator = spectator;
 	}
 }
