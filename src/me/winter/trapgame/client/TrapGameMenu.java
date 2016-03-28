@@ -15,33 +15,97 @@ public class TrapGameMenu extends JPanel
 
 	private JTextField playerName;
 	private JTextField serverAddress;
+	private JPasswordField serverPassword;
 
 	public TrapGameMenu(TrapGameClient container)
 	{
 		this.container = container;
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+		setLayout(new GridBagLayout());
 
 		playerName = new JTextField();
+		playerName.setPreferredSize(new Dimension(200, 25));
 		serverAddress = new JTextField();
+		serverAddress.setPreferredSize(new Dimension(200, 25));
+		serverPassword = new JPasswordField();
+		serverPassword.setPreferredSize(new Dimension(200, 25));
 
-		add(playerName);
-		add(serverAddress);
+		JLabel nameLabel = new JLabel("User name:");
+		nameLabel.setHorizontalAlignment(JLabel.RIGHT);
+
+		JLabel serverLabel = new JLabel("Server address:");
+		serverLabel.setHorizontalAlignment(JLabel.RIGHT);
+
+		JLabel passwordLabel = new JLabel("Server password:");
+		passwordLabel.setHorizontalAlignment(JLabel.RIGHT);
 
 		JButton button = new JButton("Connect");
 
 		button.addActionListener(event -> {
 			try
 			{
-				getContainer().getConnection().connectTo(serverAddress.getText(), playerName.getText());
+				getContainer().getConnection().connectTo(serverAddress.getText(), new String(serverPassword.getPassword()), playerName.getText());
 			}
-			catch(IOException ex)
+			catch(Exception ex)
 			{
 				JOptionPane.showMessageDialog(getContainer(), "Sorry but the connection to this server failed: \n" + ex.getMessage(), "Connection failed", JOptionPane.ERROR_MESSAGE);
 				ex.printStackTrace(System.err);
 			}
 		});
 
-		add(button);
+		GridBagConstraints bagConstraints = new GridBagConstraints();
+
+		bagConstraints.fill = GridBagConstraints.BOTH;
+		bagConstraints.anchor = GridBagConstraints.EAST;
+
+		bagConstraints.insets = new Insets(5, 5, 5, 5);
+
+		bagConstraints.gridx = 0;
+		bagConstraints.gridy = 0;
+
+		bagConstraints.gridwidth = 1;
+		bagConstraints.gridheight = 1;
+
+		add(nameLabel, bagConstraints);
+
+		bagConstraints.gridx = 1;
+		bagConstraints.gridwidth = 2;
+
+		add(playerName, bagConstraints);
+
+		bagConstraints.gridx = 0;
+		bagConstraints.gridy = 1;
+		bagConstraints.gridwidth = 1;
+
+		add(serverLabel, bagConstraints);
+
+		bagConstraints.gridx = 1;
+		bagConstraints.gridwidth = 2;
+
+		add(serverAddress, bagConstraints);
+
+		bagConstraints.gridx = 0;
+		bagConstraints.gridy = 2;
+		bagConstraints.gridwidth = 1;
+
+		add(passwordLabel, bagConstraints);
+
+		bagConstraints.gridx = 1;
+		bagConstraints.gridwidth = 2;
+
+		add(serverPassword, bagConstraints);
+
+		bagConstraints.gridx = 1;
+		bagConstraints.gridy = 3;
+		bagConstraints.gridwidth = 1;
+
+		add(button, bagConstraints);
+
+	}
+
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
 	}
 
 	public TrapGameClient getContainer()

@@ -130,10 +130,6 @@ public class TrapGameBoard extends JPanel
 	public void stop()
 	{
 		setBoardLocked(true);
-		if(boardContent.size() == boardWidth * boardHeight)
-			getContainer().getScheduler().addTask(new Task(5000, false, this::reset));
-		else
-			reset();
 	}
 
 	public void reset()
@@ -183,8 +179,6 @@ public class TrapGameBoard extends JPanel
 		if(!inGame())
 			throw new IllegalStateException("Game board not initialized");
 		players.add(info);
-
-		//repaint ?
 	}
 
 	public void leave(int playerId)

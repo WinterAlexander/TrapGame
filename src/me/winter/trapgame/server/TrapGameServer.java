@@ -24,13 +24,14 @@ public class TrapGameServer
 	/**
 	 * Starts the server with a new instance of TrapGameServer
 	 *
-	 * @param args Execution string arguments usage: java -jar TrapGameServer.jar port minPlayers maxPlayers boardWidth boardHeight
+	 * @param args Execution string arguments usage: java -jar TrapGameServer.jar port password minPlayers maxPlayers boardWidth boardHeight
 	 */
 	public static void main(String[] args)
 	{
 		try
 		{
 			int port = 1254;
+			String password = "";
 			int minPlayers = 2;
 			int maxPlayers = 8;
 			int boardWidth = 12;
@@ -39,19 +40,22 @@ public class TrapGameServer
 			if(args.length > 0 && StringUtil.isInt(args[0]))
 				port = Integer.parseInt(args[0]);
 
-			if(args.length > 1 && StringUtil.isInt(args[1]))
-				minPlayers = Integer.parseInt(args[1]);
+			if(args.length > 1 && !(args[1].equals("none") || args[1].equals("null")))
+				password = args[1];
 
 			if(args.length > 2 && StringUtil.isInt(args[2]))
-				maxPlayers = Integer.parseInt(args[2]);
+				minPlayers = Integer.parseInt(args[2]);
 
 			if(args.length > 3 && StringUtil.isInt(args[3]))
-				boardWidth = Integer.parseInt(args[3]);
+				maxPlayers = Integer.parseInt(args[3]);
 
 			if(args.length > 4 && StringUtil.isInt(args[4]))
-				boardHeight = Integer.parseInt(args[4]);
+				boardWidth = Integer.parseInt(args[4]);
 
-			new TrapGameServer(port, minPlayers, maxPlayers, boardWidth, boardHeight).start();
+			if(args.length > 5 && StringUtil.isInt(args[5]))
+				boardHeight = Integer.parseInt(args[5]);
+
+			new TrapGameServer(port, password, minPlayers, maxPlayers, boardWidth, boardHeight).start();
 		}
 		catch(Throwable ex)
 		{
@@ -70,10 +74,11 @@ public class TrapGameServer
 	private StatsManager statsManager;
 	private CommandManager commandManager;
 
+	private String password;
 	private int minPlayers, maxPlayers;
 	private int boardWidth, boardHeight;
 
-	public TrapGameServer(int port, int minPlayers, int maxPlayers, int boardWidth, int boardHeight)
+	public TrapGameServer(int port, String password, int minPlayers, int maxPlayers, int boardWidth, int boardHeight)
 	{
 		scheduler = new Scheduler();
 		state = new StandbyState(this);
@@ -82,6 +87,7 @@ public class TrapGameServer
 		statsManager = new StatsManager(this, new File("stats"));
 		commandManager = new CommandManager(this);
 
+		this.password = password;
 		setMaxPlayers(maxPlayers);
 		setMinPlayers(minPlayers);
 		this.maxPlayers = maxPlayers;
@@ -214,6 +220,11 @@ public class TrapGameServer
 		return commandManager;
 	}
 
+	public String getPassword()
+	{
+		return password;
+	}
+
 	public int getMinPlayers()
 	{
 		return minPlayers;
@@ -222,7 +233,7 @@ public class TrapGameServer
 	public void setMinPlayers(int minPlayers)
 	{
 		if(minPlayers < 0 || minPlayers > maxPlayers)
-			throw new IllegalArgumentException("min should be > 0 and < max");
+			throw new IllegalArgumentException("min(" + minPlayers + ") should be > 0 and < max");
 
 		this.minPlayers = minPlayers;
 	}
@@ -235,7 +246,7 @@ public class TrapGameServer
 	public void setMaxPlayers(int maxPlayers)
 	{
 		if(maxPlayers < 0 || maxPlayers < minPlayers)
-			throw new IllegalArgumentException("max should be > 0 and > min");
+			throw new IllegalArgumentException("max(" + maxPlayers + ") should be > 0 and > min");
 
 		this.maxPlayers = maxPlayers;
 	}

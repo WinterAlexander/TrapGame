@@ -11,11 +11,22 @@ package me.winter.trapgame.shared.packet;
  */
 public class PacketInJoin extends Packet
 {
-	private String playerName;
+	private String password, playerName;
 
-	public PacketInJoin(String playerName)
+	public PacketInJoin(String password, String playerName)
 	{
+		this.password = password;
 		this.playerName = playerName;
+	}
+
+	public String getPassword()
+	{
+		return password;
+	}
+
+	public void setPassword(String password)
+	{
+		this.password = password;
 	}
 
 	public String getPlayerName()

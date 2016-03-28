@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactManager">
+    <artifact type="jar" name="TrapGame">
+      <output-path>$USER_HOME$/Desktop</output-path>
+      <root id="archive" name="TrapGame.jar">
+        <element id="module-output" name="TrapGame" />
+      </root>
+    </artifact>
+  </component>
   <component name="ClientPropertiesManager">
     <properties class="javax.swing.AbstractButton">
       <property name="hideActionText" class="java.lang.Boolean" />
@@ -234,5 +242,8 @@
       <JAVADOC />
       <SOURCES />
     </library>
+  </component>
+  <component name="uidesigner-configuration">
+    <option name="DEFAULT_LAYOUT_MANAGER" value="GridBagLayout" />
   </component>
 </project>

@@ -15,10 +15,11 @@ public class Chat extends JTextPane
 	{
 		this.board = board;
 
-		setMaximumSize(new Dimension(300, Integer.MAX_VALUE));
-		setMinimumSize(new Dimension(100, 0));
-		setPreferredSize(new Dimension(200, Integer.MAX_VALUE));
+		setMaximumSize(new Dimension(500, Integer.MAX_VALUE));
+		setMinimumSize(new Dimension(200, 0));
+		setPreferredSize(new Dimension(350, Integer.MAX_VALUE));
 		setEditable(false);
+		setFont(new Font("Arial", Font.PLAIN, 18));
 	}
 
 	public void sendMessage(String message)

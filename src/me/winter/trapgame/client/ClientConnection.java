@@ -1,6 +1,5 @@
 package me.winter.trapgame.client;
 
-import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.*;
 import me.winter.trapgame.util.StringUtil;
 
@@ -11,6 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Represents a connection established by the client and server
@@ -23,17 +24,15 @@ public class ClientConnection
 	private TrapGameClient client;
 
 	private Socket socket;
-	private String playerName;
+	private boolean welcomed;
 
 	public ClientConnection(TrapGameClient client)
 	{
 		this.client = client;
 		socket = null;
-
-		playerName = null;
 	}
 
-	public void connectTo(String address, String playerName) throws IOException
+	public void connectTo(String address, String password, String playerName) throws IOException, TimeoutException
 	{
 		int port = 1254;
 
@@ -46,8 +45,30 @@ public class ClientConnection
 		}
 
 		socket = new Socket(InetAddress.getByName(address), port);
-		sendPacket(new PacketInJoin(this.playerName = playerName));
+		sendPacket(new PacketInJoin(password, playerName));
+
+		welcomed = false;
 		new Thread(this::acceptInput).start();
+		long waitBegin = System.currentTimeMillis();
+
+
+		while(!welcomed)
+		{
+			try
+			{
+				Thread.sleep(50);
+			}
+			catch(InterruptedException ex)
+			{
+
+			}
+
+			if(System.currentTimeMillis() - waitBegin > 2000)
+			{
+				close();
+				throw new TimeoutException("The server isn't responding.");
+			}
+		}
 	}
 
 	public void sendPacket(Packet packet)
@@ -75,6 +96,7 @@ public class ClientConnection
 		{
 			PacketOutWelcome packetWelcome = (PacketOutWelcome)packet;
 
+			welcomed = true;
 			client.getBoard().init(packetWelcome.getPlayerId(), packetWelcome.getPlayers(), packetWelcome.getBoardWidth(), packetWelcome.getBoardHeight());
 			client.goToBoard();
 			return;
@@ -116,8 +138,8 @@ public class ClientConnection
 
 		if(packet instanceof PacketOutKick)
 		{
-			client.getBoard().dispose();
-			client.goToMenu();
+			welcomed = true;
+			close();
 			JOptionPane.showMessageDialog(client, "You have been kicked out of the server, reason: \n" + ((PacketOutKick)packet).getMessage(), "You have been kicked !", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
@@ -128,7 +150,7 @@ public class ClientConnection
 
 	private void acceptInput()
 	{
-		while(socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown()) try
+		while(socket != null && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown()) try
 		{
 			receivePacket((Packet)new ObjectInputStream(socket.getInputStream()).readObject());
 		}
@@ -136,6 +158,10 @@ public class ClientConnection
 		{
 			System.err.println("Server sent a socket with unknown data.");
 			notAPacketEx.printStackTrace(System.err);
+		}
+		catch(SocketException ex)
+		{
+			break;
 		}
 		catch(IOException ex)
 		{

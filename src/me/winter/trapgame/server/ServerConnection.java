@@ -4,9 +4,12 @@ import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.packet.Packet;
 import me.winter.trapgame.shared.packet.PacketInJoin;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
+import me.winter.trapgame.shared.packet.PacketOutKick;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -46,6 +49,24 @@ public class ServerConnection
 			Socket socket = serverSocket.accept();
 
 			PacketInJoin packet = (PacketInJoin)new ObjectInputStream(socket.getInputStream()).readObject();
+
+			if(server.getPassword().length() > 0 && !server.getPassword().equals(packet.getPassword()))
+			{
+				try
+				{
+					ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+					new ObjectOutputStream(byteBuffer).writeObject(new PacketOutKick("Invalid password."));
+					byteBuffer.writeTo(socket.getOutputStream());
+
+					socket.getOutputStream().flush();
+					socket.close();
+					continue;
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace(System.err);
+				}
+			}
 
 			String name = packet.getPlayerName();
 
