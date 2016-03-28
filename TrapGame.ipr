@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ArtifactManager">
-    <artifact type="jar" name="TrapGame">
+    <artifact type="jar" name="Client">
       <output-path>$USER_HOME$/Desktop</output-path>
       <root id="archive" name="TrapGame.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/me/winter/trapgame/client/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="TrapGame" />
+      </root>
+    </artifact>
+    <artifact type="jar" name="Server">
+      <output-path>$USER_HOME$/Desktop</output-path>
+      <root id="archive" name="TrapGameServer.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/me/winter/trapgame/server/META-INF/MANIFEST.MF" />
+        </element>
         <element id="module-output" name="TrapGame" />
       </root>
     </artifact>

@@ -1,8 +1,9 @@
 # TrapGame
 A multi-player form-based desktop game about strategy and spam-clicking
 
-Work in progress ! Server is done but untested and the development of the
-client has just been started.
+Project in development. Latest builds (version 0.1)
+Client: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version%200.1/TrapGame.jar
+Server: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version%200.1/TrapGameServer.jar
 
 It is a copy of BlockFarmers, a game-plugin I made on Minecraft.
 However, this is NOT a minecraft project, TrapGame is just taking
