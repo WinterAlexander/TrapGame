@@ -2,6 +2,7 @@ package me.winter.trapgame.server;
 
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.Scheduler;
+import me.winter.trapgame.shared.packet.PacketOutBoardSize;
 import me.winter.trapgame.shared.packet.PacketOutWelcome;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
 import me.winter.trapgame.shared.packet.PacketOutLeave;
@@ -82,8 +83,6 @@ public class TrapGameServer
 			new Color(98, 61, 37),
 			new Color(255, 119, 237),
 			new Color(3, 189, 170),
-			new Color(255, 255, 255),
-			new Color(0, 0, 0),
 			new Color(128, 128, 128),
 			new Color(255, 157, 124)};
 
@@ -135,7 +134,8 @@ public class TrapGameServer
 
 		getConnection().sendToAll(new PacketOutJoin(player.getInfo()));
 		getPlayers().add(player);
-		player.getConnection().sendPacket(new PacketOutWelcome(player.getId(), getPlayersInfo(), this.boardWidth, this.boardHeight));
+		player.getConnection().sendPacket(new PacketOutWelcome(player.getId(), getPlayersInfo()));
+		player.getConnection().sendPacket(new PacketOutBoardSize(this.boardWidth, this.boardHeight));
 		broadcast(player.getName() + " has joined the game.");
 		getState().join(player);
 	}
@@ -265,23 +265,21 @@ public class TrapGameServer
 		this.maxPlayers = maxPlayers;
 	}
 
+	public void setBoardSize(int boardWidth, int boardHeight)
+	{
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
+
+		getConnection().sendToAll(new PacketOutBoardSize(boardWidth, boardHeight));
+	}
+
 	public int getBoardHeight()
 	{
 		return boardHeight;
 	}
 
-	public void setBoardHeight(int boardHeight)
-	{
-		this.boardHeight = boardHeight;
-	}
-
 	public int getBoardWidth()
 	{
 		return boardWidth;
-	}
-
-	public void setBoardWidth(int boardWidth)
-	{
-		this.boardWidth = boardWidth;
 	}
 }

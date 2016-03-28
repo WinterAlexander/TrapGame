@@ -96,10 +96,26 @@ public class GameState extends State
 		SortingUtil.reverse(players);
 		SortingUtil.reverse(scores);
 
-		String message = "Game is finished, " + (players.length > 0 && players[0] != null ? players[0].getName() : null) + " has won the game !";
+		String message = "Game is finished, ";
 
 		for(int i = 0; i < players.length; i++)
-			message += "\n " + (i + 1) + ": " + players[i].getName() + " Score: " + scores[i];
+		{
+			int playersWithThatScore = 0;
+
+			for(int playerIndex = i; playerIndex < players.length; playerIndex++)
+				if(scores[playerIndex] == scores[i])
+					playersWithThatScore++;
+
+			if(i == 0)
+			{
+				if(playersWithThatScore == 1)
+					message += players[0].getName() + " has won the game !";
+				else
+					message += "it's a draw !";
+			}
+
+			message += "\n " + (i + playersWithThatScore) + ": " + players[i].getName() + " (Score: " + scores[i] + ")";
+		}
 
 		getServer().broadcast(message);
 

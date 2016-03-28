@@ -46,7 +46,7 @@ public class TrapButton extends JButton
 				if(!(e.getX() > getWidth() / 8
 				&& e.getX() <= getWidth() * 7 / 8
 				&& e.getY() > getHeight() / 8
-				&& e.getX() <= getHeight() * 7 / 8))
+				&& e.getY() <= getHeight() * 7 / 8))
 					return;
 
 				if(!board.canClick(point))
@@ -79,11 +79,10 @@ public class TrapButton extends JButton
 	public void paintComponent(Graphics graphics)
 	{
 		graphics.setColor(getBackground());
-		if(!getBackground().equals(getParent().getBackground()))
-			graphics.fillRoundRect(getWidth() / 8, getHeight() / 8, getWidth() * 3 / 4, getHeight() * 3 / 4, getWidth() / 4, getHeight() / 4);
 
-		graphics.setColor(Color.BLACK);
-		graphics.drawRoundRect(getWidth() / 8, getHeight() / 8, getWidth() * 3 / 4, getHeight() * 3 / 4, getWidth() / 4, getHeight() / 4);
+		graphics.fillRoundRect(getWidth() / 8, getHeight() / 8, getWidth() * 3 / 4, getHeight() * 3 / 4, getWidth() / 4, getHeight() / 4);
+
+		graphics.drawImage(getBoard().getButtonFrame(), 0, 0, getWidth(), getHeight(), null);
 
 	}
 

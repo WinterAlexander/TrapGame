@@ -59,6 +59,9 @@ public class Scheduler
 		{
 			try
 			{
+				if(task == null)
+					continue;
+
 				if(task.getDelay() == 0)
 				{
 					task.run();
@@ -83,8 +86,7 @@ public class Scheduler
 			catch(Exception ex)
 			{
 				cancel(task);
-				if(task != null)
-					System.err.println("Error in scheduler with task " + task.toString());
+				System.err.println("Error in scheduler with task " + task.toString());
 				ex.printStackTrace(System.err);
 			}
 		}

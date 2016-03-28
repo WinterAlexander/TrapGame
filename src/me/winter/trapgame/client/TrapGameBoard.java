@@ -2,10 +2,12 @@ package me.winter.trapgame.client;
 
 import me.winter.trapgame.shared.PlayerInfo;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,9 +32,21 @@ public class TrapGameBoard extends JPanel
 	private int boardWidth, boardHeight;
 	private boolean boardLocked, spectator;
 
+	private Image buttonFrame;
+
 	public TrapGameBoard(TrapGameClient container)
 	{
 		this.container = container;
+
+		try
+		{
+			buttonFrame = ImageIO.read(ClassLoader.class.getResourceAsStream("/frame.png"));
+		}
+		catch(IOException ex)
+		{
+			System.err.println("Failed to load logo image");
+			ex.printStackTrace(System.err);
+		}
 
 		setLayout(new BorderLayout());
 
@@ -95,12 +109,18 @@ public class TrapGameBoard extends JPanel
 		dispose();
 	}
 
-	public void init(int playerId, List<PlayerInfo> players, int boardWidth, int boardHeight)
+	public void init(int playerId, List<PlayerInfo> players)
 	{
 		this.playerId = playerId;
 		this.players = players;
 
 		boardContent = new HashMap<>();
+		revalidate();
+		repaint();
+	}
+
+	public void setBoardSize(int boardWidth, int boardHeight)
+	{
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
 
@@ -251,5 +271,10 @@ public class TrapGameBoard extends JPanel
 	public void setSpectator(boolean spectator)
 	{
 		this.spectator = spectator;
+	}
+
+	public Image getButtonFrame()
+	{
+		return buttonFrame;
 	}
 }

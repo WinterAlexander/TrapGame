@@ -99,8 +99,14 @@ public class ClientConnection
 			PacketOutWelcome packetWelcome = (PacketOutWelcome)packet;
 
 			welcomed = true;
-			client.getBoard().init(packetWelcome.getPlayerId(), packetWelcome.getPlayers(), packetWelcome.getBoardWidth(), packetWelcome.getBoardHeight());
+			client.getBoard().init(packetWelcome.getPlayerId(), packetWelcome.getPlayers());
 			client.goToBoard();
+			return;
+		}
+
+		if(packet instanceof PacketOutBoardSize)
+		{
+			client.getBoard().setBoardSize(((PacketOutBoardSize)packet).getBoardWidth(), ((PacketOutBoardSize)packet).getBoardHeight());
 			return;
 		}
 
