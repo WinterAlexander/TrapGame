@@ -65,7 +65,27 @@ public class TrapGameServer
 		}
 	}
 
-	private static final Color[] COLORS = new Color[]{Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN, Color.PINK, Color.ORANGE, Color.BLUE, Color.BLACK};
+	private static final Color[] COLORS = new Color[]{
+			new Color(255, 0, 0),
+			new Color(3, 140, 252),
+			new Color(241, 223, 1),
+			new Color(68, 173, 50),
+			new Color(150, 45, 255),
+			new Color(249, 128, 47),
+			new Color(255, 85, 170),
+			new Color(0, 251, 255),
+			new Color(142, 1, 1),
+			new Color(33, 27, 160),
+			new Color(211, 162, 10),
+			new Color(46, 255, 11),
+			new Color(128, 18, 118),
+			new Color(98, 61, 37),
+			new Color(255, 119, 237),
+			new Color(3, 189, 170),
+			new Color(255, 255, 255),
+			new Color(0, 0, 0),
+			new Color(128, 128, 128),
+			new Color(255, 157, 124)};
 
 	private Scheduler scheduler;
 	private State state;
