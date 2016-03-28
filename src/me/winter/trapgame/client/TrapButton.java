@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 
 /**
  * Represents a button in TrapGameBoard used to play the game
@@ -20,7 +22,10 @@ public class TrapButton extends JButton
 
 	public TrapButton(TrapGameBoard board, Point point)
 	{
-		super((int)point.getX() + ", " + (int)point.getY());
+		setOpaque(false);
+		setFocusPainted(false);
+		setBorderPainted(false);
+		setContentAreaFilled(false);
 		this.board = board;
 		this.point = point;
 
@@ -36,6 +41,12 @@ public class TrapButton extends JButton
 			public void mousePressed(MouseEvent e)
 			{
 				if(board.isBoardLocked())
+					return;
+
+				if(!(e.getX() > getWidth() / 8
+				&& e.getX() <= getWidth() * 7 / 8
+				&& e.getY() > getHeight() / 8
+				&& e.getX() <= getHeight() * 7 / 8))
 					return;
 
 				if(!board.canClick(point))
@@ -62,6 +73,18 @@ public class TrapButton extends JButton
 
 			}
 		});
+	}
+
+	@Override
+	public void paintComponent(Graphics graphics)
+	{
+		graphics.setColor(getBackground());
+		if(!getBackground().equals(getParent().getBackground()))
+			graphics.fillRoundRect(getWidth() / 8, getHeight() / 8, getWidth() * 3 / 4, getHeight() * 3 / 4, getWidth() / 4, getHeight() / 4);
+
+		graphics.setColor(Color.BLACK);
+		graphics.drawRoundRect(getWidth() / 8, getHeight() / 8, getWidth() * 3 / 4, getHeight() * 3 / 4, getWidth() / 4, getHeight() / 4);
+
 	}
 
 	public TrapGameBoard getBoard()

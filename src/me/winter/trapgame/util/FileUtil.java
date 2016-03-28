@@ -1,7 +1,6 @@
 package me.winter.trapgame.util;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  *
@@ -62,9 +61,11 @@ public class FileUtil
 		return System.getProperty("user.dir");
 	}
 
-	/*public static void copyFromArchive(String file, File directory, boolean force)
+	public static void copyFromArchive(String file, File directory, boolean force)
 	{
-		if(!ResourceLoader.resourceExists(file))
+		InputStream inputStream = ClassLoader.class.getResourceAsStream(file);
+
+		if(inputStream == null)
 			return;
 
 		try
@@ -80,12 +81,11 @@ public class FileUtil
 			if(!destination.createNewFile())
 				throw new RuntimeException("Can't create file " + destination.getAbsolutePath());
 
-			InputStream input = ResourceLoader.getResourceAsStream(file);
 			OutputStream output = new FileOutputStream(destination);
 
 			byte[] buffer = new byte[1024];
 			int length;
-			while((length = input.read(buffer)) > 0)
+			while((length = inputStream.read(buffer)) > 0)
 				output.write(buffer, 0, length);
 
 			output.close();
@@ -94,5 +94,5 @@ public class FileUtil
 		{
 			throw new RuntimeException("Can't copy " + file + " from archive to " + directory.getAbsolutePath(), e);
 		}
-	}*/
+	}
 }

@@ -105,7 +105,7 @@ public class TrapGameBoard extends JPanel
 		this.boardHeight = boardHeight;
 
 		playBoard.removeAll();
-		playBoard.setLayout(new GridLayout(boardWidth, boardHeight));
+		playBoard.setLayout(new GridLayout(boardWidth, boardHeight, 0, 0));
 
 		for(int i = 0; i < boardWidth; i++)
 		{

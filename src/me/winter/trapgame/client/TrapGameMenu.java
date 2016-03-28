@@ -1,5 +1,6 @@
 package me.winter.trapgame.client;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.io.IOException;
  */
 public class TrapGameMenu extends JPanel
 {
+	private Image logo;
 	private TrapGameClient container;
 
 	private JTextField playerName;
@@ -21,7 +23,19 @@ public class TrapGameMenu extends JPanel
 	{
 		this.container = container;
 
+		try
+		{
+			logo = ImageIO.read(ClassLoader.class.getResourceAsStream("/logo.png"));
+		}
+		catch(IOException ex)
+		{
+			System.err.println("Failed to load logo image");
+			ex.printStackTrace(System.err);
+		}
+
 		setLayout(new GridBagLayout());
+
+		JLabel logoLabel = new JLabel(new ImageIcon(logo));
 
 		playerName = new JTextField();
 		playerName.setPreferredSize(new Dimension(200, 25));
@@ -63,40 +77,47 @@ public class TrapGameMenu extends JPanel
 		bagConstraints.gridx = 0;
 		bagConstraints.gridy = 0;
 
+		bagConstraints.gridwidth = 3;
+		bagConstraints.gridheight = 1;
+
+		add(logoLabel, bagConstraints);
+
+		bagConstraints.gridy++;
+
 		bagConstraints.gridwidth = 1;
 		bagConstraints.gridheight = 1;
 
 		add(nameLabel, bagConstraints);
 
-		bagConstraints.gridx = 1;
+		bagConstraints.gridx++;
 		bagConstraints.gridwidth = 2;
 
 		add(playerName, bagConstraints);
 
 		bagConstraints.gridx = 0;
-		bagConstraints.gridy = 1;
+		bagConstraints.gridy++;
 		bagConstraints.gridwidth = 1;
 
 		add(serverLabel, bagConstraints);
 
-		bagConstraints.gridx = 1;
+		bagConstraints.gridx++;
 		bagConstraints.gridwidth = 2;
 
 		add(serverAddress, bagConstraints);
 
 		bagConstraints.gridx = 0;
-		bagConstraints.gridy = 2;
+		bagConstraints.gridy++;
 		bagConstraints.gridwidth = 1;
 
 		add(passwordLabel, bagConstraints);
 
-		bagConstraints.gridx = 1;
+		bagConstraints.gridx++;
 		bagConstraints.gridwidth = 2;
 
 		add(serverPassword, bagConstraints);
 
 		bagConstraints.gridx = 1;
-		bagConstraints.gridy = 3;
+		bagConstraints.gridy++;
 		bagConstraints.gridwidth = 1;
 
 		add(button, bagConstraints);
