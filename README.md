@@ -3,11 +3,10 @@ A multi-player form-based desktop game about strategy and spam-clicking
 
 Project in development. Builds:
 
-Client 0.2: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version0.2/TrapGame.jar
-Server 0.2: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version0.2/TrapGameServer.jar
-
-Client 0.1: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version0.1/TrapGame.jar
-Server 0.1: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version0.1/TrapGameServer.jar
+  - Client 0.2: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version0.2/TrapGame.jar
+  - Server 0.2: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version0.2/TrapGameServer.jar
+  - Client 0.1: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version0.1/TrapGame.jar
+  - Server 0.1: https://dl.dropboxusercontent.com/u/65019675/TrapGame/version0.1/TrapGameServer.jar
 
 It is a copy of BlockFarmers, a game-plugin I made on Minecraft.
 However, this is NOT a minecraft project, TrapGame is just taking
