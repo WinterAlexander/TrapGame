@@ -22,7 +22,7 @@ public class TrapGameBoard extends JPanel
 {
 	private TrapGameClient container;
 
-	private JPanel playBoard;
+	private PlayBoard playBoard;
 	private Chat chat;
 
 	private Map<Point, PlayerInfo> boardContent;
@@ -102,7 +102,7 @@ public class TrapGameBoard extends JPanel
 
 		add(chatContainer, BorderLayout.EAST);
 
-		playBoard = new JPanel();
+		playBoard = new PlayBoard(this);
 
 		add(playBoard, BorderLayout.CENTER);
 
@@ -115,6 +115,7 @@ public class TrapGameBoard extends JPanel
 		this.players = players;
 
 		boardContent = new HashMap<>();
+		playBoard.setCursorColor(getClient().getColor());
 		revalidate();
 		repaint();
 	}
@@ -172,6 +173,7 @@ public class TrapGameBoard extends JPanel
 		boardLocked = true;
 		playBoard.removeAll();
 		chat.reset();
+		playBoard.setCursorColor(Color.gray);
 	}
 
 	public PlayerInfo getClient()
@@ -233,9 +235,20 @@ public class TrapGameBoard extends JPanel
 				component.setBackground(player.getColor());
 
 	}
+
 	public TrapGameClient getContainer()
 	{
 		return container;
+	}
+
+	public List<PlayerInfo> getPlayers()
+	{
+		return players;
+	}
+
+	public PlayBoard getPlayBoard()
+	{
+		return playBoard;
 	}
 
 	public boolean isBoardLocked()

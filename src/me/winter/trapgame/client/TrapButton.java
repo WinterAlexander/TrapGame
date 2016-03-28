@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -71,6 +72,28 @@ public class TrapButton extends JButton
 			public void mouseExited(MouseEvent e)
 			{
 
+			}
+
+
+		});
+
+		addMouseMotionListener(new MouseMotionListener()
+		{
+			@Override
+			public void mouseDragged(MouseEvent e)
+			{
+				MouseEvent event = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() + getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
+
+
+				getParent().dispatchEvent(event);
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e)
+			{
+				MouseEvent event = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() + getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
+
+				getParent().dispatchEvent(event);
 			}
 		});
 	}

@@ -128,6 +128,14 @@ public class ClientConnection
 			return;
 		}
 
+		if(packet instanceof PacketOutCursorMove)
+		{
+			client.getBoard().getPlayer(((PacketOutCursorMove)packet).getPlayerId()).setCursor(((PacketOutCursorMove)packet).getCursor());
+			client.getBoard().getPlayBoard().revalidate();
+			client.getBoard().getPlayBoard().repaint();
+			return;
+		}
+
 		if(packet instanceof PacketOutSpectator)
 		{
 			client.getBoard().setSpectator(true);

@@ -82,6 +82,15 @@ public class PlayerConnection
 			return;
 		}
 
+		if(packet instanceof PacketInCursorMove)
+		{
+			getPlayer().getInfo().setCursor(((PacketInCursorMove)packet).getCursor());
+			for(Player player : getPlayer().getServer().getPlayers())
+				if(player != getPlayer())
+					player.getConnection().sendPacket(new PacketOutCursorMove(getPlayer().getId(), ((PacketInCursorMove)packet).getCursor()));
+			return;
+		}
+
 		if(packet instanceof PacketInLeave)
 		{
 			close();

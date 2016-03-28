@@ -6,6 +6,8 @@ import me.winter.trapgame.shared.packet.PacketInJoin;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
 import me.winter.trapgame.shared.packet.PacketOutKick;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -75,7 +77,7 @@ public class ServerConnection
 
 			int id = server.generateNewPlayerId();
 
-			PlayerInfo info = new PlayerInfo(id, name, server.getColor(id), server.getStatsManager().load(name));
+			PlayerInfo info = new PlayerInfo(id, name, server.getColor(id), server.getStatsManager().load(name), new Point2D.Double(0.5, 0.5));
 
 			server.join(new Player(server, info, socket));
 

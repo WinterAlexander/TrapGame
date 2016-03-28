@@ -1,6 +1,7 @@
 package me.winter.trapgame.shared;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 
 /**
@@ -15,14 +16,15 @@ public class PlayerInfo implements Serializable
 	private String name;
 	private Color color;
 	private PlayerStats stats;
+	private Point2D.Double cursor;
 
-
-	public PlayerInfo(int playerId, String name, Color color, PlayerStats stats)
+	public PlayerInfo(int playerId, String name, Color color, PlayerStats stats, Point2D.Double cursor)
 	{
 		this.playerId = playerId;
 		this.name = name;
 		this.color = color;
 		this.stats = stats;
+		this.cursor = cursor;
 	}
 
 	public int getPlayerId()
@@ -63,5 +65,15 @@ public class PlayerInfo implements Serializable
 	public void setStats(PlayerStats stats)
 	{
 		this.stats = stats;
+	}
+
+	public Point2D.Double getCursor()
+	{
+		return cursor;
+	}
+
+	public void setCursor(Point2D.Double cursor)
+	{
+		this.cursor = cursor;
 	}
 }

@@ -1,5 +1,6 @@
 package me.winter.trapgame.client;
 
+import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.packet.PacketInChat;
 
 import javax.swing.*;
