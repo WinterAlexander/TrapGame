@@ -2,23 +2,14 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
+      <artifact name="Client" />
       <artifact name="Server" />
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fee9220-2597-4e37-adc9-761efedba5d3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/cursor.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/PlayBoard.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/shared/packet/PacketInCursorMove.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/shared/packet/PacketOutCursorMove.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TrapGame.iws" afterPath="$PROJECT_DIR$/TrapGame.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/ChatInput.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/ChatInput.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/ClientConnection.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/ClientConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapButton.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapButton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameBoard.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameBoard.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/PlayerConnection.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/PlayerConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/ServerConnection.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/ServerConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/shared/PlayerInfo.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/shared/PlayerInfo.java" />
     </list>
     <ignored path="TrapGame.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -118,11 +109,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TrapButton.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TrapButton.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/TrapButton.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6602871">
-              <caret line="91" column="48" selection-start-line="91" selection-start-column="48" selection-end-line="91" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="80" column="9" selection-start-line="80" selection-start-column="9" selection-end-line="80" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.2583732">
+              <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -191,7 +192,6 @@
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/shared/packet/PacketOutSpectator.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/util/FileUtil.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameMenu.java" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/Chat.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/shared/packet/PacketOutWelcome.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/shared/packet/PacketOutBoardSize.java" />
@@ -212,6 +212,7 @@
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/PlayBoard.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapButton.java" />
         <option value="$PROJECT_DIR$/dev/todolist.txt" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -950,7 +951,13 @@
       <option name="project" value="LOCAL" />
       <updated>1459195009455</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Mouse movements added ! Custom cursors and new packets !">
+      <created>1459205665490</created>
+      <option name="number" value="00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1459205665490</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1014,7 +1021,8 @@
     <MESSAGE value="Fixed readme (formatting is HARD) :(" />
     <MESSAGE value="Fixed the scroll ! (Finally)" />
     <MESSAGE value="Can now handle draws and change the board size during game" />
-    <option name="LAST_COMMIT_MESSAGE" value="Can now handle draws and change the board size during game" />
+    <MESSAGE value="Mouse movements added ! Custom cursors and new packets !" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mouse movements added ! Custom cursors and new packets !" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1253,14 +1261,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="65" column="56" selection-start-line="65" selection-start-column="56" selection-end-line="65" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1522,8 +1522,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/TrapButton.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6602871">
-          <caret line="91" column="48" selection-start-line="91" selection-start-column="48" selection-end-line="91" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="80" column="9" selection-start-line="80" selection-start-column="9" selection-end-line="80" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2583732">
+          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
           <folding />
         </state>
       </provider>
