@@ -1,6 +1,7 @@
 package me.winter.trapgame.client;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 
 /**
@@ -20,6 +21,7 @@ public class Chat extends JTextPane
 		setPreferredSize(new Dimension(350, Integer.MAX_VALUE));
 		setEditable(false);
 		setFont(new Font("Arial", Font.PLAIN, 18));
+		((DefaultCaret)getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 	}
 
 	public void sendMessage(String message)
