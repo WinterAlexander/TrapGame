@@ -43,7 +43,7 @@ public class ChatInput extends JTextField
 					return;
 
 				if(getText().length() > 0)
-					board.getContainer().getConnection().sendPacket(new PacketInChat(ChatInput.this.getText()));
+					board.getContainer().getConnection().sendPacketLater(new PacketInChat(ChatInput.this.getText()));
 				ChatInput.this.setText("");
 			}
 		});

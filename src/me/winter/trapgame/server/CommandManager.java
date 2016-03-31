@@ -23,6 +23,8 @@ public class CommandManager
 		commands.add(new SkipCommand());
 		commands.add(new BoardSizeCommand());
 		commands.add(new StopCommand());
+		commands.add(new PropTemplateCommand());
+		commands.add(new StatsCommand());
 	}
 
 	public void execute(Player player, String input)

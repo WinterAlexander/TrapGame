@@ -1,10 +1,12 @@
 package me.winter.trapgame.client;
 
 import me.winter.trapgame.shared.Scheduler;
+import me.winter.trapgame.util.FileUtil;
 import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 /**
  * Represents the client for TrapGame
@@ -22,7 +24,7 @@ public class TrapGameClient extends JFrame
 	{
 		try
 		{
-			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); sucks
+			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			new TrapGameClient().start();
 		}
 		catch(Throwable throwable)//catch copied from NewX
@@ -37,6 +39,7 @@ public class TrapGameClient extends JFrame
 
 	private Scheduler scheduler;
 	private ClientConnection connection;
+	private UserProperties userProperties;
 
 	private TrapGameMenu menu;
 	private TrapGameBoard board;
@@ -51,6 +54,8 @@ public class TrapGameClient extends JFrame
 
 		scheduler = new Scheduler();
 		connection = new ClientConnection(this);
+		userProperties = new UserProperties(new File(FileUtil.getAppData() + "/.TrapGame/user.proprieties"));
+		userProperties.loadIfPresent();
 
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -113,6 +118,16 @@ public class TrapGameClient extends JFrame
 	public ClientConnection getConnection()
 	{
 		return connection;
+	}
+
+	public UserProperties getUserProperties()
+	{
+		return userProperties;
+	}
+
+	public void setUserProperties(UserProperties userProperties)
+	{
+		this.userProperties = userProperties;
 	}
 
 	public TrapGameMenu getMenu()

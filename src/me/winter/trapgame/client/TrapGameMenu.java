@@ -53,12 +53,27 @@ public class TrapGameMenu extends JPanel
 		JLabel passwordLabel = new JLabel("Server password:");
 		passwordLabel.setHorizontalAlignment(JLabel.RIGHT);
 
+		final JCheckBox saveProprieties = new JCheckBox("Remember me");
+
 		JButton button = new JButton("Connect");
 
 		button.addActionListener(event -> {
 			try
 			{
-				getContainer().getConnection().connectTo(serverAddress.getText(), new String(serverPassword.getPassword()), playerName.getText());
+				String name = playerName.getText(),
+						password = new String(serverPassword.getPassword()),
+						server = serverAddress.getText();
+
+				if(saveProprieties.isSelected())
+				{
+					UserProperties properties = getContainer().getUserProperties();
+					properties.setLastName(name);
+					properties.setLastPassword(password);
+					properties.setLastServer(server);
+					properties.save();
+				}
+
+				getContainer().getConnection().connectTo(server, password, name);
 			}
 			catch(Exception ex)
 			{
@@ -121,6 +136,19 @@ public class TrapGameMenu extends JPanel
 		bagConstraints.gridwidth = 1;
 
 		add(button, bagConstraints);
+
+		bagConstraints.gridx++;
+
+		add(saveProprieties, bagConstraints);
+
+		UserProperties properties = getContainer().getUserProperties();
+
+		if(properties.exists())
+		{
+			playerName.setText(properties.getLastName());
+			serverPassword.setText(properties.getLastPassword());
+			serverAddress.setText(properties.getLastServer());
+		}
 
 	}
 

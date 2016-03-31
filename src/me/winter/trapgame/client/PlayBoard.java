@@ -25,16 +25,13 @@ public class PlayBoard extends JPanel
 	private TrapGameBoard container;
 
 	private Map<Color, BufferedImage> preloaded;
+	private boolean windowsCursor;
 
 	public PlayBoard(TrapGameBoard container)
 	{
 		this.container = container;
+		this.windowsCursor = System.getProperty("os.name").toLowerCase().contains("win");
 		preloaded = new HashMap<>();
-
-		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-
-		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor"));
-
 		try
 		{
 			baseCursor = ImageIO.read(ClassLoader.class.getResourceAsStream("/cursor.png"));
@@ -61,9 +58,8 @@ public class PlayBoard extends JPanel
 			private void declareMouseMove(int x, int y)
 			{
 				container.getClient().setCursor(new Point2D.Double((double)x / getWidth(), (double)y / getHeight()));
-				container.getContainer().getConnection().sendPacket(new PacketInCursorMove(container.getClient().getCursor()));
-				revalidate();
-				repaint();
+				container.getContainer().getConnection().sendPacketLater(new PacketInCursorMove(container.getClient().getCursor()));
+
 			}
 		});
 	}
@@ -75,14 +71,40 @@ public class PlayBoard extends JPanel
 
 		for(PlayerInfo player : container.getPlayers())
 		{
-			graphics.drawImage(getCursorImage(player.getColor()),
+			if(player == container.getClient())
+				continue;
+			graphics.drawImage(getCursorImage(player.getColor(), true),
 					(int)(player.getCursor().getX() * getWidth()) - 16,
 					(int)(player.getCursor().getY() * getHeight()) - 16, null);
 		}
 	}
 
-	public BufferedImage getCursorImage(Color color)
+	public BufferedImage getCursorImage(Color color, boolean transparency)
 	{
+		if(!transparency)
+		{
+			BufferedImage image = new BufferedImage(baseCursor.getWidth(), baseCursor.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+			Graphics2D graphics2D = image.createGraphics();
+			graphics2D.setColor(Color.white);
+			graphics2D.fillRect(0, 0, image.getWidth(), image.getHeight());
+			graphics2D.drawImage(getCursorImage(color, true), 0, 0, null);
+
+			for(int x = 0; x < baseCursor.getWidth(); x++)
+			{
+				for(int y = 0; y < baseCursor.getHeight(); y++)
+				{
+					Color currentColor = new Color(image.getRGB(x, y));
+
+					if(currentColor.equals(Color.white))
+						image.setRGB(x, y, new Color(0, 0, 0, 0).getRGB());
+				}
+			}
+			graphics2D.dispose();
+
+			return image;
+		}
+
 		if(preloaded.containsKey(color))
 			return preloaded.get(color);
 
@@ -106,5 +128,12 @@ public class PlayBoard extends JPanel
 
 		preloaded.put(color, image);
 		return image;
+	}
+
+	public void setCursor(Color color)
+	{
+		BufferedImage image = getCursorImage(color, !windowsCursor);
+		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(image.getWidth() / 2, image.getHeight() / 2), "TrapGame"));
+
 	}
 }

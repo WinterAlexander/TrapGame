@@ -36,6 +36,7 @@ public class ServerConnection
 
 			new Thread(this::acceptClients).start();
 			acceptNewClients = true;
+			System.out.println("The server is listening on " + port);
 		}
 		catch(IOException exception)
 		{
@@ -51,7 +52,7 @@ public class ServerConnection
 
 			PacketInJoin packet = (PacketInJoin)new ObjectInputStream(socket.getInputStream()).readObject();
 
-			if(server.getPassword().length() > 0 && !server.getPassword().equals(packet.getPassword()))
+			if(server.getPassword() != null && server.getPassword().length() > 0 && !server.getPassword().equals(packet.getPassword()))
 			{
 				try
 				{
@@ -81,12 +82,17 @@ public class ServerConnection
 			server.join(new Player(server, info, socket));
 
 		}
-		catch(ClassCastException classCastEx)
+		catch(ClassCastException | ClassNotFoundException classCastEx)
 		{
 			System.err.println("Something sent a socket that isn't a PacketInJoin");
 			classCastEx.printStackTrace(System.err);
 		}
-		catch(Exception ex)
+		catch(SocketException ex)
+		{
+			if(!isAcceptingNewClients())
+				break;
+		}
+		catch(IOException ex)
 		{
 			System.err.println("An internal error occured while trying to accept a new client's connection");
 			ex.printStackTrace(System.err);

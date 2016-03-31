@@ -53,7 +53,7 @@ public class TrapButton extends JButton
 				if(!board.canClick(point))
 					return;
 
-				board.getContainer().getConnection().sendPacket(new PacketInClick(point));
+				board.getContainer().getConnection().sendPacketLater(new PacketInClick(point));
 			}
 
 			@Override

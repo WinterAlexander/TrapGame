@@ -4,11 +4,13 @@ import me.winter.trapgame.shared.packet.*;
 import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Point;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -23,12 +25,14 @@ public class ClientConnection
 	private TrapGameClient client;
 
 	private Socket socket;
+	private List<Packet> toSend;
 	private boolean welcomed;
 
 	public ClientConnection(TrapGameClient client)
 	{
 		this.client = client;
 		socket = null;
+		toSend = new ArrayList<>();
 	}
 
 	public void connectTo(String address, String password, String playerName) throws IOException, TimeoutException
@@ -47,7 +51,7 @@ public class ClientConnection
 		sendPacket(new PacketInJoin(password, playerName));
 
 		welcomed = false;
-		new Thread(this::acceptInput).start();
+		new Thread(this::update).start();
 		long waitBegin = System.currentTimeMillis();
 
 
@@ -68,6 +72,11 @@ public class ClientConnection
 				throw new TimeoutException("The server isn't responding.");
 			}
 		}
+	}
+
+	public void sendPacketLater(Packet packet)
+	{
+		toSend.add(packet);
 	}
 
 	public void sendPacket(Packet packet)
@@ -169,10 +178,16 @@ public class ClientConnection
 		System.err.println(packet.getClass().getName());
 	}
 
-	private void acceptInput()
+	private void update()
 	{
 		while(socket != null && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown()) try
 		{
+			for(Packet packet : new ArrayList<>(toSend))
+			{
+				if(packet != null)
+					sendPacket(packet);
+				toSend.remove(packet);
+			}
 			receivePacket((Packet)new ObjectInputStream(socket.getInputStream()).readObject());
 		}
 		catch(ClassNotFoundException | ClassCastException notAPacketEx)

@@ -31,7 +31,7 @@ public class TrapGameServer
 	{
 		try
 		{
-			int port = 1254;
+			/*int port = 1254;
 			String password = "";
 			int minPlayers = 2;
 			int maxPlayers = 8;
@@ -54,9 +54,9 @@ public class TrapGameServer
 				boardWidth = Integer.parseInt(args[4]);
 
 			if(args.length > 5 && StringUtil.isInt(args[5]))
-				boardHeight = Integer.parseInt(args[5]);
+				boardHeight = Integer.parseInt(args[5]);*/
 
-			new TrapGameServer(port, password, minPlayers, maxPlayers, boardWidth, boardHeight).start();
+			new TrapGameServer(/*port, password, minPlayers, maxPlayers, boardWidth, boardHeight*/).start();
 			System.out.println("Thanks for playing TrapGame ! :)");
 		}
 		catch(Throwable ex)
@@ -100,22 +100,23 @@ public class TrapGameServer
 
 	private boolean stop;
 
-	public TrapGameServer(int port, String password, int minPlayers, int maxPlayers, int boardWidth, int boardHeight)
+	public TrapGameServer()
 	{
+		ServerProperties properties = new ServerProperties(new File("server.proprieties"));
+		properties.loadIfPresent();
+
 		scheduler = new Scheduler();
 		state = new StandbyState(this);
 		players = new ArrayList<>();
-		connection = new ServerConnection(this, port);
+		connection = new ServerConnection(this, properties.getPort());
 		statsManager = new StatsManager(this, new File("stats"));
 		commandManager = new CommandManager(this);
 		stop = false;
 
-		this.password = password;
-		setMaxPlayers(maxPlayers);
-		setMinPlayers(minPlayers);
-		this.maxPlayers = maxPlayers;
-		this.boardWidth = boardWidth;
-		this.boardHeight = boardHeight;
+		this.password = properties.getPassword();
+		setMaxPlayers(properties.getMaxPlayers());
+		setMinPlayers(properties.getMinPlayers());
+		setBoardSize(properties.getBoardWidth(), properties.getBoardHeight());
 
 	}
 
@@ -130,7 +131,7 @@ public class TrapGameServer
 
 	public void join(Player player)
 	{
-		if(getPlayers().size() >= maxPlayers)
+		if(getPlayers().size() >= getMaxPlayers())
 		{
 			player.kick("Sorry, the server reached the maximum of players.");
 			return;
@@ -166,10 +167,7 @@ public class TrapGameServer
 
 	public boolean isAvailable(String playerName)
 	{
-		for(Player player : getPlayers())
-			if(player.getName().equalsIgnoreCase(playerName))
-				return false;
-		return true;
+		return getPlayer(playerName) == null;
 	}
 
 	public int generateNewPlayerId()
@@ -188,6 +186,14 @@ public class TrapGameServer
 			if(player.getId() == playerId)
 				return false;
 		return true;
+	}
+
+	public Player getPlayer(String name)
+	{
+		for(Player player : getPlayers())
+			if(player.getName().equalsIgnoreCase(name))
+				return player;
+		return null;
 	}
 
 	public List<PlayerInfo> getPlayersInfo()
@@ -261,9 +267,6 @@ public class TrapGameServer
 
 	public void setMinPlayers(int minPlayers)
 	{
-		if(minPlayers < 0 || minPlayers > maxPlayers)
-			throw new IllegalArgumentException("min(" + minPlayers + ") should be > 0 and < max");
-
 		this.minPlayers = minPlayers;
 	}
 
@@ -274,18 +277,16 @@ public class TrapGameServer
 
 	public void setMaxPlayers(int maxPlayers)
 	{
-		if(maxPlayers < 0 || maxPlayers < minPlayers)
-			throw new IllegalArgumentException("max(" + maxPlayers + ") should be > 0 and > min");
-
 		this.maxPlayers = maxPlayers;
 	}
 
 	public void setBoardSize(int boardWidth, int boardHeight)
 	{
-		this.boardWidth = boardWidth;
-		this.boardHeight = boardHeight;
 
-		getConnection().sendToAll(new PacketOutBoardSize(boardWidth, boardHeight));
+		this.boardWidth = boardWidth > 0 ? boardWidth : 1;
+		this.boardHeight = boardHeight > 0 ? boardHeight : 1;
+
+		getConnection().sendToAll(new PacketOutBoardSize(this.boardWidth, this.boardHeight));
 	}
 
 	public int getBoardHeight()

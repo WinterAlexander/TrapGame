@@ -115,6 +115,7 @@ public class TrapGameBoard extends JPanel
 		this.players = players;
 
 		boardContent = new HashMap<>();
+		playBoard.setCursor(getClient().getColor());
 		revalidate();
 		repaint();
 	}
