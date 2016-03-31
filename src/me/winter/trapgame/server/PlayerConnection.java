@@ -1,10 +1,12 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.*;
 
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  *
@@ -28,7 +30,14 @@ public class PlayerConnection
 	{
 		while(socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown()) try
 		{
-			receivePacket((Packet)new ObjectInputStream(socket.getInputStream()).readObject());
+			Packet packet = (Packet)new ObjectInputStream(new BufferedInputStream(socket.getInputStream())).readObject();
+
+			getPlayer().getServer().getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
+
+		}
+		catch(EOFException | SocketException ex)
+		{
+			break;
 		}
 		catch(ClassNotFoundException | ClassCastException notAPacketEx)
 		{
@@ -85,6 +94,7 @@ public class PlayerConnection
 		if(packet instanceof PacketInCursorMove)
 		{
 			getPlayer().getInfo().setCursor(((PacketInCursorMove)packet).getCursor());
+
 			for(Player player : getPlayer().getServer().getPlayers())
 				if(player != getPlayer())
 					player.getConnection().sendPacket(new PacketOutCursorMove(getPlayer().getId(), ((PacketInCursorMove)packet).getCursor()));

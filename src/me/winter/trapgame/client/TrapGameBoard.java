@@ -115,7 +115,6 @@ public class TrapGameBoard extends JPanel
 		this.players = players;
 
 		boardContent = new HashMap<>();
-		playBoard.setCursorColor(getClient().getColor());
 		revalidate();
 		repaint();
 	}
@@ -173,7 +172,6 @@ public class TrapGameBoard extends JPanel
 		boardLocked = true;
 		playBoard.removeAll();
 		chat.reset();
-		playBoard.setCursorColor(Color.gray);
 	}
 
 	public PlayerInfo getClient()

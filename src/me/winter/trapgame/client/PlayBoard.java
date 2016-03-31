@@ -24,14 +24,16 @@ public class PlayBoard extends JPanel
 	private BufferedImage baseCursor;
 	private TrapGameBoard container;
 
-	private Color cursorColor;
-
 	private Map<Color, BufferedImage> preloaded;
 
 	public PlayBoard(TrapGameBoard container)
 	{
 		this.container = container;
 		preloaded = new HashMap<>();
+
+		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+
+		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor"));
 
 		try
 		{
@@ -41,8 +43,6 @@ public class PlayBoard extends JPanel
 		{
 			ex.printStackTrace();
 		}
-
-		setCursorColor(Color.gray);
 
 		addMouseMotionListener(new MouseMotionListener()
 		{
@@ -62,6 +62,8 @@ public class PlayBoard extends JPanel
 			{
 				container.getClient().setCursor(new Point2D.Double((double)x / getWidth(), (double)y / getHeight()));
 				container.getContainer().getConnection().sendPacket(new PacketInCursorMove(container.getClient().getCursor()));
+				revalidate();
+				repaint();
 			}
 		});
 	}
@@ -72,17 +74,11 @@ public class PlayBoard extends JPanel
 		super.paint(graphics);
 
 		for(PlayerInfo player : container.getPlayers())
-			if(player != container.getClient())
-				graphics.drawImage(getCursorImage(player.getColor()), (int)(player.getCursor().getX() * getWidth()) - 16, (int)(player.getCursor().getY() * getHeight()) - 16, null);
-	}
-
-	public void setCursorColor(Color color)
-	{
-		this.cursorColor = color;
-
-		BufferedImage image = getCursorImage(color);
-
-		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(image.getWidth() / 2, image.getHeight() / 2), "TrapGame " + cursorColor.toString()));
+		{
+			graphics.drawImage(getCursorImage(player.getColor()),
+					(int)(player.getCursor().getX() * getWidth()) - 16,
+					(int)(player.getCursor().getY() * getHeight()) - 16, null);
+		}
 	}
 
 	public BufferedImage getCursorImage(Color color)

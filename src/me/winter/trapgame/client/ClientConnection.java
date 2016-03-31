@@ -5,10 +5,7 @@ import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -183,7 +180,7 @@ public class ClientConnection
 			System.err.println("Server sent a socket with unknown data.");
 			notAPacketEx.printStackTrace(System.err);
 		}
-		catch(SocketException ex)
+		catch(EOFException | SocketException ex)
 		{
 			break;
 		}

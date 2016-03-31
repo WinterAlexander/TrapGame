@@ -3,10 +3,8 @@ package me.winter.trapgame.server;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.packet.Packet;
 import me.winter.trapgame.shared.packet.PacketInJoin;
-import me.winter.trapgame.shared.packet.PacketOutJoin;
 import me.winter.trapgame.shared.packet.PacketOutKick;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
