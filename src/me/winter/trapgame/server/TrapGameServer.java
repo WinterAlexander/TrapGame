@@ -57,6 +57,7 @@ public class TrapGameServer
 				boardHeight = Integer.parseInt(args[5]);
 
 			new TrapGameServer(port, password, minPlayers, maxPlayers, boardWidth, boardHeight).start();
+			System.out.println("Thanks for playing TrapGame ! :)");
 		}
 		catch(Throwable ex)
 		{
@@ -97,6 +98,8 @@ public class TrapGameServer
 	private int minPlayers, maxPlayers;
 	private int boardWidth, boardHeight;
 
+	private boolean stop;
+
 	public TrapGameServer(int port, String password, int minPlayers, int maxPlayers, int boardWidth, int boardHeight)
 	{
 		scheduler = new Scheduler();
@@ -105,6 +108,7 @@ public class TrapGameServer
 		connection = new ServerConnection(this, port);
 		statsManager = new StatsManager(this, new File("stats"));
 		commandManager = new CommandManager(this);
+		stop = false;
 
 		this.password = password;
 		setMaxPlayers(maxPlayers);
@@ -120,7 +124,7 @@ public class TrapGameServer
 		System.out.println("TrapGame server should now be operational.");
 
 		scheduler.start();
-		while(true)
+		while(!stop)
 			scheduler.update();
 	}
 
@@ -142,10 +146,22 @@ public class TrapGameServer
 
 	public void leave(Player player)
 	{
+		getStatsManager().save(player.getName(), player.getInfo().getStats());
 		getPlayers().remove(player);
 		broadcast(player.getName() + " has left the game.");
 		getState().leave(player);
 		getConnection().sendToAll(new PacketOutLeave(player.getId()));
+	}
+
+	public void stop()
+	{
+		getConnection().setAcceptingNewClients(false);
+
+		for(Player player : new ArrayList<>(players))
+			player.kick("Server is closing.");
+
+		getConnection().close();
+		stop = true;
 	}
 
 	public boolean isAvailable(String playerName)
@@ -178,8 +194,7 @@ public class TrapGameServer
 	{
 		List<PlayerInfo> players = new ArrayList<>();
 
-		for(Player player : getPlayers())
-			players.add(player.getInfo());
+		getPlayers().forEach(player -> players.add(player.getInfo()));
 
 		return players;
 	}

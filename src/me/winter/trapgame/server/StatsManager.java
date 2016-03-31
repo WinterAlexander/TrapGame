@@ -66,6 +66,7 @@ public class StatsManager
 
 		try
 		{
+			FileUtil.createDirectory(directory);
 			FileUtil.createFile(file);
 		}
 		catch(IOException ex)

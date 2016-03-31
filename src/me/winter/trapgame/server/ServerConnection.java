@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Represents a connection from the server side accepting new clients
@@ -97,8 +98,30 @@ public class ServerConnection
 		server.getPlayers().forEach(player -> player.getConnection().sendPacket(packet));
 	}
 
+	public void close()
+	{
+		try
+		{
+			getServerSocket().close();
+		}
+		catch(IOException ex)
+		{
+			ex.printStackTrace(System.err);
+		}
+	}
+
 	public ServerSocket getServerSocket()
 	{
 		return serverSocket;
+	}
+
+	public boolean isAcceptingNewClients()
+	{
+		return acceptNewClients;
+	}
+
+	public void setAcceptingNewClients(boolean acceptNewClients)
+	{
+		this.acceptNewClients = acceptNewClients;
 	}
 }

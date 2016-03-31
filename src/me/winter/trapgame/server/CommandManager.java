@@ -1,9 +1,6 @@
 package me.winter.trapgame.server;
 
-import me.winter.trapgame.server.command.BoardSizeCommand;
-import me.winter.trapgame.server.command.Command;
-import me.winter.trapgame.server.command.HelpCommand;
-import me.winter.trapgame.server.command.SkipCommand;
+import me.winter.trapgame.server.command.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +22,7 @@ public class CommandManager
 		commands.add(new HelpCommand());
 		commands.add(new SkipCommand());
 		commands.add(new BoardSizeCommand());
+		commands.add(new StopCommand());
 	}
 
 	public void execute(Player player, String input)

@@ -33,6 +33,21 @@ public class PlayerStats implements Serializable
 		return (float)MathUtil.round(getWinLoseRatio(), 2);
 	}
 
+	public void addWin()
+	{
+		wins++;
+	}
+
+	public void addLose()
+	{
+		loses++;
+	}
+
+	public void addDraw()
+	{
+		draws++;
+	}
+
 	public int getWins()
 	{
 		return wins;

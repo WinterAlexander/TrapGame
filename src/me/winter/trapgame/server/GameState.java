@@ -109,10 +109,20 @@ public class GameState extends State
 			if(i == 0)
 			{
 				if(playersWithThatScore == 1)
+				{
 					message += players[0].getName() + " has won the game !";
+					players[0].getInfo().getStats().addWin();
+				}
 				else
+				{
 					message += "it's a draw !";
+					players[0].getInfo().getStats().addDraw();
+				}
 			}
+			else if(scores[i] == scores[0])
+				players[i].getInfo().getStats().addDraw();
+			else
+				players[i].getInfo().getStats().addLose();
 
 			message += "\n " + (i + playersWithThatScore) + ": " + players[i].getName() + " (Score: " + scores[i] + ")";
 		}
