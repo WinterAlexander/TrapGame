@@ -3,7 +3,7 @@ A multi-player form-based desktop game about strategy and spam-clicking
 
 Project in development. Downloads:
 
-  - Version 0.4 Client: http://bit.ly/1RO7I7H Server: http://bit.ly/1M474XJ
+  - [BROKEN] Version 0.4 Client: http://bit.ly/1RO7I7H Server: http://bit.ly/1M474XJ
   - Version 0.3 Client: http://bit.ly/1RO7GNp Server: http://bit.ly/235SR0w
   - Version 0.2 Client: http://bit.ly/1VWgMO2 Server: http://bit.ly/1VcelpS
   - Version 0.1 Client: http://bit.ly/1UXf0wJ Server: http://bit.ly/1MX7qKG
