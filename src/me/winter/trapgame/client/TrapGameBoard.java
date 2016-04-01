@@ -48,8 +48,6 @@ public class TrapGameBoard extends JPanel
 			ex.printStackTrace(System.err);
 		}
 
-		setLayout(new BorderLayout());
-
 		chat = new Chat(this);
 
 		JPanel chatContainer = new JPanel();
@@ -100,11 +98,40 @@ public class TrapGameBoard extends JPanel
 		chatContainer.add(scroll, BorderLayout.EAST);
 		chatContainer.add(new ChatInput(this), BorderLayout.SOUTH);
 
-		add(chatContainer, BorderLayout.EAST);
+
 
 		playBoard = new PlayBoard(this);
+/*
+		setLayout(new GridBagLayout());
+		GridBagConstraints rules = new GridBagConstraints();
+
+		rules.fill = GridBagConstraints.BOTH;
+
+		rules.gridx = 0;
+		rules.gridy = 0;
+		rules.gridwidth = 1;
+		rules.gridheight = 4;
+
+		add(new JPanel(), rules);
+
+		rules.gridx += rules.gridwidth;
+		rules.gridwidth = 4;
+		rules.weightx = 1;
+		rules.weighty = 1;
+
+		add(playBoard, rules);
+
+		rules.gridx += rules.gridwidth;
+		rules.gridwidth = 1;
+		rules.weightx = 0;
+		rules.weighty = 0;
+
+		add(chatContainer, rules);*/
+
+		setLayout(new BorderLayout());
 
 		add(playBoard, BorderLayout.CENTER);
+		add(chatContainer, BorderLayout.EAST);
 
 		dispose();
 	}

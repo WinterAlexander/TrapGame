@@ -16,15 +16,16 @@ public class PlayerInfo implements Serializable
 	private String name;
 	private Color color;
 	private PlayerStats stats;
-	private Point2D.Double cursor;
+	private float cursorX, cursorY;
 
-	public PlayerInfo(int playerId, String name, Color color, PlayerStats stats, Point2D.Double cursor)
+	public PlayerInfo(int playerId, String name, Color color, PlayerStats stats, float cursorX, float cursorY)
 	{
 		this.playerId = playerId;
 		this.name = name;
 		this.color = color;
 		this.stats = stats;
-		this.cursor = cursor;
+		this.cursorX = cursorX;
+		this.cursorY = cursorY;
 	}
 
 	public int getPlayerId()
@@ -67,13 +68,29 @@ public class PlayerInfo implements Serializable
 		this.stats = stats;
 	}
 
-	public Point2D.Double getCursor()
+	public float getCursorX()
 	{
-		return cursor;
+		return cursorX;
 	}
 
-	public void setCursor(Point2D.Double cursor)
+	public void setCursorX(float cursorX)
 	{
-		this.cursor = cursor;
+		this.cursorX = cursorX;
+	}
+
+	public float getCursorY()
+	{
+		return cursorY;
+	}
+
+	public void setCursorY(float cursorY)
+	{
+		this.cursorY = cursorY;
+	}
+
+	public void setCursor(float x, float y)
+	{
+		this.cursorX = x;
+		this.cursorY = y;
 	}
 }

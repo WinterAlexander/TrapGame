@@ -6,10 +6,7 @@ import me.winter.trapgame.shared.packet.PacketInJoin;
 import me.winter.trapgame.shared.packet.PacketOutKick;
 
 import java.awt.geom.Point2D;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -46,28 +43,24 @@ public class ServerConnection
 
 	private void acceptClients()
 	{
-		while(acceptNewClients) try
+		while(isAcceptingNewClients()) try
 		{
 			Socket socket = serverSocket.accept();
 
-			PacketInJoin packet = (PacketInJoin)new ObjectInputStream(socket.getInputStream()).readObject();
+			PacketInJoin packet = new PacketInJoin();
+			if(!new DataInputStream(socket.getInputStream()).readUTF().equals("PacketInJoin"))
+				continue;
+
+			packet.readFrom(socket.getInputStream());
 
 			if(server.getPassword() != null && server.getPassword().length() > 0 && !server.getPassword().equals(packet.getPassword()))
 			{
-				try
-				{
-					ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-					new ObjectOutputStream(byteBuffer).writeObject(new PacketOutKick("Invalid password."));
-					byteBuffer.writeTo(socket.getOutputStream());
+				new DataOutputStream(socket.getOutputStream()).writeUTF("PacketOutKick");
+				new PacketOutKick("Invalid password.").writeTo(socket.getOutputStream());
 
-					socket.getOutputStream().flush();
-					socket.close();
-					continue;
-				}
-				catch(IOException e)
-				{
-					e.printStackTrace(System.err);
-				}
+				socket.getOutputStream().flush();
+				socket.close();
+				continue;
 			}
 
 			String name = packet.getPlayerName();
@@ -77,31 +70,26 @@ public class ServerConnection
 
 			int id = server.generateNewPlayerId();
 
-			PlayerInfo info = new PlayerInfo(id, name, server.getColor(id), server.getStatsManager().load(name), new Point2D.Double(0.5, 0.5));
+			PlayerInfo info = new PlayerInfo(id, name, server.getColor(id), server.getStatsManager().load(name), 0.5f, 0.5f);
 
 			server.join(new Player(server, info, socket));
 
 		}
-		catch(ClassCastException | ClassNotFoundException classCastEx)
+		catch(Exception ex)
 		{
-			System.err.println("Something sent a socket that isn't a PacketInJoin");
-			classCastEx.printStackTrace(System.err);
-		}
-		catch(SocketException ex)
-		{
-			if(!isAcceptingNewClients())
-				break;
-		}
-		catch(IOException ex)
-		{
-			System.err.println("An internal error occured while trying to accept a new client's connection");
-			ex.printStackTrace(System.err);
+			if(server.isDebugMode())
+				System.err.println(ex);
 		}
 	}
 
 	public void sendToAll(Packet packet)
 	{
 		server.getPlayers().forEach(player -> player.getConnection().sendPacket(packet));
+	}
+
+	public void sendToAllLater(Packet packet)
+	{
+		server.getPlayers().forEach(player -> player.getConnection().sendPacketLater(packet));
 	}
 
 	public void close()

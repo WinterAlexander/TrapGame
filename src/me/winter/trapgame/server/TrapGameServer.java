@@ -97,6 +97,7 @@ public class TrapGameServer
 	private String password;
 	private int minPlayers, maxPlayers;
 	private int boardWidth, boardHeight;
+	private boolean debugMode;
 
 	private boolean stop;
 
@@ -117,7 +118,7 @@ public class TrapGameServer
 		setMaxPlayers(properties.getMaxPlayers());
 		setMinPlayers(properties.getMinPlayers());
 		setBoardSize(properties.getBoardWidth(), properties.getBoardHeight());
-
+		setDebugMode(properties.isDebugMode());
 	}
 
 	public void start()
@@ -126,7 +127,17 @@ public class TrapGameServer
 
 		scheduler.start();
 		while(!stop)
+		{
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch(InterruptedException ex)
+			{
+				ex.printStackTrace(System.err);
+			}
 			scheduler.update();
+		}
 	}
 
 	public void join(Player player)
@@ -297,5 +308,15 @@ public class TrapGameServer
 	public int getBoardWidth()
 	{
 		return boardWidth;
+	}
+
+	public boolean isDebugMode()
+	{
+		return debugMode;
+	}
+
+	public void setDebugMode(boolean debugMode)
+	{
+		this.debugMode = debugMode;
 	}
 }

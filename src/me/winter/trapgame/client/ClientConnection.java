@@ -1,5 +1,7 @@
 package me.winter.trapgame.client;
 
+import me.winter.trapgame.shared.PlayerInfo;
+import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.*;
 import me.winter.trapgame.util.StringUtil;
 
@@ -33,10 +35,14 @@ public class ClientConnection
 		this.client = client;
 		socket = null;
 		toSend = new ArrayList<>();
+		welcomed = true;
 	}
 
 	public void connectTo(String address, String password, String playerName) throws IOException, TimeoutException
 	{
+		if(socket != null)
+			return;
+
 		int port = 1254;
 
 		String[] parts = address.split(":");
@@ -51,27 +57,18 @@ public class ClientConnection
 		sendPacket(new PacketInJoin(password, playerName));
 
 		welcomed = false;
-		new Thread(this::update).start();
-		long waitBegin = System.currentTimeMillis();
+		new Thread(this::acceptInput).start();
+		new Thread(this::sendOutput).start();
 
-
-		while(!welcomed)
+		client.getScheduler().addTask(new Task(2000, false, () ->
 		{
-			try
+			if(!welcomed)
 			{
-				Thread.sleep(50);
-			}
-			catch(InterruptedException ex)
-			{
-
+				JOptionPane.showMessageDialog(client, "Sorry but the server isn't responding.", "Connection failed", JOptionPane.ERROR_MESSAGE);
+				welcomed = true;
 			}
 
-			if(System.currentTimeMillis() - waitBegin > 2000)
-			{
-				close();
-				throw new TimeoutException("The server isn't responding.");
-			}
-		}
+		}));
 	}
 
 	public void sendPacketLater(Packet packet)
@@ -86,15 +83,15 @@ public class ClientConnection
 
 		try
 		{
-			ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-			new ObjectOutputStream(byteBuffer).writeObject(packet);
-			byteBuffer.writeTo(socket.getOutputStream());
+			new DataOutputStream(socket.getOutputStream()).writeUTF(packet.getClass().getSimpleName());
+			packet.writeTo(socket.getOutputStream());
 
 			socket.getOutputStream().flush();
 		}
-		catch(IOException e)
+		catch(Exception ex)
 		{
-			e.printStackTrace(System.err);
+			if(client.getUserProperties().isDebugMode())
+				ex.printStackTrace(System.err);
 		}
 	}
 
@@ -136,7 +133,11 @@ public class ClientConnection
 
 		if(packet instanceof PacketOutCursorMove)
 		{
-			client.getBoard().getPlayer(((PacketOutCursorMove)packet).getPlayerId()).setCursor(((PacketOutCursorMove)packet).getCursor());
+			PacketOutCursorMove movePacket = (PacketOutCursorMove)packet;
+
+			PlayerInfo player = client.getBoard().getPlayer(movePacket.getPlayerId());
+			player.setCursorX(movePacket.getCursorX());
+			player.setCursorY(movePacket.getCursorY());
 			client.getBoard().getPlayBoard().revalidate();
 			client.getBoard().getPlayBoard().repaint();
 			return;
@@ -178,9 +179,28 @@ public class ClientConnection
 		System.err.println(packet.getClass().getName());
 	}
 
-	private void update()
+	private void acceptInput()
 	{
-		while(socket != null && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown()) try
+		while(isOpen()) try
+		{
+			String packetName = new DataInputStream(socket.getInputStream()).readUTF();
+
+			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
+			packet.readFrom(socket.getInputStream());
+
+			client.getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
+		}
+		catch(Exception ex)
+		{
+			if(client.getUserProperties().isDebugMode())
+				ex.printStackTrace(System.err);
+		}
+		close();
+	}
+
+	private void sendOutput()
+	{
+		while(isOpen())
 		{
 			for(Packet packet : new ArrayList<>(toSend))
 			{
@@ -188,24 +208,12 @@ public class ClientConnection
 					sendPacket(packet);
 				toSend.remove(packet);
 			}
-			receivePacket((Packet)new ObjectInputStream(socket.getInputStream()).readObject());
 		}
-		catch(ClassNotFoundException | ClassCastException notAPacketEx)
-		{
-			System.err.println("Server sent a socket with unknown data.");
-			notAPacketEx.printStackTrace(System.err);
-		}
-		catch(EOFException | SocketException ex)
-		{
-			break;
-		}
-		catch(IOException ex)
-		{
-			System.err.println("An internal exception occurred while trying to read socket input data, closing it.");
-			ex.printStackTrace();
-			break;
-		}
-		close();
+	}
+
+	public boolean isOpen()
+	{
+		return socket != null && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown();
 	}
 
 	public void close()

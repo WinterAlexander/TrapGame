@@ -1,6 +1,6 @@
 package me.winter.trapgame.shared.packet;
 
-import java.awt.geom.Point2D;
+import java.io.*;
 
 /**
  * From client to server
@@ -10,20 +10,52 @@ import java.awt.geom.Point2D;
  */
 public class PacketInCursorMove extends Packet
 {
-	private Point2D.Double cursor;
+	private float cursorX, cursorY;
 
-	public PacketInCursorMove(Point2D.Double cursor)
+	public PacketInCursorMove()
 	{
-		this.cursor = cursor;
+
 	}
 
-	public Point2D.Double getCursor()
+	public PacketInCursorMove(float cursorX, float cursorY)
 	{
-		return cursor;
+		this.cursorX = cursorX;
+		this.cursorY = cursorY;
 	}
 
-	public void setCursor(Point2D.Double cursor)
+	@Override
+	public void readFrom(InputStream stream) throws IOException
 	{
-		this.cursor = cursor;
+		DataInputStream dataStream = new DataInputStream(stream);
+		setCursorX(dataStream.readFloat());
+		setCursorY(dataStream.readFloat());
+	}
+
+	@Override
+	public void writeTo(OutputStream stream) throws IOException
+	{
+		DataOutputStream dataStream = new DataOutputStream(stream);
+		dataStream.writeFloat(getCursorX());
+		dataStream.writeFloat(getCursorY());
+	}
+
+	public float getCursorX()
+	{
+		return cursorX;
+	}
+
+	public void setCursorX(float cursorX)
+	{
+		this.cursorX = cursorX;
+	}
+
+	public float getCursorY()
+	{
+		return cursorY;
+	}
+
+	public void setCursorY(float cursorY)
+	{
+		this.cursorY = cursorY;
 	}
 }

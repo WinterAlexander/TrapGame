@@ -2,6 +2,7 @@ package me.winter.trapgame.shared.packet;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.*;
 
 /**
  * From server to client
@@ -12,12 +13,36 @@ import java.awt.geom.Point2D;
 public class PacketOutCursorMove extends Packet
 {
 	private int playerId;
-	private Point2D.Double cursor;
+	private float cursorX, cursorY;
 
-	public PacketOutCursorMove(int playerId, Point2D.Double cursor)
+	public PacketOutCursorMove()
+	{
+
+	}
+
+	public PacketOutCursorMove(int playerId, float cursorX, float cursorY)
 	{
 		this.playerId = playerId;
-		this.cursor = cursor;
+		this.cursorX = cursorX;
+		this.cursorY = cursorY;
+	}
+
+	@Override
+	public void readFrom(InputStream stream) throws IOException
+	{
+		DataInputStream dataStream = new DataInputStream(stream);
+		setPlayerId(dataStream.readShort());
+		setCursorX(dataStream.readFloat());
+		setCursorY(dataStream.readFloat());
+	}
+
+	@Override
+	public void writeTo(OutputStream stream) throws IOException
+	{
+		DataOutputStream dataStream = new DataOutputStream(stream);
+		dataStream.writeShort((short)playerId);
+		dataStream.writeFloat(getCursorX());
+		dataStream.writeFloat(getCursorY());
 	}
 
 	public int getPlayerId()
@@ -30,13 +55,23 @@ public class PacketOutCursorMove extends Packet
 		this.playerId = playerId;
 	}
 
-	public Point2D.Double getCursor()
+	public float getCursorX()
 	{
-		return cursor;
+		return cursorX;
 	}
 
-	public void setCursor(Point2D.Double cursor)
+	public void setCursorX(float cursorX)
 	{
-		this.cursor = cursor;
+		this.cursorX = cursorX;
+	}
+
+	public float getCursorY()
+	{
+		return cursorY;
+	}
+
+	public void setCursorY(float cursorY)
+	{
+		this.cursorY = cursorY;
 	}
 }

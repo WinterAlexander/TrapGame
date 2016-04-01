@@ -1,5 +1,7 @@
 package me.winter.trapgame.shared.packet;
 
+import java.io.*;
+
 /**
  * Represents a packet sent from client to server
  * Used when a player wants to join a game
@@ -13,11 +15,34 @@ public class PacketInJoin extends Packet
 {
 	private String password, playerName;
 
+	public PacketInJoin()
+	{
+
+	}
+
 	public PacketInJoin(String password, String playerName)
 	{
 		this.password = password;
 		this.playerName = playerName;
 	}
+
+	@Override
+	public void readFrom(InputStream stream) throws IOException
+	{
+		DataInputStream dataStream = new DataInputStream(stream);
+		setPassword(dataStream.readUTF());
+		setPlayerName(dataStream.readUTF());
+	}
+
+	@Override
+	public void writeTo(OutputStream stream) throws IOException
+	{
+		DataOutputStream dataStream = new DataOutputStream(stream);
+		dataStream.writeUTF(getPassword());
+		dataStream.writeUTF(getPlayerName());
+	}
+
+
 
 	public String getPassword()
 	{

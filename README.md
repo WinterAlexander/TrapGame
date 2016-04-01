@@ -9,7 +9,7 @@ Project in development. Downloads:
   - Version 0.1 Client: http://bit.ly/1UXf0wJ Server: http://bit.ly/1MX7qKG
 
 It is a copy of BlockFarmers, a game-plugin I made on Minecraft.
-However, this is NOT a minecraft project, TrapGame is just taking
+However, this is NOT a Minecraft project, TrapGame is just taking
 the concept of BlockFarmers and put it independent in his own client
 with his own server.
 

@@ -57,8 +57,8 @@ public class PlayBoard extends JPanel
 
 			private void declareMouseMove(int x, int y)
 			{
-				container.getClient().setCursor(new Point2D.Double((double)x / getWidth(), (double)y / getHeight()));
-				container.getContainer().getConnection().sendPacketLater(new PacketInCursorMove(container.getClient().getCursor()));
+				container.getClient().setCursor((float)x / getWidth(), (float)y / getHeight());
+				container.getContainer().getConnection().sendPacketLater(new PacketInCursorMove(container.getClient().getCursorX(), container.getClient().getCursorY()));
 
 			}
 		});
@@ -74,8 +74,8 @@ public class PlayBoard extends JPanel
 			if(player == container.getClient())
 				continue;
 			graphics.drawImage(getCursorImage(player.getColor(), true),
-					(int)(player.getCursor().getX() * getWidth()) - 16,
-					(int)(player.getCursor().getY() * getHeight()) - 16, null);
+					(int)(player.getCursorX() * getWidth()) - 16,
+					(int)(player.getCursorY() * getHeight()) - 16, null);
 		}
 	}
 

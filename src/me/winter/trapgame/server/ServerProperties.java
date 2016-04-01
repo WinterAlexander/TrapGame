@@ -144,4 +144,14 @@ public class ServerProperties extends Properties
 	{
 		setProperty("board-height", boardHeight + "");
 	}
+
+	public boolean isDebugMode()
+	{
+		return Boolean.parseBoolean(getProperty("debug-mode"));
+	}
+
+	public void setDebugMode(boolean debugMode)
+	{
+		setProperty("debug-mode", debugMode + "");
+	}
 }

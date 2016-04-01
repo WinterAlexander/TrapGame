@@ -7,6 +7,8 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.*;
+import java.util.List;
 
 /**
  *
@@ -16,6 +18,7 @@ public class PlayerConnection
 {
 	private Player player;
 
+	private List<Packet> toSend;
 	private Socket socket;
 
 	public PlayerConnection(Player player, Socket socket)
@@ -23,44 +26,57 @@ public class PlayerConnection
 		this.player = player;
 		this.socket = socket;
 
+		toSend = new ArrayList<>();
+
 		new Thread(this::acceptInput).start();
+		new Thread(this::sendOutput).start();
 	}
 
 	private void acceptInput()
 	{
-		while(socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown()) try
+		while(isOpen()) try
 		{
-			Packet packet = (Packet)new ObjectInputStream(new BufferedInputStream(socket.getInputStream())).readObject();
+			String packetName = new DataInputStream(socket.getInputStream()).readUTF();
+
+			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
+			packet.readFrom(socket.getInputStream());
 
 			getPlayer().getServer().getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
 
 		}
-		catch(EOFException | SocketException ex)
+		catch(Exception ex)
 		{
-			break;
-		}
-		catch(ClassNotFoundException | ClassCastException notAPacketEx)
-		{
-			System.err.println("Player " + getPlayer().getName() + " sent a socket with unknown data.");
-			notAPacketEx.printStackTrace(System.err);
-		}
-		catch(IOException ex)
-		{
-			System.err.println("An internal exception occurred while trying to read socket input data, closing it.");
-			ex.printStackTrace();
+			if(getPlayer().getServer().isDebugMode())
+				ex.printStackTrace(System.err);
 			break;
 		}
 		close();
+	}
+
+	private void sendOutput()
+	{
+		while(isOpen())
+		{
+			for(Packet packet : new ArrayList<>(toSend))
+			{
+				if(packet != null)
+					sendPacket(packet);
+				toSend.remove(packet);
+			}
+		}
+	}
+
+	public void sendPacketLater(Packet packet)
+	{
+		toSend.add(packet);
 	}
 
 	public void sendPacket(Packet packet)
 	{
 		try
 		{
-			ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-			new ObjectOutputStream(byteBuffer).writeObject(packet);
-			byteBuffer.writeTo(socket.getOutputStream());
-
+			new DataOutputStream(socket.getOutputStream()).writeUTF(packet.getClass().getSimpleName());
+			packet.writeTo(socket.getOutputStream());
 			socket.getOutputStream().flush();
 		}
 		catch(IOException e)
@@ -87,17 +103,17 @@ public class PlayerConnection
 			Point location = ((PacketInClick)packet).getLocation();
 
 			if(((GameState)state).place(getPlayer(), location))
-				getPlayer().getServer().getConnection().sendToAll(new PacketOutPlace(getPlayer().getId(), location));
+				getPlayer().getServer().getConnection().sendToAllLater(new PacketOutPlace(getPlayer().getId(), location));
 			return;
 		}
 
 		if(packet instanceof PacketInCursorMove)
 		{
-			getPlayer().getInfo().setCursor(((PacketInCursorMove)packet).getCursor());
+			getPlayer().getInfo().setCursor(((PacketInCursorMove)packet).getCursorX(), ((PacketInCursorMove)packet).getCursorY());
 
 			for(Player player : getPlayer().getServer().getPlayers())
 				if(player != getPlayer())
-					player.getConnection().sendPacket(new PacketOutCursorMove(getPlayer().getId(), ((PacketInCursorMove)packet).getCursor()));
+					player.getConnection().sendPacketLater(new PacketOutCursorMove(getPlayer().getId(), ((PacketInCursorMove)packet).getCursorX(), ((PacketInCursorMove)packet).getCursorY()));
 			return;
 		}
 
@@ -109,6 +125,11 @@ public class PlayerConnection
 
 		System.err.println("The packet sent by " + getPlayer().getName() + " isn't appropriate:");
 		System.err.println(packet.getClass().getName());
+	}
+
+	public boolean isOpen()
+	{
+		return socket != null && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown();
 	}
 
 	public void close()

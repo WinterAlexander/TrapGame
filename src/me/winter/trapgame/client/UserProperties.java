@@ -85,4 +85,14 @@ public class UserProperties extends Properties
 	{
 		setProperty("last-password", lastPassword);
 	}
+
+	public boolean isDebugMode()
+	{
+		return Boolean.parseBoolean(getProperty("debug-mode"));
+	}
+
+	public void setDebugMode(boolean debugMode)
+	{
+		setProperty("debug-mode", debugMode + "");
+	}
 }

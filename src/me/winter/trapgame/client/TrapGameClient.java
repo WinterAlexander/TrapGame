@@ -76,8 +76,18 @@ public class TrapGameClient extends JFrame
 	{
 		getScheduler().start();
 
-		while(isValid())
+		while(isVisible())
+		{
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch(InterruptedException ex)
+			{
+				ex.printStackTrace(System.err);
+			}
 			getScheduler().update();
+		}
 	}
 
 	public void goToMenu()
