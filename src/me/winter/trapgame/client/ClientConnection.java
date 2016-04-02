@@ -38,7 +38,7 @@ public class ClientConnection
 		welcomed = true;
 	}
 
-	public void connectTo(String address, String password, String playerName) throws IOException, TimeoutException
+	public synchronized void connectTo(String address, String password, String playerName) throws IOException, TimeoutException
 	{
 		if(socket != null)
 			return;
@@ -71,9 +71,10 @@ public class ClientConnection
 		}));
 	}
 
-	public void sendPacketLater(Packet packet)
+	public synchronized void sendPacketLater(Packet packet)
 	{
 		toSend.add(packet);
+		notify();
 	}
 
 	public void sendPacket(Packet packet)
@@ -81,17 +82,20 @@ public class ClientConnection
 		if(socket == null)
 			throw new IllegalStateException("Currently not connected to any server");
 
-		try
+		synchronized(this)
 		{
-			new DataOutputStream(socket.getOutputStream()).writeUTF(packet.getClass().getSimpleName());
-			packet.writeTo(socket.getOutputStream());
+			try
+			{
+				new DataOutputStream(socket.getOutputStream()).writeUTF(packet.getClass().getSimpleName());
+				packet.writeTo(socket.getOutputStream());
 
-			socket.getOutputStream().flush();
-		}
-		catch(Exception ex)
-		{
-			if(client.getUserProperties().isDebugMode())
-				ex.printStackTrace(System.err);
+				socket.getOutputStream().flush();
+			}
+			catch(Exception ex)
+			{
+				if(client.getUserProperties().isDebugMode())
+					ex.printStackTrace(System.err);
+			}
 		}
 	}
 
@@ -207,6 +211,18 @@ public class ClientConnection
 				if(packet != null)
 					sendPacket(packet);
 				toSend.remove(packet);
+			}
+
+			synchronized(this)
+			{
+				try
+				{
+					wait();
+				}
+				catch(InterruptedException ex)
+				{
+					ex.printStackTrace(System.err);
+				}
 			}
 		}
 	}

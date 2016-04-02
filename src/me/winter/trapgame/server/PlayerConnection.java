@@ -63,15 +63,28 @@ public class PlayerConnection
 					sendPacket(packet);
 				toSend.remove(packet);
 			}
+
+			synchronized(this)
+			{
+				try
+				{
+					wait();
+				}
+				catch(InterruptedException ex)
+				{
+					ex.printStackTrace(System.err);
+				}
+			}
 		}
 	}
 
-	public void sendPacketLater(Packet packet)
+	public synchronized void sendPacketLater(Packet packet)
 	{
 		toSend.add(packet);
+		notify();
 	}
 
-	public void sendPacket(Packet packet)
+	public synchronized void sendPacket(Packet packet)
 	{
 		try
 		{
