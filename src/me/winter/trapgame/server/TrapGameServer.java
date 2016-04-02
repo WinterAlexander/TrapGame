@@ -103,7 +103,7 @@ public class TrapGameServer
 
 	public TrapGameServer()
 	{
-		ServerProperties properties = new ServerProperties(new File("server.proprieties"));
+		ServerProperties properties = new ServerProperties(new File("server.properties"));
 		properties.loadIfPresent();
 
 		scheduler = new Scheduler();

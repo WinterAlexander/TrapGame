@@ -1,5 +1,6 @@
 package me.winter.trapgame.client;
 
+import me.winter.trapgame.shared.BoardFiller;
 import me.winter.trapgame.shared.PlayerInfo;
 
 import javax.imageio.ImageIO;
@@ -259,7 +260,19 @@ public class TrapGameBoard extends JPanel
 		for(Component component : playBoard.getComponents())
 			if(component instanceof TrapButton && ((TrapButton)component).getPoint().equals(point))
 				component.setBackground(player.getColor());
+	}
 
+	public void fill(int playerId, Point point)
+	{
+		BoardFiller.tryFill(point, getPlayer(playerId), boardContent, getBoardWidth(), getBoardHeight());
+
+		for(Component component : playBoard.getComponents())
+			if(component instanceof TrapButton)
+			{
+				PlayerInfo owner = boardContent.get(((TrapButton)component).getPoint());
+				if(owner != null)
+					component.setBackground(owner.getColor());
+			}
 	}
 
 	public TrapGameClient getContainer()

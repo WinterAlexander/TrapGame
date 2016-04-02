@@ -1,6 +1,8 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.shared.BoardFiller;
 import me.winter.trapgame.shared.Task;
+import me.winter.trapgame.shared.packet.PacketOutFill;
 import me.winter.trapgame.shared.packet.PacketOutSpectator;
 import me.winter.trapgame.shared.packet.PacketOutStatus;
 import me.winter.trapgame.util.CollectionUtil;
@@ -77,8 +79,51 @@ public class GameState extends State
 		if(boardContent.size() == getServer().getBoardWidth() * getServer().getBoardHeight())
 			getServer().getScheduler().addTask(new Task(0, false, this::skip));
 
-
 		return true;
+	}
+
+	public void tryFilling(Player player, Point point)
+	{
+		if(boardContent.size() == getServer().getBoardWidth() * getServer().getBoardHeight())
+			return;
+
+		for(Player current : getServer().getPlayers())
+		{
+			if(spectators.contains(current))
+				continue;
+
+			if(!boardContent.containsValue(current))
+				return;
+		}
+
+		for(int direction = 0; direction < 4; direction++)
+		{
+			int x = 0, y = 0;
+
+			if(direction < 2)
+				x = (int)Math.pow(-1, direction);
+			else
+				y = (int)Math.pow(-1, direction);
+
+			Point newPoint = new Point(point);
+			newPoint.translate(x, y);
+
+			if(boardContent.get(newPoint) != null)
+				continue;
+
+			if(newPoint.getX() < 0
+			|| newPoint.getY() < 0
+			|| newPoint.getX() >= getServer().getBoardWidth()
+			|| newPoint.getY() >= getServer().getBoardHeight())
+				continue;
+
+			if(BoardFiller.tryFill(newPoint, player, boardContent, getServer().getBoardWidth(), getServer().getBoardHeight()))
+				getServer().getConnection().sendToAllLater(new PacketOutFill(player.getId(), newPoint));
+		}
+
+
+		if(boardContent.size() == getServer().getBoardWidth() * getServer().getBoardHeight())
+			getServer().getScheduler().addTask(new Task(0, false, this::skip));
 	}
 
 	@Override

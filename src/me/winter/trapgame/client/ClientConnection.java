@@ -135,6 +135,12 @@ public class ClientConnection
 			return;
 		}
 
+		if(packet instanceof PacketOutFill)
+		{
+			client.getBoard().fill(((PacketOutFill)packet).getPlayerId(), ((PacketOutFill)packet).getLocation());
+			return;
+		}
+
 		if(packet instanceof PacketOutCursorMove)
 		{
 			PacketOutCursorMove movePacket = (PacketOutCursorMove)packet;

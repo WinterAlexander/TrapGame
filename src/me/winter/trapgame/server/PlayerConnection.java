@@ -116,7 +116,12 @@ public class PlayerConnection
 			Point location = ((PacketInClick)packet).getLocation();
 
 			if(((GameState)state).place(getPlayer(), location))
+			{
 				getPlayer().getServer().getConnection().sendToAllLater(new PacketOutPlace(getPlayer().getId(), location));
+				((GameState)state).tryFilling(getPlayer(), location);
+			}
+
+
 			return;
 		}
 

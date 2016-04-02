@@ -54,7 +54,7 @@ public class TrapGameClient extends JFrame
 
 		scheduler = new Scheduler();
 		connection = new ClientConnection(this);
-		userProperties = new UserProperties(new File(FileUtil.getAppData() + "/.TrapGame/user.proprieties"));
+		userProperties = new UserProperties(new File(FileUtil.getAppData() + "/.TrapGame/user.properties"));
 		userProperties.loadIfPresent();
 
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
