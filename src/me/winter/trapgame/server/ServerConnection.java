@@ -5,11 +5,9 @@ import me.winter.trapgame.shared.packet.Packet;
 import me.winter.trapgame.shared.packet.PacketInJoin;
 import me.winter.trapgame.shared.packet.PacketOutKick;
 
-import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * Represents a connection from the server side accepting new clients
