@@ -63,6 +63,12 @@ public class Scheduler
 				if(task == null)
 					continue;
 
+				if(task.getScheduler() != this)
+				{
+					this.tasks.remove(task);
+					continue;
+				}
+
 				if(task.getDelay() == 0)
 				{
 					task.run();

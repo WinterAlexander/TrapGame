@@ -65,6 +65,11 @@ public class Task implements Runnable
 		return scheduler;
 	}
 
+	public boolean isRunning()
+	{
+		return scheduler != null && scheduler.getTasks().contains(this) && !scheduler.isPause();
+	}
+
 	@Override
 	public void run()
 	{

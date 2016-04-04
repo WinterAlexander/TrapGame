@@ -42,6 +42,8 @@ public class ServerConnection
 
 			new Thread(this::acceptInput).start();
 			new Thread(this::sendOutput).start();
+			new Thread(this::lookForAlive).start();
+
 			acceptNewClients = true;
 			System.out.println("The server is listening on " + port);
 		}
@@ -67,6 +69,7 @@ public class ServerConnection
 
 			if(packetName.equals("KeepAlive"))
 			{
+				keepAlive(bufPacket.getAddress(), bufPacket.getPort());
 				player.getConnection().keepAlive();
 				continue;
 			}
@@ -148,14 +151,49 @@ public class ServerConnection
 		}
 	}
 
-	private void lookForAlives()
+	private void lookForAlive()
 	{
 		while(isOpen())
 		{
-			for(Player player : server.getPlayers())
+			for(Player player : new ArrayList<>(server.getPlayers()))
 			{
+				if(!server.getPlayers().contains(player))
+					continue;
 
+				if(System.currentTimeMillis() - player.getConnection().getLastPacketReceived() > 30_000)
+					player.timeOut();
 			}
+
+			try
+			{
+				Thread.sleep(5000);
+			}
+			catch(InterruptedException ex)
+			{
+				ex.printStackTrace(System.err);
+			}
+		}
+	}
+
+	public void keepAlive(InetAddress address, int port)
+	{
+		try
+		{
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			new DataOutputStream(byteStream).writeUTF("KeepAlive");
+
+			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+			synchronized(this)
+			{
+				toSend.add(data);
+				notify();
+			}
+		}
+		catch(Exception ex)
+		{
+			if(server.isDebugMode())
+				ex.printStackTrace(System.err);
 		}
 	}
 

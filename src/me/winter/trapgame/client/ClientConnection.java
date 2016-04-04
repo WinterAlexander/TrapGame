@@ -37,6 +37,7 @@ public class ClientConnection
 
 	private List<Packet> toSend;
 	private boolean welcomed;
+	private Task keepAliveTask;
 
 	public ClientConnection(TrapGameClient client)
 	{
@@ -46,6 +47,8 @@ public class ClientConnection
 		welcomed = true;
 		port = 1254;
 		inputBuffer = new byte[1024];
+
+		keepAliveTask = new Task(4000, true, this::keepAlive);
 	}
 
 	public synchronized void connectTo(String addressName, String password, String playerName) throws IOException, TimeoutException
@@ -88,9 +91,30 @@ public class ClientConnection
 		notify();
 	}
 
+	public void keepAlive()
+	{
+		if(!isOpen())
+			return;
+
+		try
+		{
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			new DataOutputStream(byteStream).writeUTF("KeepAlive");
+
+			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+			udpSocket.send(data);
+		}
+		catch(Exception ex)
+		{
+			if(client.getUserProperties().isDebugMode())
+				ex.printStackTrace(System.err);
+		}
+	}
+
 	public void sendPacket(Packet packet)
 	{
-		if(udpSocket == null)
+		if(!isOpen())
 			throw new IllegalStateException("Currently not connected to any server");
 
 
@@ -120,6 +144,7 @@ public class ClientConnection
 			welcomed = true;
 			client.getBoard().init(packetWelcome.getPlayerId(), packetWelcome.getPlayers());
 			client.goToBoard();
+			client.getScheduler().addTask(keepAliveTask);
 			return;
 		}
 
@@ -214,6 +239,9 @@ public class ClientConnection
 
 			String packetName = new DataInputStream(byteStream).readUTF();
 
+			if(packetName.equals("KeepAlive"))
+				continue;
+
 			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
 			packet.readFrom(byteStream);
 
@@ -272,6 +300,8 @@ public class ClientConnection
 
 	public synchronized void close()
 	{
+		keepAliveTask.cancel();
+
 		if(client.inBoard())
 		{
 			client.getBoard().dispose();

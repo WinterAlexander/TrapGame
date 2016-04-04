@@ -1,11 +1,15 @@
 package me.winter.trapgame.client;
 
 import me.winter.trapgame.shared.Scheduler;
+import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.util.FileUtil;
 import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 
 /**
@@ -33,7 +37,7 @@ public class TrapGameClient extends JFrame
 			JFrame frame = new JFrame();
 			JOptionPane.showMessageDialog(frame, "We are sorry, an internal error occurred during your game session: \n\n" + StringUtil.getStackTrace(throwable) + "\nPlease report this error to me at a.w1nter@hotmail.com", "TrapGame has crashed :(", JOptionPane.ERROR_MESSAGE);
 			frame.dispose();
-			System.exit(0);
+			System.exit(-1);
 		}
 
 	}
@@ -63,7 +67,16 @@ public class TrapGameClient extends JFrame
 		setSize((int)dimension.getWidth() / 2, (int)dimension.getHeight() / 2);
 		setLocation((int)dimension.getWidth() / 2 - getWidth() / 2, (int)dimension.getHeight() / 2 - getHeight() / 2);
 
-		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+		addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				stop();
+			}
+		});
 
 		menu = new TrapGameMenu(this);
 		board = new TrapGameBoard(this);
@@ -101,6 +114,11 @@ public class TrapGameClient extends JFrame
 			getConnection().close();
 			dispose();
 		}
+	}
+
+	public void stop()
+	{
+		getScheduler().addTask(new Task(0, false, () -> setVisible(false)));
 	}
 
 	public void goToMenu()
