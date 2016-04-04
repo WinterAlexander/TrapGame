@@ -17,11 +17,14 @@ public class PlayerConnection
 	private InetAddress address;
 	private int port;
 
+	private long lastPacketReceived;
+
 	public PlayerConnection(Player player, InetAddress address, int port)
 	{
 		this.player = player;
 		this.address = address;
 		this.port = port;
+		keepAlive();
 	}
 
 	public void sendPacketLater(Packet packet)
@@ -39,8 +42,14 @@ public class PlayerConnection
 		getPlayer().getServer().getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
 	}
 
+	public void keepAlive()
+	{
+		this.lastPacketReceived = System.currentTimeMillis();
+	}
+
 	public void receivePacket(Packet packet)
 	{
+		keepAlive();
 		if(packet instanceof PacketInChat)
 		{
 			player.getServer().getCommandManager().execute(player, ((PacketInChat)packet).getMessage());
@@ -99,5 +108,10 @@ public class PlayerConnection
 	public int getPort()
 	{
 		return port;
+	}
+
+	public long getLastPacketReceived()
+	{
+		return lastPacketReceived;
 	}
 }

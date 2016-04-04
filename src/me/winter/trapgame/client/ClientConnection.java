@@ -230,8 +230,7 @@ public class ClientConnection
 		}
 		catch(SocketException ex)
 		{
-			if(!isOpen())
-				break;
+
 		}
 		catch(Exception ex)
 		{
@@ -282,7 +281,11 @@ public class ClientConnection
 		if(udpSocket == null)
 			return;
 
-		udpSocket.close();
+		if(!udpSocket.isClosed())
+		{
+			sendPacket(new PacketInLeave("Disconnecting"));
+			udpSocket.close();
+		}
 		udpSocket = null;
 
 		notify();

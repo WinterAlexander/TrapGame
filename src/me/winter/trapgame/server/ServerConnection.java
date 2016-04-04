@@ -10,6 +10,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,17 +59,24 @@ public class ServerConnection
 
 			udpSocket.receive(bufPacket);
 
+			Player player = getPlayer(bufPacket.getAddress(), bufPacket.getPort());
+
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(inputBuffer);
 
 			String packetName = new DataInputStream(byteStream).readUTF();
+
+			if(packetName.equals("KeepAlive"))
+			{
+				player.getConnection().keepAlive();
+				continue;
+			}
+
 
 			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
 			packet.readFrom(byteStream);
 
 			//if(server.isDebugMode()) ab00se
 			//	System.out.println("Received " + packet.getClass().getSimpleName() + " from " + bufPacket.getAddress().toString() + " port: " + bufPacket.getPort());
-
-			Player player = getPlayer(bufPacket.getAddress(), bufPacket.getPort());
 
 			if(player != null)
 			{
@@ -95,6 +103,10 @@ public class ServerConnection
 			PlayerInfo info = new PlayerInfo(id, name, server.getColor(id), server.getStatsManager().load(name), 0.5f, 0.5f);
 
 			server.join(new Player(server, info, bufPacket.getAddress(), bufPacket.getPort()));
+
+		}
+		catch(SocketException ex)
+		{
 
 		}
 		catch(Exception ex)
@@ -132,6 +144,17 @@ public class ServerConnection
 				{
 					ex.printStackTrace(System.err);
 				}
+			}
+		}
+	}
+
+	private void lookForAlives()
+	{
+		while(isOpen())
+		{
+			for(Player player : server.getPlayers())
+			{
+
 			}
 		}
 	}

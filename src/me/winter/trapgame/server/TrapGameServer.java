@@ -121,8 +121,6 @@ public class TrapGameServer
 		setMinPlayers(properties.getMinPlayers());
 		setBoardSize(properties.getBoardWidth(), properties.getBoardHeight());
 		setDebugMode(properties.isDebugMode());
-
-		new Thread(console::start).start();
 	}
 
 	public synchronized void start()

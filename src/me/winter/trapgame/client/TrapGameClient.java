@@ -63,7 +63,7 @@ public class TrapGameClient extends JFrame
 		setSize((int)dimension.getWidth() / 2, (int)dimension.getHeight() / 2);
 		setLocation((int)dimension.getWidth() / 2 - getWidth() / 2, (int)dimension.getHeight() / 2 - getHeight() / 2);
 
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
 		menu = new TrapGameMenu(this);
 		board = new TrapGameBoard(this);
@@ -98,6 +98,8 @@ public class TrapGameClient extends JFrame
 				}
 				getScheduler().update();
 			}
+			getConnection().close();
+			dispose();
 		}
 	}
 

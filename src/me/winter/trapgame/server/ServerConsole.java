@@ -5,6 +5,7 @@ import me.winter.trapgame.shared.PlayerStats;
 import me.winter.trapgame.shared.Task;
 
 import java.awt.*;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -30,16 +31,15 @@ public class ServerConsole
 					System.out.println(message);
 				}
 
-				public void kick(String message)
-				{
-
-				}
+				public void kick(String message){ }
 			};
 		}
 		catch(UnknownHostException ex)
 		{
 			ex.printStackTrace(System.err);
 		}
+
+		new Thread(this::start).start();
 	}
 
 	public synchronized void start()
@@ -48,9 +48,27 @@ public class ServerConsole
 
 		while(!server.isStopped())
 		{
-			server.getScheduler().addTask(new Task(0, false, () ->
-				server.getCommandManager().execute(consolePlayer, scanner.nextLine())
-			));
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch(InterruptedException ex)
+			{
+				ex.printStackTrace(System.err);
+			}
+
+			try
+			{
+				while(System.in.available() != 0)
+				{
+					server.getScheduler().addTask(new Task(0, false,
+							() -> server.getCommandManager().execute(consolePlayer, scanner.nextLine())));
+				}
+			}
+			catch(IOException ex)
+			{
+				ex.printStackTrace(System.err);
+			}
 
 		}
 
