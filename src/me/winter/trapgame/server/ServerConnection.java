@@ -52,7 +52,7 @@ public class ServerConnection
 
 	private void acceptInput()
 	{
-		while(isAcceptingNewClients()) try
+		while(isOpen()) try
 		{
 			DatagramPacket bufPacket = new DatagramPacket(inputBuffer, inputBuffer.length);
 
@@ -65,8 +65,8 @@ public class ServerConnection
 			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
 			packet.readFrom(byteStream);
 
-			if(server.isDebugMode())
-				System.out.println("Received " + packet.getClass().getSimpleName() + " from " + bufPacket.getAddress().toString() + " port: " + bufPacket.getPort());
+			//if(server.isDebugMode()) ab00se
+			//	System.out.println("Received " + packet.getClass().getSimpleName() + " from " + bufPacket.getAddress().toString() + " port: " + bufPacket.getPort());
 
 			Player player = getPlayer(bufPacket.getAddress(), bufPacket.getPort());
 
@@ -76,7 +76,7 @@ public class ServerConnection
 				continue;
 			}
 
-			if(!(packet instanceof PacketInJoin))
+			if(!(packet instanceof PacketInJoin) || !isAcceptingNewClients())
 				continue;
 
 			if(server.getPassword() != null && server.getPassword().length() > 0 && !server.getPassword().equals(((PacketInJoin)packet).getPassword()))
@@ -204,9 +204,10 @@ public class ServerConnection
 		return !udpSocket.isClosed();
 	}
 
-	public void close()
+	public synchronized void close()
 	{
 		getUdpSocket().close();
+		notify();
 	}
 
 	public DatagramSocket getUdpSocket()

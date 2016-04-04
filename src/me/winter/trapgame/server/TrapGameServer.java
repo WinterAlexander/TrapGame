@@ -93,6 +93,7 @@ public class TrapGameServer
 	private ServerConnection connection;
 	private StatsManager statsManager;
 	private CommandManager commandManager;
+	private ServerConsole console;
 
 	private String password;
 	private int minPlayers, maxPlayers;
@@ -112,6 +113,7 @@ public class TrapGameServer
 		connection = new ServerConnection(this, properties.getPort());
 		statsManager = new StatsManager(this, new File("stats"));
 		commandManager = new CommandManager(this);
+		console = new ServerConsole(this);
 		stop = false;
 
 		this.password = properties.getPassword();
@@ -119,6 +121,8 @@ public class TrapGameServer
 		setMinPlayers(properties.getMinPlayers());
 		setBoardSize(properties.getBoardWidth(), properties.getBoardHeight());
 		setDebugMode(properties.isDebugMode());
+
+		new Thread(console::start).start();
 	}
 
 	public synchronized void start()
@@ -185,6 +189,12 @@ public class TrapGameServer
 
 		getConnection().close();
 		stop = true;
+		getScheduler().notify();
+	}
+
+	public boolean isStopped()
+	{
+		return stop;
 	}
 
 	public boolean isAvailable(String playerName)
@@ -275,6 +285,11 @@ public class TrapGameServer
 	public CommandManager getCommandManager()
 	{
 		return commandManager;
+	}
+
+	public ServerConsole getConsole()
+	{
+		return console;
 	}
 
 	public String getPassword()

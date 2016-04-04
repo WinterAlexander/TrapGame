@@ -76,6 +76,7 @@ public class ClientConnection
 			{
 				JOptionPane.showMessageDialog(client, "Sorry but the server isn't responding.", "Connection failed", JOptionPane.ERROR_MESSAGE);
 				welcomed = true;
+				close();
 			}
 
 		}));
@@ -216,8 +217,8 @@ public class ClientConnection
 			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
 			packet.readFrom(byteStream);
 
-			if(client.getUserProperties().isDebugMode())
-				System.out.println("Received " + packet.getClass().getSimpleName() + " from " + bufPacket.getAddress().toString() + " port: " + bufPacket.getPort());
+			//if(client.getUserProperties().isDebugMode()) ab00se
+			//	System.out.println("Received " + packet.getClass().getSimpleName() + " from " + bufPacket.getAddress().toString() + " port: " + bufPacket.getPort());
 
 			client.getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
 		}
@@ -226,6 +227,11 @@ public class ClientConnection
 			close();
 			JOptionPane.showMessageDialog(client, "Sorry, you were disconnected because the server stopped responding.", "Server stopped responding", JOptionPane.ERROR_MESSAGE);
 			return;
+		}
+		catch(SocketException ex)
+		{
+			if(!isOpen())
+				break;
 		}
 		catch(Exception ex)
 		{
@@ -265,17 +271,21 @@ public class ClientConnection
 		return udpSocket != null;
 	}
 
-	public void close()
+	public synchronized void close()
 	{
-		client.getBoard().dispose();
-		client.goToMenu();
+		if(client.inBoard())
+		{
+			client.getBoard().dispose();
+			client.goToMenu();
+		}
 
-		if(udpSocket == null || udpSocket.isClosed())
+		if(udpSocket == null)
 			return;
 
 		udpSocket.close();
-
 		udpSocket = null;
+
+		notify();
 	}
 
 }
