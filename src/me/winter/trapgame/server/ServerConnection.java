@@ -6,8 +6,13 @@ import me.winter.trapgame.shared.packet.PacketInJoin;
 import me.winter.trapgame.shared.packet.PacketOutKick;
 
 import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a connection from the server side accepting new clients
@@ -19,7 +24,9 @@ public class ServerConnection
 {
 	private TrapGameServer server;
 
-	private ServerSocket serverSocket;
+	private List<DatagramPacket> toSend;
+	private DatagramSocket udpSocket;
+	private byte[] inputBuffer;
 	private boolean acceptNewClients;
 
 	public ServerConnection(TrapGameServer server, int port)
@@ -27,9 +34,13 @@ public class ServerConnection
 		try
 		{
 			this.server = server;
-			serverSocket = new ServerSocket(port);
 
-			new Thread(this::acceptClients).start();
+			toSend = new ArrayList<>();
+			inputBuffer = new byte[1024];
+			udpSocket = new DatagramSocket(port);
+
+			new Thread(this::acceptInput).start();
+			new Thread(this::sendOutput).start();
 			acceptNewClients = true;
 			System.out.println("The server is listening on " + port);
 		}
@@ -39,29 +50,42 @@ public class ServerConnection
 		}
 	}
 
-	private void acceptClients()
+	private void acceptInput()
 	{
 		while(isAcceptingNewClients()) try
 		{
-			Socket socket = serverSocket.accept();
+			DatagramPacket bufPacket = new DatagramPacket(inputBuffer, inputBuffer.length);
 
-			PacketInJoin packet = new PacketInJoin();
-			if(!new DataInputStream(socket.getInputStream()).readUTF().equals("PacketInJoin"))
-				continue;
+			udpSocket.receive(bufPacket);
 
-			packet.readFrom(socket.getInputStream());
+			ByteArrayInputStream byteStream = new ByteArrayInputStream(inputBuffer);
 
-			if(server.getPassword() != null && server.getPassword().length() > 0 && !server.getPassword().equals(packet.getPassword()))
+			String packetName = new DataInputStream(byteStream).readUTF();
+
+			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
+			packet.readFrom(byteStream);
+
+			if(server.isDebugMode())
+				System.out.println("Received " + packet.getClass().getSimpleName() + " from " + bufPacket.getAddress().toString() + " port: " + bufPacket.getPort());
+
+			Player player = getPlayer(bufPacket.getAddress(), bufPacket.getPort());
+
+			if(player != null)
 			{
-				new DataOutputStream(socket.getOutputStream()).writeUTF("PacketOutKick");
-				new PacketOutKick("Invalid password.").writeTo(socket.getOutputStream());
-
-				socket.getOutputStream().flush();
-				socket.close();
+				player.getConnection().receivePacketLater(packet);
 				continue;
 			}
 
-			String name = packet.getPlayerName();
+			if(!(packet instanceof PacketInJoin))
+				continue;
+
+			if(server.getPassword() != null && server.getPassword().length() > 0 && !server.getPassword().equals(((PacketInJoin)packet).getPassword()))
+			{
+				sendPacket(new PacketOutKick("Invalid password."), bufPacket.getAddress(), bufPacket.getPort());
+				continue;
+			}
+
+			String name = ((PacketInJoin)packet).getPlayerName();
 
 			while(!server.isAvailable(name))
 				name += "_";
@@ -70,13 +94,88 @@ public class ServerConnection
 
 			PlayerInfo info = new PlayerInfo(id, name, server.getColor(id), server.getStatsManager().load(name), 0.5f, 0.5f);
 
-			server.join(new Player(server, info, socket));
+			server.join(new Player(server, info, bufPacket.getAddress(), bufPacket.getPort()));
 
 		}
 		catch(Exception ex)
 		{
 			if(server.isDebugMode())
-				System.err.println(ex);
+				ex.printStackTrace(System.err);
+		}
+	}
+
+	private void sendOutput()
+	{
+		while(isOpen())
+		{
+			for(DatagramPacket packet : new ArrayList<>(toSend))
+			{
+				try
+				{
+					if(packet != null)
+						udpSocket.send(packet);
+					toSend.remove(packet);
+				}
+				catch(IOException ex)
+				{
+					ex.printStackTrace(System.err);
+				}
+			}
+
+			synchronized(this)
+			{
+				try
+				{
+					wait();
+				}
+				catch(InterruptedException ex)
+				{
+					ex.printStackTrace(System.err);
+				}
+			}
+		}
+	}
+
+	public void sendPacketLater(Packet packet, InetAddress address, int port)
+	{
+		try
+		{
+
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
+			packet.writeTo(byteStream);
+
+			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+			synchronized(this)
+			{
+				toSend.add(data);
+				notify();
+			}
+		}
+		catch(Exception ex)
+		{
+			if(server.isDebugMode())
+				ex.printStackTrace(System.err);
+		}
+	}
+
+	public void sendPacket(Packet packet, InetAddress address, int port)
+	{
+		try
+		{
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
+			packet.writeTo(byteStream);
+
+			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+			udpSocket.send(data);
+		}
+		catch(Exception ex)
+		{
+			if(server.isDebugMode())
+				ex.printStackTrace(System.err);
 		}
 	}
 
@@ -90,21 +189,29 @@ public class ServerConnection
 		server.getPlayers().forEach(player -> player.getConnection().sendPacketLater(packet));
 	}
 
-	public void close()
+	public Player getPlayer(InetAddress address, int port)
 	{
-		try
-		{
-			getServerSocket().close();
-		}
-		catch(IOException ex)
-		{
-			ex.printStackTrace(System.err);
-		}
+		for(Player player : server.getPlayers())
+			if(player.getConnection().getAddress().equals(address)
+			&& player.getConnection().getPort() == port)
+				return player;
+
+		return null;
 	}
 
-	public ServerSocket getServerSocket()
+	public boolean isOpen()
 	{
-		return serverSocket;
+		return !udpSocket.isClosed();
+	}
+
+	public void close()
+	{
+		getUdpSocket().close();
+	}
+
+	public DatagramSocket getUdpSocket()
+	{
+		return udpSocket;
 	}
 
 	public boolean isAcceptingNewClients()

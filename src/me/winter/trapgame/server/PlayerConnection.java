@@ -4,10 +4,7 @@ import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.*;
 
 import java.awt.*;
-import java.io.*;
-import java.net.Socket;
-import java.util.*;
-import java.util.List;
+import java.net.InetAddress;
 
 /**
  *
@@ -17,84 +14,29 @@ public class PlayerConnection
 {
 	private Player player;
 
-	private List<Packet> toSend;
-	private Socket socket;
+	private InetAddress address;
+	private int port;
 
-	public PlayerConnection(Player player, Socket socket)
+	public PlayerConnection(Player player, InetAddress address, int port)
 	{
 		this.player = player;
-		this.socket = socket;
-
-		toSend = new ArrayList<>();
-
-		new Thread(this::acceptInput).start();
-		new Thread(this::sendOutput).start();
+		this.address = address;
+		this.port = port;
 	}
 
-	private void acceptInput()
+	public void sendPacketLater(Packet packet)
 	{
-		while(isOpen()) try
-		{
-			String packetName = new DataInputStream(socket.getInputStream()).readUTF();
-
-			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
-			packet.readFrom(socket.getInputStream());
-
-			getPlayer().getServer().getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
-
-		}
-		catch(Exception ex)
-		{
-			if(getPlayer().getServer().isDebugMode())
-				ex.printStackTrace(System.err);
-			break;
-		}
-		close();
+		getPlayer().getServer().getConnection().sendPacketLater(packet, address, port);
 	}
 
-	private void sendOutput()
+	public void sendPacket(Packet packet)
 	{
-		while(isOpen())
-		{
-			for(Packet packet : new ArrayList<>(toSend))
-			{
-				if(packet != null)
-					sendPacket(packet);
-				toSend.remove(packet);
-			}
-
-			synchronized(this)
-			{
-				try
-				{
-					wait();
-				}
-				catch(InterruptedException ex)
-				{
-					ex.printStackTrace(System.err);
-				}
-			}
-		}
+		getPlayer().getServer().getConnection().sendPacket(packet, address, port);
 	}
 
-	public synchronized void sendPacketLater(Packet packet)
+	public void receivePacketLater(Packet packet)
 	{
-		toSend.add(packet);
-		notify();
-	}
-
-	public synchronized void sendPacket(Packet packet)
-	{
-		try
-		{
-			new DataOutputStream(socket.getOutputStream()).writeUTF(packet.getClass().getSimpleName());
-			packet.writeTo(socket.getOutputStream());
-			socket.getOutputStream().flush();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace(System.err);
-		}
+		getPlayer().getServer().getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
 	}
 
 	public void receivePacket(Packet packet)
@@ -136,36 +78,12 @@ public class PlayerConnection
 
 		if(packet instanceof PacketInLeave)
 		{
-			close();
+			player.leave();
 			return;
 		}
 
-		System.err.println("The packet sent by " + getPlayer().getName() + " isn't appropriate:");
-		System.err.println(packet.getClass().getName());
-	}
-
-	public boolean isOpen()
-	{
-		return socket != null && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown();
-	}
-
-	public void close()
-	{
-		if(player.getServer().getPlayers().contains(player))
-			player.getServer().leave(player);
-
-		if(socket.isClosed())
-			return;
-
-		try
-		{
-			getSocket().close();
-		}
-		catch(IOException ex)
-		{
-			System.err.println("An internal error occurred while closing client socket of " + player.getName());
-			ex.printStackTrace(System.err);
-		}
+		if(getPlayer().getServer().isDebugMode())
+			System.out.println("The packet sent by " + getPlayer().getName() + " isn't appropriate: " + packet.getClass().getName());
 	}
 
 	public Player getPlayer()
@@ -173,8 +91,13 @@ public class PlayerConnection
 		return player;
 	}
 
-	public Socket getSocket()
+	public InetAddress getAddress()
 	{
-		return socket;
+		return address;
+	}
+
+	public int getPort()
+	{
+		return port;
 	}
 }

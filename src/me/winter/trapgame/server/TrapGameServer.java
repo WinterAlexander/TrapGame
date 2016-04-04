@@ -121,22 +121,33 @@ public class TrapGameServer
 		setDebugMode(properties.isDebugMode());
 	}
 
-	public void start()
+	public synchronized void start()
 	{
 		System.out.println("TrapGame server should now be operational.");
 
-		scheduler.start();
-		while(!stop)
+		synchronized(getScheduler())
 		{
-			try
+			getScheduler().start();
+
+			while(!stop)
 			{
-				Thread.sleep(100);
+				long toWait = getScheduler().getWaitingDelay();
+				if(toWait > 0)
+				{
+					try
+					{
+						if(toWait == Long.MAX_VALUE)
+							getScheduler().wait(0);
+						else
+							getScheduler().wait(toWait);
+					}
+					catch(InterruptedException ex)
+					{
+						ex.printStackTrace(System.err);
+					}
+				}
+				getScheduler().update();
 			}
-			catch(InterruptedException ex)
-			{
-				ex.printStackTrace(System.err);
-			}
-			scheduler.update();
 		}
 	}
 

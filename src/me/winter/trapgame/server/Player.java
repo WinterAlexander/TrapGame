@@ -19,11 +19,11 @@ public class Player
 	private PlayerInfo info;
 	private PlayerConnection connection;
 
-	public Player(TrapGameServer server, PlayerInfo info, Socket socket)
+	public Player(TrapGameServer server, PlayerInfo info, InetAddress address, int port)
 	{
 		this.server = server;
 		this.info = info;
-		this.connection = new PlayerConnection(this, socket);
+		this.connection = new PlayerConnection(this, address, port);
 	}
 
 	public int getId()
@@ -49,12 +49,24 @@ public class Player
 	public void kick(String message)
 	{
 		getConnection().sendPacket(new PacketOutKick(message));
-		getConnection().close();
+		leave();
+	}
+
+	public void leave()
+	{
+		if(getServer().getPlayers().contains(this))
+			getServer().leave(this);
+	}
+
+	public void timeOut()
+	{
+		getServer().broadcast(getName() + " has timed out.");
+		leave();
 	}
 
 	public InetAddress getIpAddress()
 	{
-		return null;
+		return connection.getAddress();
 	}
 
 	public TrapGameServer getServer()

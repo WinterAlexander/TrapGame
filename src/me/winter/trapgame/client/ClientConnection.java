@@ -8,9 +8,12 @@ import me.winter.trapgame.util.StringUtil;
 import javax.swing.*;
 import java.awt.Point;
 import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,34 +29,41 @@ public class ClientConnection
 {
 	private TrapGameClient client;
 
-	private Socket socket;
+	private DatagramSocket udpSocket;
+
+	private InetAddress address;
+	private int port;
+	private byte[] inputBuffer;
+
 	private List<Packet> toSend;
 	private boolean welcomed;
 
 	public ClientConnection(TrapGameClient client)
 	{
 		this.client = client;
-		socket = null;
+		udpSocket = null;
 		toSend = new ArrayList<>();
 		welcomed = true;
+		port = 1254;
+		inputBuffer = new byte[1024];
 	}
 
-	public synchronized void connectTo(String address, String password, String playerName) throws IOException, TimeoutException
+	public synchronized void connectTo(String addressName, String password, String playerName) throws IOException, TimeoutException
 	{
-		if(socket != null)
+		if(!welcomed || isOpen())
 			return;
 
-		int port = 1254;
-
-		String[] parts = address.split(":");
+		String[] parts = addressName.split(":");
 
 		if(parts.length == 2 && StringUtil.isInt(parts[1]))
 		{
-			address = parts[0];
+			addressName = parts[0];
 			port = Integer.parseInt(parts[1]);
 		}
 
-		socket = new Socket(InetAddress.getByName(address), port);
+		udpSocket = new DatagramSocket();
+		udpSocket.setSoTimeout(30_000);
+		address = InetAddress.getByName(addressName);
 		sendPacket(new PacketInJoin(password, playerName));
 
 		welcomed = false;
@@ -79,23 +89,24 @@ public class ClientConnection
 
 	public void sendPacket(Packet packet)
 	{
-		if(socket == null)
+		if(udpSocket == null)
 			throw new IllegalStateException("Currently not connected to any server");
 
-		synchronized(this)
-		{
-			try
-			{
-				new DataOutputStream(socket.getOutputStream()).writeUTF(packet.getClass().getSimpleName());
-				packet.writeTo(socket.getOutputStream());
 
-				socket.getOutputStream().flush();
-			}
-			catch(Exception ex)
-			{
-				if(client.getUserProperties().isDebugMode())
-					ex.printStackTrace(System.err);
-			}
+		try
+		{
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
+			packet.writeTo(byteStream);
+
+			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+			udpSocket.send(data);
+		}
+		catch(Exception ex)
+		{
+			if(client.getUserProperties().isDebugMode())
+				ex.printStackTrace(System.err);
 		}
 	}
 
@@ -185,20 +196,36 @@ public class ClientConnection
 			return;
 		}
 
-		System.err.println("The packet sent by server isn't appropriate:");
-		System.err.println(packet.getClass().getName());
+		if(client.getUserProperties().isDebugMode())
+			System.out.println("The packet sent by server isn't appropriate: " + packet.getClass().getName());
 	}
 
 	private void acceptInput()
 	{
 		while(isOpen()) try
 		{
-			String packetName = new DataInputStream(socket.getInputStream()).readUTF();
+
+			DatagramPacket bufPacket = new DatagramPacket(inputBuffer, inputBuffer.length);
+
+			udpSocket.receive(bufPacket);
+
+			ByteArrayInputStream byteStream = new ByteArrayInputStream(inputBuffer);
+
+			String packetName = new DataInputStream(byteStream).readUTF();
 
 			Packet packet = (Packet)Class.forName("me.winter.trapgame.shared.packet." + packetName).newInstance();
-			packet.readFrom(socket.getInputStream());
+			packet.readFrom(byteStream);
+
+			if(client.getUserProperties().isDebugMode())
+				System.out.println("Received " + packet.getClass().getSimpleName() + " from " + bufPacket.getAddress().toString() + " port: " + bufPacket.getPort());
 
 			client.getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
+		}
+		catch(SocketTimeoutException ex)
+		{
+			close();
+			JOptionPane.showMessageDialog(client, "Sorry, you were disconnected because the server stopped responding.", "Server stopped responding", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
 		catch(Exception ex)
 		{
@@ -235,7 +262,7 @@ public class ClientConnection
 
 	public boolean isOpen()
 	{
-		return socket != null && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown() && !socket.isOutputShutdown();
+		return udpSocket != null;
 	}
 
 	public void close()
@@ -243,20 +270,12 @@ public class ClientConnection
 		client.getBoard().dispose();
 		client.goToMenu();
 
-		if(socket == null || socket.isClosed())
+		if(udpSocket == null || udpSocket.isClosed())
 			return;
 
-		try
-		{
-			socket.close();
-		}
-		catch(IOException ex)
-		{
-			System.err.println("An internal error occurred while closing socket with server");
-			ex.printStackTrace(System.err);
-		}
+		udpSocket.close();
 
-		socket = null;
+		udpSocket = null;
 	}
 
 }

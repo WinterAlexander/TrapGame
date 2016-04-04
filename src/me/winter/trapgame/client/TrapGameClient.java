@@ -33,6 +33,7 @@ public class TrapGameClient extends JFrame
 			JFrame frame = new JFrame();
 			JOptionPane.showMessageDialog(frame, "We are sorry, an internal error occurred during your game session: \n\n" + StringUtil.getStackTrace(throwable) + "\nPlease report this error to me at a.w1nter@hotmail.com", "TrapGame has crashed :(", JOptionPane.ERROR_MESSAGE);
 			frame.dispose();
+			System.exit(0);
 		}
 
 	}
@@ -74,19 +75,29 @@ public class TrapGameClient extends JFrame
 
 	public void start()
 	{
-		getScheduler().start();
-
-		while(isVisible())
+		synchronized(getScheduler())
 		{
-			try
+			getScheduler().start();
+
+			while(isVisible())
 			{
-				Thread.sleep(100);
+				long toWait = getScheduler().getWaitingDelay();
+				if(toWait > 0)
+				{
+					try
+					{
+						if(toWait == Long.MAX_VALUE)
+							getScheduler().wait(0);
+						else
+							getScheduler().wait(toWait);
+					}
+					catch(InterruptedException ex)
+					{
+						ex.printStackTrace(System.err);
+					}
+				}
+				getScheduler().update();
 			}
-			catch(InterruptedException ex)
-			{
-				ex.printStackTrace(System.err);
-			}
-			getScheduler().update();
 		}
 	}
 

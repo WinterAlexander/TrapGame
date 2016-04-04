@@ -21,10 +21,11 @@ public class Scheduler
 		this.pauseTime = 0;
 	}
 	
-	public void addTask(Task task)
+	public synchronized void addTask(Task task)
 	{
 		this.tasks.add(task);
 		task.register(this);
+		notify();
 	}
 	
 	public void addTasks(Collection<Task> tasks)
@@ -129,8 +130,22 @@ public class Scheduler
 		return lastPause;
 	}
 	
-	public long getGameTimeMillis()
+	public long getTimeMillis()
 	{
 		return System.nanoTime() / 1_000_000 - this.pauseTime;
+	}
+
+	public long getWaitingDelay()
+	{
+		long minDelay = Long.MAX_VALUE;
+
+		for(Task task : new ArrayList<>(getTasks()))
+		{
+			long delay = task.getLastWork() + task.getDelay() - getTimeMillis();
+			if(delay < minDelay)
+				minDelay = delay;
+		}
+
+		return minDelay;
 	}
 }
