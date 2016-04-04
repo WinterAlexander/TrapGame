@@ -129,7 +129,19 @@ public class GameState extends State
 	@Override
 	public void skip()
 	{
+		getServer().broadcast(gameEnd());
+
+		getServer().getConnection().sendToAllLater(new PacketOutStatus(PacketOutStatus.GAME_STOP));
+		getServer().setState(new WaitingState(getServer()));
+		getServer().getState().start();
+	}
+
+	public String gameEnd()
+	{
 		Set<Player> uniquePlayers = new HashSet<>(boardContent.values());
+
+		if(uniquePlayers.size() == 0)
+			return "Game is finished.";
 
 		Player[] players = uniquePlayers.toArray(new Player[uniquePlayers.size()]);
 		int[] scores = new int[players.length];
@@ -171,11 +183,6 @@ public class GameState extends State
 
 			message += "\n " + (i + playersWithThatScore) + ": " + players[i].getName() + " (Score: " + scores[i] + ")";
 		}
-
-		getServer().broadcast(message);
-
-		getServer().getConnection().sendToAll(new PacketOutStatus(PacketOutStatus.GAME_STOP));
-		getServer().setState(new WaitingState(getServer()));
-		getServer().getState().start();
+		return message;
 	}
 }

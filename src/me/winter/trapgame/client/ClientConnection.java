@@ -46,7 +46,7 @@ public class ClientConnection
 		toSend = new ArrayList<>();
 		welcomed = true;
 		port = 1254;
-		inputBuffer = new byte[1024];
+		inputBuffer = new byte[8 * 1024];
 
 		keepAliveTask = new Task(4000, true, this::keepAlive);
 	}

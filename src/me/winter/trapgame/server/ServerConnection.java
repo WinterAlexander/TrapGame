@@ -37,7 +37,7 @@ public class ServerConnection
 			this.server = server;
 
 			toSend = new ArrayList<>();
-			inputBuffer = new byte[1024];
+			inputBuffer = new byte[8 * 1024];
 			udpSocket = new DatagramSocket(port);
 
 			new Thread(this::acceptInput).start();
