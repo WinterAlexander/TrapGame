@@ -52,8 +52,8 @@ public class StatsCommand implements Command
 		}
 
 		player.sendMessage("---[ " + pPlayer.getName() + "'s Stats ]---\n" +
-				"Wins:" + pPlayer.getName() + "\n" +
-				"Loses:" + pPlayer.getName() + "\n" +
-				"Draws:" + pPlayer.getName());
+				"Wins:" + pPlayer.getInfo().getStats().getWins() + "\n" +
+				"Loses:" + pPlayer.getInfo().getStats().getLoses() + "\n" +
+				"Draws:" + pPlayer.getInfo().getStats().getDraws());
 	}
 }

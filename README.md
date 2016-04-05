@@ -7,6 +7,7 @@ Project in development. Downloads:
   - Version 0.6 Client: http://bit.ly/1YbKEor Server: http://bit.ly/1TwHpbI
   - Version 0.5 Client: http://bit.ly/1V14jsX Server: http://bit.ly/1ordHrF
   - Version 0.4.1 Client: http://bit.ly/1oq9rIT Server: http://bit.ly/1SFmeSH
+  - Version 0.4 [BROKEN]
   - Version 0.3 Client: http://bit.ly/1RO7GNp Server: http://bit.ly/235SR0w
   - Version 0.2 Client: http://bit.ly/1VWgMO2 Server: http://bit.ly/1VcelpS
   - Version 0.1 Client: http://bit.ly/1UXf0wJ Server: http://bit.ly/1MX7qKG
