@@ -28,6 +28,7 @@ public class CommandManager
 		commands.add(new TimerCommand());
 		commands.add(new ListCommand(this));
 		commands.add(new SuperUserCommand());
+		commands.add(new KickCommand());
 	}
 
 	public void execute(CommandSender sender, String input)
