@@ -1,5 +1,6 @@
 package me.winter.trapgame.server.command;
 
+import me.winter.trapgame.server.CommandSender;
 import me.winter.trapgame.server.Player;
 import me.winter.trapgame.util.StringUtil;
 
@@ -37,7 +38,7 @@ public class HelpCommand implements Command
 	}
 
 	@Override
-	public void execute(Player player, String label, String[] arguments)
+	public void execute(CommandSender player, String label, String[] arguments)
 	{
 		if(arguments.length == 0)
 			arguments = new String[]{"help"};
@@ -55,5 +56,12 @@ public class HelpCommand implements Command
 		player.sendMessage(command.getDescription());
 		player.sendMessage("Usage: " + command.getUsage());
 		player.sendMessage("Aliases: " + StringUtil.join(command.getAliases()));
+		player.sendMessage("Super users only: " + command.needSuper());
+	}
+
+	@Override
+	public boolean needSuper()
+	{
+		return false;
 	}
 }

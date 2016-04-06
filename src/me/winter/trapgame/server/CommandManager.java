@@ -25,10 +25,14 @@ public class CommandManager
 		commands.add(new StopCommand());
 		commands.add(new PropTemplateCommand());
 		commands.add(new StatsCommand());
+		commands.add(new TimerCommand());
+		commands.add(new ListCommand(this));
+		commands.add(new SuperUserCommand());
 	}
 
-	public void execute(Player player, String input)
+	public void execute(CommandSender sender, String input)
 	{
+		String originalInput = input;
 		String label = null;
 		List<String> argsList = new ArrayList<>();
 
@@ -41,7 +45,7 @@ public class CommandManager
 
 		if(!input.startsWith("/"))
 		{
-			player.chat(input);
+			sender.chat(input);
 			return;
 		}
 
@@ -62,11 +66,18 @@ public class CommandManager
 
 		if(command == null)
 		{
-			player.sendMessage("Command \"" + label + "\" not found.");
+			sender.sendMessage("Command \"" + label + "\" not found.");
 			return;
 		}
 
-		command.execute(player, label, argsList.toArray(new String[argsList.size()]));
+		if(command.needSuper() && !sender.isSuperUser())
+		{
+			sender.sendMessage("You need to be a super user in order to execute this command.");
+			return;
+		}
+
+		System.out.println(sender.getName() + " executed command: " + originalInput);
+		command.execute(sender, label, argsList.toArray(new String[argsList.size()]));
 	}
 
 	public Command findCommand(String label)

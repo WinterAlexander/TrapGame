@@ -1,5 +1,6 @@
 package me.winter.trapgame.server.command;
 
+import me.winter.trapgame.server.CommandSender;
 import me.winter.trapgame.server.Player;
 
 import java.util.Arrays;
@@ -37,8 +38,14 @@ public class StopCommand implements Command
 	}
 
 	@Override
-	public void execute(Player player, String label, String[] arguments)
+	public void execute(CommandSender player, String label, String[] arguments)
 	{
 		player.getServer().stop();
+	}
+
+	@Override
+	public boolean needSuper()
+	{
+		return true;
 	}
 }

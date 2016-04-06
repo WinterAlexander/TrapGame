@@ -17,27 +17,12 @@ import java.util.Scanner;
 public class ServerConsole
 {
 	private TrapGameServer server;
-	private Player consolePlayer;
+	private ConsoleSender consoleSender;
 
 	public ServerConsole(TrapGameServer server)
 	{
 		this.server = server;
-		try
-		{
-			consolePlayer = new Player(server, new PlayerInfo(-1, "Console", Color.BLACK, new PlayerStats(99, 0, 0), 0, 0), InetAddress.getLocalHost(), -1)
-			{
-				public void sendMessage(String message)
-				{
-					System.out.println(message);
-				}
-
-				public void kick(String message){ }
-			};
-		}
-		catch(UnknownHostException ex)
-		{
-			ex.printStackTrace(System.err);
-		}
+		consoleSender = new ConsoleSender(this);
 
 		new Thread(this::start).start();
 	}
@@ -62,7 +47,7 @@ public class ServerConsole
 				while(System.in.available() != 0)
 				{
 					server.getScheduler().addTask(new Task(0, false,
-							() -> server.getCommandManager().execute(consolePlayer, scanner.nextLine())));
+							() -> server.getCommandManager().execute(consoleSender, scanner.nextLine())));
 				}
 			}
 			catch(IOException ex)
@@ -75,8 +60,13 @@ public class ServerConsole
 		scanner.close();
 	}
 
-	public Player getConsolePlayer()
+	public TrapGameServer getServer()
 	{
-		return consolePlayer;
+		return server;
+	}
+
+	public ConsoleSender getConsoleSender()
+	{
+		return consoleSender;
 	}
 }

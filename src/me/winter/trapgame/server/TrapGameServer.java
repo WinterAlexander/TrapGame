@@ -68,24 +68,24 @@ public class TrapGameServer
 	}
 
 	private static final Color[] COLORS = new Color[]{
-			new Color(255, 0, 0),
-			new Color(3, 140, 252),
-			new Color(241, 223, 1),
-			new Color(68, 173, 50),
-			new Color(150, 45, 255),
-			new Color(249, 128, 47),
-			new Color(255, 85, 170),
-			new Color(0, 251, 255),
-			new Color(142, 1, 1),
-			new Color(33, 27, 160),
-			new Color(211, 162, 10),
-			new Color(46, 255, 11),
-			new Color(128, 18, 118),
-			new Color(98, 61, 37),
-			new Color(255, 119, 237),
-			new Color(3, 189, 170),
-			new Color(128, 128, 128),
-			new Color(255, 157, 124)};
+			new Color(255, 0, 0),       //1
+			new Color(3, 140, 252),     //2
+			new Color(241, 223, 1),     //3
+			new Color(68, 173, 50),     //4
+			new Color(150, 45, 255),    //5
+			new Color(249, 128, 47),    //6
+			new Color(255, 85, 170),    //7
+			new Color(0, 251, 255),     //8
+			new Color(142, 1, 1),       //9
+			new Color(33, 27, 160),     //10
+			new Color(211, 162, 10),    //11
+			new Color(46, 255, 11),     //12
+			new Color(128, 18, 118),    //13
+			new Color(98, 61, 37),      //14
+			new Color(255, 119, 237),   //15
+			new Color(3, 139, 130),     //16
+			new Color(128, 128, 128),   //17
+			new Color(255, 157, 124)};  //18
 
 	private Scheduler scheduler;
 	private State state;
@@ -95,9 +95,10 @@ public class TrapGameServer
 	private CommandManager commandManager;
 	private ServerConsole console;
 
-	private String password;
+	private String password, superPassword;
 	private int minPlayers, maxPlayers;
 	private int boardWidth, boardHeight;
+	private int waitingTimer;
 	private boolean debugMode;
 
 	private boolean stop;
@@ -117,10 +118,12 @@ public class TrapGameServer
 		stop = false;
 
 		this.password = properties.getPassword();
+		this.superPassword = properties.getSuperPassword();
 		setMaxPlayers(properties.getMaxPlayers());
 		setMinPlayers(properties.getMinPlayers());
 		setBoardSize(properties.getBoardWidth(), properties.getBoardHeight());
 		setDebugMode(properties.isDebugMode());
+		this.waitingTimer = properties.getTimer();
 	}
 
 	public synchronized void start()
@@ -295,6 +298,11 @@ public class TrapGameServer
 		return password;
 	}
 
+	public String getSuperPassword()
+	{
+		return superPassword;
+	}
+
 	public int getMinPlayers()
 	{
 		return minPlayers;
@@ -332,6 +340,16 @@ public class TrapGameServer
 	public int getBoardWidth()
 	{
 		return boardWidth;
+	}
+
+	public int getWaitingTimer()
+	{
+		return waitingTimer;
+	}
+
+	public void setWaitingTimer(int waitingTimer)
+	{
+		this.waitingTimer = waitingTimer;
 	}
 
 	public boolean isDebugMode()

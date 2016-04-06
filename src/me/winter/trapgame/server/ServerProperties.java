@@ -154,4 +154,31 @@ public class ServerProperties extends Properties
 	{
 		setProperty("debug-mode", debugMode + "");
 	}
+
+	public int getTimer()
+	{
+		try
+		{
+			return Integer.parseInt(getProperty("timer"));
+		}
+		catch(NumberFormatException ex)
+		{
+			return 30;
+		}
+	}
+
+	public void setTimer(int timer)
+	{
+		setProperty("timer", timer + "");
+	}
+
+	public String getSuperPassword()
+	{
+		return getProperty("super-password", "");
+	}
+
+	public void setSuperPassword(String superPassword)
+	{
+		setProperty("super-password", superPassword);
+	}
 }

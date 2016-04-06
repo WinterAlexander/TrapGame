@@ -12,18 +12,20 @@ import java.net.Socket;
  *
  * Created by winter on 25/03/16.
  */
-public class Player
+public class Player implements CommandSender
 {
 	private TrapGameServer server;
 
 	private PlayerInfo info;
 	private PlayerConnection connection;
+	private boolean superUser;
 
 	public Player(TrapGameServer server, PlayerInfo info, InetAddress address, int port)
 	{
 		this.server = server;
 		this.info = info;
 		this.connection = new PlayerConnection(this, address, port);
+		this.superUser = false;
 	}
 
 	public int getId()
@@ -31,16 +33,19 @@ public class Player
 		return info.getPlayerId();
 	}
 
+	@Override
 	public String getName()
 	{
 		return info.getName();
 	}
 
+	@Override
 	public void chat(String message)
 	{
 		getServer().broadcast(getName() + ": " + message);
 	}
 
+	@Override
 	public void sendMessage(String message)
 	{
 		getConnection().sendPacket(new PacketOutChat(message));
@@ -64,11 +69,13 @@ public class Player
 		leave();
 	}
 
+	@Override
 	public InetAddress getIpAddress()
 	{
 		return connection.getAddress();
 	}
 
+	@Override
 	public TrapGameServer getServer()
 	{
 		return server;
@@ -84,4 +91,14 @@ public class Player
 		return connection;
 	}
 
+	@Override
+	public boolean isSuperUser()
+	{
+		return superUser;
+	}
+
+	public void setSuperUser(boolean superUser)
+	{
+		this.superUser = superUser;
+	}
 }

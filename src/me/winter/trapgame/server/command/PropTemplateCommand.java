@@ -1,5 +1,6 @@
 package me.winter.trapgame.server.command;
 
+import me.winter.trapgame.server.CommandSender;
 import me.winter.trapgame.server.Player;
 import me.winter.trapgame.server.ServerProperties;
 
@@ -39,7 +40,7 @@ public class PropTemplateCommand implements Command
 	}
 
 	@Override
-	public void execute(Player player, String label, String[] arguments)
+	public void execute(CommandSender player, String label, String[] arguments)
 	{
 		ServerProperties properties = new ServerProperties(new File("server.properties"));
 		properties.setPort(1254);
@@ -48,8 +49,15 @@ public class PropTemplateCommand implements Command
 		properties.setMaxPlayers(8);
 		properties.setBoardWidth(10);
 		properties.setBoardHeight(10);
+		properties.setTimer(30);
 
 		properties.save();
 		player.sendMessage("server.properties file created.");
+	}
+
+	@Override
+	public boolean needSuper()
+	{
+		return true;
 	}
 }

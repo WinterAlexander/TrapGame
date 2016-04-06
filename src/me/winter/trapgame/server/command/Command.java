@@ -1,5 +1,6 @@
 package me.winter.trapgame.server.command;
 
+import me.winter.trapgame.server.CommandSender;
 import me.winter.trapgame.server.Player;
 
 import java.util.List;
@@ -39,9 +40,16 @@ public interface Command
 
 	/**
 	 * Called to execute the command
-	 * @param player the executer
+	 * @param sender the executer
 	 * @param label name used to identify the command
 	 * @param arguments strings separated by spaces in the command line
 	 */
-	void execute(Player player, String label, String[] arguments);
+	void execute(CommandSender sender, String label, String[] arguments);
+
+	/**
+	 * Tells is the command should only be used by super users
+	 *
+	 * @return if the command is reserved to super users
+	 */
+	boolean needSuper();
 }

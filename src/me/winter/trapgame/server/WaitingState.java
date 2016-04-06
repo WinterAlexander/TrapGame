@@ -15,7 +15,7 @@ public class WaitingState extends State
 	public WaitingState(TrapGameServer server)
 	{
 		super(server);
-		timer = 30;
+		timer = server.getWaitingTimer();
 		task = new Task(1000, true, this::tick);
 	}
 

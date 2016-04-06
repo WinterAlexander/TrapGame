@@ -1,5 +1,6 @@
 package me.winter.trapgame.server.command;
 
+import me.winter.trapgame.server.CommandSender;
 import me.winter.trapgame.server.Player;
 
 import java.util.Arrays;
@@ -37,7 +38,7 @@ public class BoardSizeCommand implements Command
 	}
 
 	@Override
-	public void execute(Player player, String label, String[] arguments)
+	public void execute(CommandSender player, String label, String[] arguments)
 	{
 		if(arguments.length != 2)
 		{
@@ -56,5 +57,11 @@ public class BoardSizeCommand implements Command
 		{
 			player.sendMessage("Invalid argument(s), width and height should be integers.");
 		}
+	}
+
+	@Override
+	public boolean needSuper()
+	{
+		return true;
 	}
 }
