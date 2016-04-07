@@ -83,7 +83,6 @@ public class BoardMenu extends JPanel
 
 		for(PlayerInfo info : getBoard().getPlayers())
 		{
-
 			JLabel label = new JLabel("<html>" + info.getName() + ":<br>" + info.getStats() + "</html>");
 			label.setForeground(info.getColor());
 
