@@ -24,6 +24,7 @@ public class TrapGameBoard extends JPanel
 	private TrapGameClient container;
 
 	private PlayBoard playBoard;
+	private BoardMenu boardMenu;
 	private Chat chat;
 
 	private Map<Point, PlayerInfo> boardContent;
@@ -50,57 +51,7 @@ public class TrapGameBoard extends JPanel
 		}
 
 		chat = new Chat(this);
-
-		JPanel chatContainer = new JPanel();
-		chatContainer.setLayout(new BorderLayout());
-
-		JButton disconnect = new JButton("Disconnect");
-		disconnect.addMouseListener(new MouseListener()
-		{
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e)
-			{
-				getContainer().getConnection().close();
-				dispose();
-				getContainer().goToMenu();
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e)
-			{
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e)
-			{
-
-			}
-		});
-		chatContainer.add(disconnect, BorderLayout.NORTH);
-		chatContainer.add(chat, BorderLayout.CENTER);
-
-		JScrollPane scroll = new JScrollPane(chat);
-		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-		chatContainer.add(scroll, BorderLayout.EAST);
-		chatContainer.add(new ChatInput(this), BorderLayout.SOUTH);
-
-
-
+		boardMenu = new BoardMenu(this);
 		playBoard = new PlayBoard(this);
 /*
 		setLayout(new GridBagLayout());
@@ -129,10 +80,15 @@ public class TrapGameBoard extends JPanel
 
 		add(chatContainer, rules);*/
 
-		setLayout(new BorderLayout());
+		//setLayout(new BorderLayout());
+		setLayout(new BoardLayout());
 
-		add(playBoard, BorderLayout.CENTER);
-		add(chatContainer, BorderLayout.EAST);
+		//add(playBoard, BorderLayout.CENTER);
+		//add(chatContainer, BorderLayout.EAST);
+
+		add(playBoard, BoardLayout.BOARD);
+		add(chat, BoardLayout.RIGHT);
+		add(boardMenu, BoardLayout.LEFT);
 
 		dispose();
 	}
@@ -144,6 +100,7 @@ public class TrapGameBoard extends JPanel
 
 		boardContent = new HashMap<>();
 		playBoard.setCursor(getClient().getColor());
+		boardMenu.build();
 		revalidate();
 		repaint();
 	}
@@ -153,16 +110,7 @@ public class TrapGameBoard extends JPanel
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
 
-		playBoard.removeAll();
-		playBoard.setLayout(new GridLayout(boardWidth, boardHeight, 0, 0));
-
-		for(int i = 0; i < boardWidth; i++)
-		{
-			for(int j = 0; j < boardHeight; j++)
-			{
-				playBoard.add(new TrapButton(this, new Point(i, j)));
-			}
-		}
+		playBoard.prepare(boardWidth, boardHeight);
 		revalidate();
 		repaint();
 	}
@@ -183,9 +131,7 @@ public class TrapGameBoard extends JPanel
 	{
 		boardContent.clear();
 		boardLocked = true;
-		for(Component component : playBoard.getComponents())
-			if(component instanceof TrapButton)
-				component.setBackground(null);
+		playBoard.reset();
 
 		revalidate();
 		repaint();
@@ -226,6 +172,7 @@ public class TrapGameBoard extends JPanel
 		if(!inGame())
 			throw new IllegalStateException("Game board not initialized");
 		players.add(info);
+		boardMenu.build();
 	}
 
 	public void leave(int playerId)
@@ -234,6 +181,7 @@ public class TrapGameBoard extends JPanel
 			return;
 
 		players.removeIf(player -> player.getPlayerId() == playerId);
+		boardMenu.build();
 	}
 
 	public boolean canClick(Point point)

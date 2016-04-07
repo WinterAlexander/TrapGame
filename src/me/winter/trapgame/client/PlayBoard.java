@@ -64,6 +64,27 @@ public class PlayBoard extends JPanel
 		});
 	}
 
+	public void prepare(int boardWidth, int boardHeight)
+	{
+		removeAll();
+		setLayout(new GridLayout(boardWidth, boardHeight, 0, 0));
+
+		for(int i = 0; i < boardWidth; i++)
+		{
+			for(int j = 0; j < boardHeight; j++)
+			{
+				add(new TrapButton(container, new Point(i, j)));
+			}
+		}
+	}
+
+	public void reset()
+	{
+		for(Component component : getComponents())
+			if(component instanceof TrapButton)
+				component.setBackground(null);
+	}
+
 	@Override
 	public void paint(Graphics graphics)
 	{

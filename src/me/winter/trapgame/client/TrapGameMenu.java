@@ -3,6 +3,7 @@ package me.winter.trapgame.client;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
@@ -12,7 +13,7 @@ import java.io.IOException;
  */
 public class TrapGameMenu extends JPanel
 {
-	private Image logo;
+	private BufferedImage logo;
 	private TrapGameClient container;
 
 	private JTextField playerName;

@@ -23,6 +23,12 @@ public class PlayerStats implements Serializable
 		this.draws = draws;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Wins: " + wins + " Loses: " + loses + " Draws: " + draws;
+	}
+
 	public double getWinLoseRatio()
 	{
 		return (double)wins / (double)loses;
