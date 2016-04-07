@@ -69,6 +69,8 @@ public class BoardMenu extends JPanel
 			}
 		});
 
+		setBackground(Color.BLACK);
+
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;

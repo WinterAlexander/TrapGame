@@ -62,6 +62,8 @@ public class PlayBoard extends JPanel
 
 			}
 		});
+
+		setBackground(Color.BLACK);
 	}
 
 	public void prepare(int boardWidth, int boardHeight)

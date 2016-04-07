@@ -57,6 +57,12 @@ public class Chat extends JPanel
 
 		textArea.setEditable(false);
 		textArea.setFont(new Font("Arial", Font.PLAIN, 18));
+		textArea.setForeground(Color.WHITE);
+		textArea.setBackground(Color.BLACK);
+
+		textField.setFont(new Font("Arial", Font.PLAIN, 18));
+		textField.setForeground(Color.WHITE);
+		textField.setBackground(Color.BLACK);
 		((DefaultCaret)textArea.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		setLayout(new BorderLayout());
