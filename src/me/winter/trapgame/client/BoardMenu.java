@@ -3,6 +3,7 @@ package me.winter.trapgame.client;
 import me.winter.trapgame.shared.PlayerInfo;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -32,7 +33,7 @@ public class BoardMenu extends JPanel
 	public void build()
 	{
 		removeAll();
-		JButton leaveButton = new JButton("Disconnect");
+		JButton leaveButton = new JButton("Disconnect from server");
 
 		leaveButton.addMouseListener(new MouseListener()
 		{
@@ -76,37 +77,74 @@ public class BoardMenu extends JPanel
 		buttonContainer.add(leaveButton);
 
 		JPanel statsContainer = new JPanel();
-		statsContainer.setBackground(new Color(255, 0, 0, 0));
-		statsContainer.setLayout(new GridLayout(0, 1, 5, 5));
 
+		statsContainer.setBackground(new Color(0, 0, 0, 0));
+
+		JLabel leaderBoard = new JLabel("Scores");
+		leaderBoard.setFont(new Font("Verdana", Font.BOLD, 20));
+
+		//leaderBoard.setPreferredSize(new Dimension(Integer.MAX_VALUE, 128));
+		leaderBoard.setForeground(Color.WHITE);
+
+		JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
+		separator.setForeground(Color.WHITE);
+		separator.setPreferredSize(new Dimension(Integer.MAX_VALUE / 2, 1));
+
+		statsContainer.add(leaderBoard);
+		statsContainer.add(separator);
 
 		for(PlayerInfo info : getBoard().getPlayers())
 		{
-			JTextPane label = new JTextPane();
-			label.setContentType("text/html");
-			label.setText(  "<html>" +
-								"<body>" +
-									"<center><div>" +
-										"<center>" +
-											"<b>" + info.getName() + "</b><br>" +
-										"</center>" +
-										"Wins: " + info.getStats().getWins() + "<br>" +
-										"Loses: " + info.getStats().getLoses() + "<br>" +
-										"Draws: " + info.getStats().getDraws() + "<br>" +
-										"Ratio: " + info.getStats().getRoundedWinLoseRatio() +
-									"</div></center>" +
-								"</body>" +
-							"</html>");
-			label.setEditable(false);
-			label.setFont(new Font("Arial", Font.PLAIN, 18));
-			label.setForeground(info.getColor());
-			label.setBackground(new Color(0, 0, 0, 0));
-			label.setBorder(new LineBorder(info.getColor(), 1, true));
+			JPanel playerStats = new JPanel();
+			playerStats.setBackground(new Color(0, 0, 0, 0));
+			playerStats.setBorder(new EmptyBorder(10, 10, 10, 10));
+			playerStats.setLayout(new BoxLayout(playerStats, BoxLayout.Y_AXIS));
+			playerStats.setPreferredSize(new Dimension(160, 128));
 
-			statsContainer.add(label);
+			JLabel name = new JLabel(info.getName());
+			name.setFont(new Font("Verdana", Font.BOLD, 20));
+			name.setForeground(info.getColor());
+			name.setPreferredSize(new Dimension(128, 64));
+
+			Font font = new Font("Verdana", Font.PLAIN, 18);
+
+			JLabel wins = new JLabel("Wins: " + info.getStats().getWins());
+			wins.setFont(font);
+			wins.setForeground(info.getColor());
+
+			JLabel loses = new JLabel("Loses: " + info.getStats().getLoses());
+			loses.setFont(font);
+			loses.setForeground(info.getColor());
+
+			JLabel draws = new JLabel("Draws: " + info.getStats().getDraws());
+			draws.setFont(font);
+			draws.setForeground(info.getColor());
+
+			JLabel ratio = new JLabel("Ratio: " + info.getStats().getRoundedWinLoseRatio());
+			ratio.setFont(font);
+			ratio.setForeground(info.getColor());
+
+			JSeparator statsSeparator = new JSeparator(JSeparator.HORIZONTAL);
+			statsSeparator.setForeground(info.getColor());
+
+			playerStats.add(Box.createVerticalGlue());
+			playerStats.add(name);
+			playerStats.add(statsSeparator);
+			playerStats.add(wins);
+			playerStats.add(Box.createVerticalGlue());
+			playerStats.add(loses);
+			playerStats.add(Box.createVerticalGlue());
+			playerStats.add(draws);
+			playerStats.add(Box.createVerticalGlue());
+			playerStats.add(ratio);
+			playerStats.add(Box.createVerticalGlue());
+
+			statsContainer.add(playerStats);
 		}
 
-		add(buttonContainer, BorderLayout.NORTH);
+		statsContainer.setPreferredSize(statsContainer.getPreferredSize());
+
+		add(buttonContainer, BorderLayout.SOUTH);
 		add(statsContainer, BorderLayout.CENTER);
 
 		revalidate();
