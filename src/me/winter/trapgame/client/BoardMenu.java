@@ -3,6 +3,7 @@ package me.winter.trapgame.client;
 import me.winter.trapgame.shared.PlayerInfo;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,9 +19,8 @@ public class BoardMenu extends JPanel
 
 	public BoardMenu(TrapGameBoard board)
 	{
-		setLayout(new GridBagLayout());
-
 		this.board = board;
+		setLayout(new BorderLayout());
 	}
 
 	/**
@@ -71,26 +71,43 @@ public class BoardMenu extends JPanel
 
 		setBackground(Color.BLACK);
 
-		GridBagConstraints constraints = new GridBagConstraints();
+		JPanel buttonContainer = new JPanel();
+		buttonContainer.setBackground(new Color(0, 0, 0, 0));
+		buttonContainer.add(leaveButton);
 
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
+		JPanel statsContainer = new JPanel();
+		statsContainer.setBackground(new Color(255, 0, 0, 0));
+		statsContainer.setLayout(new GridLayout(0, 1, 5, 5));
 
-		add(leaveButton, constraints);
-
-		constraints.gridx = 0;
-		constraints.gridwidth = 1;
 
 		for(PlayerInfo info : getBoard().getPlayers())
 		{
-			JLabel label = new JLabel("<html>" + info.getName() + ":<br>" + info.getStats() + "</html>");
+			JTextPane label = new JTextPane();
+			label.setContentType("text/html");
+			label.setText(  "<html>" +
+								"<body>" +
+									"<center><div>" +
+										"<center>" +
+											"<b>" + info.getName() + "</b><br>" +
+										"</center>" +
+										"Wins: " + info.getStats().getWins() + "<br>" +
+										"Loses: " + info.getStats().getLoses() + "<br>" +
+										"Draws: " + info.getStats().getDraws() + "<br>" +
+										"Ratio: " + info.getStats().getRoundedWinLoseRatio() +
+									"</div></center>" +
+								"</body>" +
+							"</html>");
+			label.setEditable(false);
+			label.setFont(new Font("Arial", Font.PLAIN, 18));
 			label.setForeground(info.getColor());
+			label.setBackground(new Color(0, 0, 0, 0));
+			label.setBorder(new LineBorder(info.getColor(), 1, true));
 
-			constraints.gridy++;
-			add(label, constraints);
+			statsContainer.add(label);
 		}
+
+		add(buttonContainer, BorderLayout.NORTH);
+		add(statsContainer, BorderLayout.CENTER);
 
 		revalidate();
 		repaint();

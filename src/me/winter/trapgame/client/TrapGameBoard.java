@@ -50,6 +50,8 @@ public class TrapGameBoard extends JPanel
 			ex.printStackTrace(System.err);
 		}
 
+		setBackground(Color.BLACK);
+
 		chat = new Chat(this);
 		boardMenu = new BoardMenu(this);
 		playBoard = new PlayBoard(this);

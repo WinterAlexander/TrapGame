@@ -84,7 +84,7 @@ public class PlayBoard extends JPanel
 	{
 		for(Component component : getComponents())
 			if(component instanceof TrapButton)
-				component.setBackground(null);
+				component.setBackground(Color.white);
 	}
 
 	@Override

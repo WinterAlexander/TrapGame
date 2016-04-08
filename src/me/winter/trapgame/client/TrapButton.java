@@ -27,6 +27,7 @@ public class TrapButton extends JButton
 		setFocusPainted(false);
 		setBorderPainted(false);
 		setContentAreaFilled(false);
+		setBackground(Color.white);
 		this.board = board;
 		this.point = point;
 
