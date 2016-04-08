@@ -148,6 +148,12 @@ public class ClientConnection
 			return;
 		}
 
+		if(packet instanceof PacketOutUpdateStats)
+		{
+			client.getBoard().updateStats(((PacketOutUpdateStats)packet).getStats());
+			return;
+		}
+
 		if(packet instanceof PacketOutBoardSize)
 		{
 			client.getBoard().setBoardSize(((PacketOutBoardSize)packet).getBoardWidth(), ((PacketOutBoardSize)packet).getBoardHeight());

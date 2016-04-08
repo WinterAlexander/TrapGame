@@ -78,7 +78,7 @@ public class Chat extends JPanel
 
 	public void sendMessage(String message)
 	{
-		textArea.setText(textArea.getText() + (textArea.getText().length() == 0 ? "" : "\n") + message);
+		textArea.setText(message + "\n" + textArea.getText());
 	}
 
 	public void reset()

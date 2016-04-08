@@ -2,13 +2,14 @@ package me.winter.trapgame.client;
 
 import me.winter.trapgame.shared.BoardFiller;
 import me.winter.trapgame.shared.PlayerInfo;
+import me.winter.trapgame.shared.PlayerStats;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +106,14 @@ public class TrapGameBoard extends JPanel
 		boardMenu.build();
 		revalidate();
 		repaint();
+	}
+
+	public void updateStats(Map<Integer, PlayerStats> stats)
+	{
+		for(int index : stats.keySet())
+			getPlayer(index).setStats(stats.get(index));
+
+		boardMenu.build();
 	}
 
 	public void setBoardSize(int boardWidth, int boardHeight)

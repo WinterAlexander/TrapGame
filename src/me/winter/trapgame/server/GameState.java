@@ -5,6 +5,7 @@ import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.PacketOutFill;
 import me.winter.trapgame.shared.packet.PacketOutSpectator;
 import me.winter.trapgame.shared.packet.PacketOutStatus;
+import me.winter.trapgame.shared.packet.PacketOutUpdateStats;
 import me.winter.trapgame.util.CollectionUtil;
 import me.winter.trapgame.util.SortingUtil;
 
@@ -183,6 +184,9 @@ public class GameState extends State
 
 			message += "\n " + (i + playersWithThatScore) + ": " + players[i].getName() + " (Score: " + scores[i] + ")";
 		}
+
+		getServer().getConnection().sendToAllLater(new PacketOutUpdateStats(getServer().getPlayersInfo()));
+
 		return message;
 	}
 }
