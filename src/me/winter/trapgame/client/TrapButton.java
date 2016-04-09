@@ -27,7 +27,7 @@ public class TrapButton extends JButton
 		setFocusPainted(false);
 		setBorderPainted(false);
 		setContentAreaFilled(false);
-		setBackground(Color.white);
+		setBackground(Color.WHITE);
 		this.board = board;
 		this.point = point;
 
@@ -96,7 +96,7 @@ public class TrapButton extends JButton
 	@Override
 	public void paintComponent(Graphics graphics)
 	{
-		graphics.setColor(getBackground());
+		graphics.setColor(new Color(getBackground().getRed(), getBackground().getGreen(), getBackground().getBlue(), 128));
 
 		graphics.fillRect(0, 0, getWidth(), getHeight());
 

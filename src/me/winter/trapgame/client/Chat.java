@@ -23,6 +23,8 @@ public class Chat extends JPanel
 	{
 		this.board = board;
 
+		setBackground(new Color(0, 0, 0, 0));
+
 		this.textField = new JTextField();
 		this.textArea = new JTextPane();
 
@@ -58,11 +60,11 @@ public class Chat extends JPanel
 		textArea.setEditable(false);
 		textArea.setFont(new Font("Arial", Font.PLAIN, 18));
 		textArea.setForeground(Color.WHITE);
-		textArea.setBackground(Color.BLACK);
+		textArea.setBackground(new Color(0, 0, 0, 0));
 
 		textField.setFont(new Font("Arial", Font.PLAIN, 18));
 		textField.setForeground(Color.WHITE);
-		textField.setBackground(Color.BLACK);
+		textField.setBackground(new Color(0, 0, 0, 0));
 		((DefaultCaret)textArea.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		setLayout(new BorderLayout());

@@ -35,7 +35,7 @@ public class TrapGameBoard extends JPanel
 	private int boardWidth, boardHeight;
 	private boolean boardLocked, spectator;
 
-	private Image buttonFrame;
+	private Image buttonFrame, background;
 
 	public TrapGameBoard(TrapGameClient container)
 	{
@@ -44,56 +44,34 @@ public class TrapGameBoard extends JPanel
 		try
 		{
 			buttonFrame = ImageIO.read(ClassLoader.class.getResourceAsStream("/frame.png"));
+			background = ImageIO.read(ClassLoader.class.getResourceAsStream("/background.png"));
 		}
 		catch(IOException ex)
 		{
-			System.err.println("Failed to load logo image");
+			System.err.println("Failed to load image(s)");
 			ex.printStackTrace(System.err);
 		}
 
-		setBackground(Color.BLACK);
+		setBackground(new Color(0, 0, 0, 0));
 
 		chat = new Chat(this);
 		boardMenu = new BoardMenu(this);
 		playBoard = new PlayBoard(this);
-/*
-		setLayout(new GridBagLayout());
-		GridBagConstraints rules = new GridBagConstraints();
 
-		rules.fill = GridBagConstraints.BOTH;
-
-		rules.gridx = 0;
-		rules.gridy = 0;
-		rules.gridwidth = 1;
-		rules.gridheight = 4;
-
-		add(new JPanel(), rules);
-
-		rules.gridx += rules.gridwidth;
-		rules.gridwidth = 4;
-		rules.weightx = 1;
-		rules.weighty = 1;
-
-		add(playBoard, rules);
-
-		rules.gridx += rules.gridwidth;
-		rules.gridwidth = 1;
-		rules.weightx = 0;
-		rules.weighty = 0;
-
-		add(chatContainer, rules);*/
-
-		//setLayout(new BorderLayout());
 		setLayout(new BoardLayout());
-
-		//add(playBoard, BorderLayout.CENTER);
-		//add(chatContainer, BorderLayout.EAST);
 
 		add(playBoard, BoardLayout.BOARD);
 		add(chat, BoardLayout.RIGHT);
 		add(boardMenu, BoardLayout.LEFT);
 
 		dispose();
+	}
+
+	@Override
+	public void paintComponent(Graphics graphics)
+	{
+		graphics.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+		super.paintComponent(graphics);
 	}
 
 	public void init(int playerId, List<PlayerInfo> players)
@@ -219,6 +197,9 @@ public class TrapGameBoard extends JPanel
 		for(Component component : playBoard.getComponents())
 			if(component instanceof TrapButton && ((TrapButton)component).getPoint().equals(point))
 				component.setBackground(player.getColor());
+
+		if(playerId == getClient().getPlayerId())
+			getPlayBoard().playClickSound();
 	}
 
 	public void fill(int playerId, Point point)

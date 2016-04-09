@@ -4,6 +4,11 @@ import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.packet.PacketInCursorMove;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -27,6 +32,8 @@ public class PlayBoard extends JPanel
 	private Map<Color, BufferedImage> preloaded;
 	private boolean windowsCursor;
 
+	private Clip clickSound;
+
 	public PlayBoard(TrapGameBoard container)
 	{
 		this.container = container;
@@ -39,6 +46,18 @@ public class PlayBoard extends JPanel
 		catch(IOException ex)
 		{
 			ex.printStackTrace();
+		}
+
+		try
+		{
+			this.clickSound = AudioSystem.getClip();
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(PlayBoard.class.getResourceAsStream("/click.wav"));
+			this.clickSound.open(inputStream);
+		}
+		catch(LineUnavailableException | UnsupportedAudioFileException | IOException ex)
+		{
+			ex.printStackTrace(System.err);
+			this.clickSound = null;
 		}
 
 		addMouseMotionListener(new MouseMotionListener()
@@ -63,7 +82,7 @@ public class PlayBoard extends JPanel
 			}
 		});
 
-		setBackground(Color.BLACK);
+		setBackground(new Color(0, 0, 0, 0));
 	}
 
 	public void prepare(int boardWidth, int boardHeight)
@@ -84,7 +103,7 @@ public class PlayBoard extends JPanel
 	{
 		for(Component component : getComponents())
 			if(component instanceof TrapButton)
-				component.setBackground(Color.white);
+				component.setBackground(Color.WHITE);
 	}
 
 	@Override
@@ -151,6 +170,12 @@ public class PlayBoard extends JPanel
 
 		preloaded.put(color, image);
 		return image;
+	}
+
+	public void playClickSound()
+	{
+		clickSound.setFramePosition(0);
+		clickSound.start();
 	}
 
 	public void setCursor(Color color)

@@ -70,7 +70,7 @@ public class BoardMenu extends JPanel
 			}
 		});
 
-		setBackground(Color.BLACK);
+		setBackground(new Color(0, 0, 0, 0));
 
 		JPanel buttonContainer = new JPanel();
 		buttonContainer.setBackground(new Color(0, 0, 0, 0));
