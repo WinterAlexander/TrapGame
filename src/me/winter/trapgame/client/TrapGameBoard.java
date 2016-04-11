@@ -28,12 +28,8 @@ public class TrapGameBoard extends JPanel
 	private BoardMenu boardMenu;
 	private Chat chat;
 
-	private Map<Point, PlayerInfo> boardContent;
 	private List<PlayerInfo> players;
 	private int playerId;
-
-	private int boardWidth, boardHeight;
-	private boolean boardLocked, spectator;
 
 	private Image buttonFrame, background;
 
@@ -56,15 +52,12 @@ public class TrapGameBoard extends JPanel
 
 		chat = new Chat(this);
 		boardMenu = new BoardMenu(this);
-		playBoard = new PlayBoard(this);
+		playBoard = null;
 
 		setLayout(new BoardLayout());
 
-		add(playBoard, BoardLayout.BOARD);
 		add(chat, BoardLayout.RIGHT);
 		add(boardMenu, BoardLayout.LEFT);
-
-		dispose();
 	}
 
 	@Override
@@ -74,13 +67,13 @@ public class TrapGameBoard extends JPanel
 		super.paintComponent(graphics);
 	}
 
-	public void init(int playerId, List<PlayerInfo> players)
+	public void init(int playerId, List<PlayerInfo> players, int width, int height)
 	{
 		this.playerId = playerId;
 		this.players = players;
 
-		boardContent = new HashMap<>();
-		playBoard.setCursor(getClient().getColor());
+		playBoard = new PlayBoard(this, width, height);
+		add(playBoard, BoardLayout.BOARD);
 		boardMenu.build();
 		revalidate();
 		repaint();
@@ -96,9 +89,6 @@ public class TrapGameBoard extends JPanel
 
 	public void setBoardSize(int boardWidth, int boardHeight)
 	{
-		this.boardWidth = boardWidth;
-		this.boardHeight = boardHeight;
-
 		playBoard.prepare(boardWidth, boardHeight);
 		revalidate();
 		repaint();
@@ -107,20 +97,19 @@ public class TrapGameBoard extends JPanel
 	public void start()
 	{
 		reset();
-		setBoardLocked(false);
+		playBoard.setBoardLocked(false);
 	}
 
 	public void stop()
 	{
-		setBoardLocked(true);
-		spectator = false;
+		playBoard.setBoardLocked(true);
+		playBoard.setSpectator(false);
 	}
 
 	public void reset()
 	{
-		boardContent.clear();
-		boardLocked = true;
-		playBoard.reset();
+		playBoard.getScores().clear();
+		playBoard.setBoardLocked(true);
 
 		revalidate();
 		repaint();
@@ -128,13 +117,11 @@ public class TrapGameBoard extends JPanel
 
 	public void dispose()
 	{
-		boardContent = null;
+		if(playBoard != null)
+			remove(playBoard);
+		playBoard = null;
 		players = null;
 		playerId = -1;
-		boardWidth = -1;
-		boardHeight = -1;
-		boardLocked = true;
-		playBoard.removeAll();
 		chat.reset();
 	}
 
@@ -153,7 +140,7 @@ public class TrapGameBoard extends JPanel
 
 	public boolean inGame()
 	{
-		return players != null && boardContent != null && playerId >= 0;
+		return players != null && playBoard != null && playerId >= 0;
 	}
 
 	public void join(PlayerInfo info)
@@ -173,47 +160,6 @@ public class TrapGameBoard extends JPanel
 		boardMenu.build();
 	}
 
-	public boolean canClick(Point point)
-	{
-		return !boardContent.containsKey(point);
-	}
-
-	public void place(int playerId, Point point)
-	{
-		if(boardLocked && !spectator)
-			return;
-
-		PlayerInfo player = getPlayer(playerId);
-
-		if(point.getX() < 0 || point.getY() < 0
-				|| point.getX() >= getBoardWidth()
-				|| point.getY() >= getBoardHeight()
-				|| boardContent.containsKey(point))
-			return;
-
-
-		boardContent.put(point, player);
-
-		for(Component component : playBoard.getComponents())
-			if(component instanceof TrapButton && ((TrapButton)component).getPoint().equals(point))
-				component.setBackground(player.getColor());
-
-		if(playerId == getClient().getPlayerId())
-			getPlayBoard().playClickSound();
-	}
-
-	public void fill(int playerId, Point point)
-	{
-		BoardFiller.tryFill(point, getPlayer(playerId), boardContent, getBoardWidth(), getBoardHeight());
-
-		for(Component component : playBoard.getComponents())
-			if(component instanceof TrapButton)
-			{
-				PlayerInfo owner = boardContent.get(((TrapButton)component).getPoint());
-				if(owner != null)
-					component.setBackground(owner.getColor());
-			}
-	}
 
 	public TrapGameClient getContainer()
 	{
@@ -230,39 +176,9 @@ public class TrapGameBoard extends JPanel
 		return playBoard;
 	}
 
-	public boolean isBoardLocked()
-	{
-		return boardLocked;
-	}
-
-	public void setBoardLocked(boolean locked)
-	{
-		boardLocked = locked;
-	}
-
-	public int getBoardWidth()
-	{
-		return boardWidth;
-	}
-
-	public int getBoardHeight()
-	{
-		return boardHeight;
-	}
-
 	public Chat getChat()
 	{
 		return chat;
-	}
-
-	public boolean isSpectator()
-	{
-		return spectator;
-	}
-
-	public void setSpectator(boolean spectator)
-	{
-		this.spectator = spectator;
 	}
 
 	public Image getButtonFrame()

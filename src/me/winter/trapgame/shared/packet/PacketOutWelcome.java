@@ -18,6 +18,7 @@ import java.util.Map;
 public class PacketOutWelcome extends Packet
 {
 	private int playerId;
+	private int boardWidth, boardHeight;
 	private List<PlayerInfo> players;
 
 	public PacketOutWelcome()
@@ -25,9 +26,11 @@ public class PacketOutWelcome extends Packet
 
 	}
 
-	public PacketOutWelcome(int playerId, List<PlayerInfo> players)
+	public PacketOutWelcome(int playerId, List<PlayerInfo> players, int boardWidth, int boardHeight)
 	{
 		this.playerId = playerId;
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
 		this.players = players;
 	}
 
@@ -38,6 +41,8 @@ public class PacketOutWelcome extends Packet
 		{
 			ObjectInputStream objectStream = new ObjectInputStream(stream);
 			setPlayerId(objectStream.readShort());
+			setBoardWidth(objectStream.readShort());
+			setBoardHeight(objectStream.readShort());
 			setPlayers((List<PlayerInfo>)objectStream.readObject());
 		}
 		catch(ClassNotFoundException | ClassCastException | NoClassDefFoundError ex)
@@ -51,6 +56,8 @@ public class PacketOutWelcome extends Packet
 	{
 		ObjectOutputStream objectStream = new ObjectOutputStream(stream);
 		objectStream.writeShort((short)getPlayerId());
+		objectStream.writeShort((short)getBoardWidth());
+		objectStream.writeShort((short)getBoardHeight());
 		objectStream.writeObject(getPlayers());
 	}
 
@@ -62,6 +69,26 @@ public class PacketOutWelcome extends Packet
 	public void setPlayerId(int playerId)
 	{
 		this.playerId = playerId;
+	}
+
+	public int getBoardWidth()
+	{
+		return boardWidth;
+	}
+
+	public void setBoardWidth(int boardWidth)
+	{
+		this.boardWidth = boardWidth;
+	}
+
+	public int getBoardHeight()
+	{
+		return boardHeight;
+	}
+
+	public void setBoardHeight(int boardHeight)
+	{
+		this.boardHeight = boardHeight;
 	}
 
 	public List<PlayerInfo> getPlayers()

@@ -4,7 +4,6 @@ import me.winter.trapgame.shared.PlayerInfo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -96,7 +95,7 @@ public class BoardMenu extends JPanel
 		for(PlayerInfo info : getBoard().getPlayers())
 		{
 			JPanel playerStats = new JPanel();
-			playerStats.setBackground(new Color(0, 0, 0, 0));
+			playerStats.setBackground(new Color(0, 0, 0, 64));
 			playerStats.setBorder(new EmptyBorder(10, 10, 10, 10));
 			playerStats.setLayout(new BoxLayout(playerStats, BoxLayout.Y_AXIS));
 			playerStats.setPreferredSize(new Dimension(160, 128));

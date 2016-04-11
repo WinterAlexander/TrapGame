@@ -1,6 +1,8 @@
 package me.winter.trapgame.client;
 
+import me.winter.trapgame.shared.BoardFiller;
 import me.winter.trapgame.shared.PlayerInfo;
+import me.winter.trapgame.shared.packet.PacketInClick;
 import me.winter.trapgame.shared.packet.PacketInCursorMove;
 
 import javax.imageio.ImageIO;
@@ -12,6 +14,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -24,20 +27,24 @@ import java.util.Map;
  *
  * Created by Alexander Winter on 2016-03-28.
  */
-public class PlayBoard extends JPanel
+public class PlayBoard extends JPanel implements MouseMotionListener, MouseListener
 {
-	private BufferedImage baseCursor;
+
 	private TrapGameBoard container;
 
+	private Map<Point, PlayerInfo> scores;
+	private int boardWidth, boardHeight;
+	private boolean boardLocked, spectator;
+
+	private BufferedImage baseCursor;
 	private Map<Color, BufferedImage> preloaded;
-	private boolean windowsCursor;
 
 	private Clip clickSound;
 
-	public PlayBoard(TrapGameBoard container)
+	public PlayBoard(TrapGameBoard container, int width, int height)
 	{
 		this.container = container;
-		this.windowsCursor = System.getProperty("os.name").toLowerCase().contains("win");
+		this.scores = new HashMap<>();
 		preloaded = new HashMap<>();
 		try
 		{
@@ -60,56 +67,59 @@ public class PlayBoard extends JPanel
 			this.clickSound = null;
 		}
 
-		addMouseMotionListener(new MouseMotionListener()
-		{
-			@Override
-			public void mouseDragged(MouseEvent e)
-			{
-				declareMouseMove(e.getX(), e.getY());
-			}
-
-			@Override
-			public void mouseMoved(MouseEvent e)
-			{
-				declareMouseMove(e.getX(), e.getY());
-			}
-
-			private void declareMouseMove(int x, int y)
-			{
-				container.getClient().setCursor((float)x / getWidth(), (float)y / getHeight());
-				container.getContainer().getConnection().sendPacketLater(new PacketInCursorMove(container.getClient().getCursorX(), container.getClient().getCursorY()));
-
-			}
-		});
+		addMouseMotionListener(this);
+		addMouseListener(this);
 
 		setBackground(new Color(0, 0, 0, 0));
+
+		boolean windows;
+
+		try
+		{
+			windows = System.getProperty("os.name").toLowerCase().contains("win");
+		}
+		catch(Exception ex)
+		{
+			windows = false;
+		}
+
+		BufferedImage image = getCursorImage(container.getClient().getColor(), !windows);
+		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(image.getWidth() / 2, image.getHeight() / 2), "TrapGame"));
+
+		prepare(width, height);
 	}
 
 	public void prepare(int boardWidth, int boardHeight)
 	{
+		setBoardWidth(boardWidth);
+		setBoardHeight(boardHeight);
 		removeAll();
 		setLayout(new GridLayout(boardWidth, boardHeight, 0, 0));
-
-		for(int i = 0; i < boardWidth; i++)
-		{
-			for(int j = 0; j < boardHeight; j++)
-			{
-				add(new TrapButton(container, new Point(i, j)));
-			}
-		}
-	}
-
-	public void reset()
-	{
-		for(Component component : getComponents())
-			if(component instanceof TrapButton)
-				component.setBackground(Color.WHITE);
 	}
 
 	@Override
 	public void paint(Graphics graphics)
 	{
-		super.paint(graphics);
+		int buttonWidth = getWidth() / getBoardWidth();
+		int buttonHeight = getHeight() / getBoardHeight();
+
+		for(int x = 0; x < getBoardWidth(); x++)
+		{
+			for(int y = 0; y < getBoardHeight(); y++)
+			{
+				PlayerInfo player = scores.get(new Point(x, y));
+				Color color;
+
+				if(player == null)
+					color = Color.WHITE;
+				else
+					color = player.getColor();
+
+				graphics.setColor(color);
+				graphics.fillRect(x * buttonWidth, y * buttonHeight, buttonWidth, buttonHeight);
+				graphics.drawImage(container.getButtonFrame(), x * buttonWidth, y * buttonHeight, buttonWidth, buttonHeight, null);
+			}
+		}
 
 		for(PlayerInfo player : container.getPlayers())
 		{
@@ -172,16 +182,136 @@ public class PlayBoard extends JPanel
 		return image;
 	}
 
+	public void place(int playerId, Point point)
+	{
+		if(boardLocked && !spectator)
+			return;
+
+		PlayerInfo player = container.getPlayer(playerId);
+
+		if(point.getX() < 0 || point.getY() < 0
+				|| point.getX() >= getBoardWidth()
+				|| point.getY() >= getBoardHeight()
+				|| scores.containsKey(point))
+			return;
+
+
+		scores.put(point, player);
+
+		if(playerId == container.getClient().getPlayerId())
+			playClickSound();
+
+		container.revalidate();
+		container.repaint();
+	}
+
+	public void fill(int playerId, Point point)
+	{
+		BoardFiller.tryFill(point, container.getPlayer(playerId), scores, getBoardWidth(), getBoardHeight());
+		container.revalidate();
+		container.repaint();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e)
+	{
+		mouseMoved(e);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e)
+	{
+		container.getClient().setCursor((float)e.getX() / getWidth(), (float)e.getY() / getHeight());
+		container.getContainer().getConnection().sendPacketLater(new PacketInCursorMove(container.getClient().getCursorX(), container.getClient().getCursorY()));
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+		if(isBoardLocked())
+			return;
+
+		Point point = new Point(e.getX() * getBoardWidth() / getWidth(), e.getY() * getBoardHeight() / getHeight());
+
+		if(getScores().containsKey(point))
+			return;
+
+		container.getContainer().getConnection().sendPacketLater(new PacketInClick(point));
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e)
+	{
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e)
+	{
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e)
+	{
+
+	}
+
 	public void playClickSound()
 	{
 		clickSound.setFramePosition(0);
 		clickSound.start();
 	}
 
-	public void setCursor(Color color)
+	public Map<Point, PlayerInfo> getScores()
 	{
-		BufferedImage image = getCursorImage(color, !windowsCursor);
-		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(image.getWidth() / 2, image.getHeight() / 2), "TrapGame"));
+		return scores;
+	}
 
+	public int getBoardWidth()
+	{
+		return boardWidth;
+	}
+
+	public void setBoardWidth(int boardWidth)
+	{
+		this.boardWidth = boardWidth;
+	}
+
+	public int getBoardHeight()
+	{
+		return boardHeight;
+	}
+
+	public void setBoardHeight(int boardHeight)
+	{
+		this.boardHeight = boardHeight;
+	}
+
+	public boolean isBoardLocked()
+	{
+		return boardLocked;
+	}
+
+	public void setBoardLocked(boolean boardLocked)
+	{
+		this.boardLocked = boardLocked;
+	}
+
+	public boolean isSpectator()
+	{
+		return spectator;
+	}
+
+	public void setSpectator(boolean spectator)
+	{
+		this.spectator = spectator;
 	}
 }

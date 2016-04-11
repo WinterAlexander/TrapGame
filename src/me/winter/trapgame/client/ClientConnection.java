@@ -6,14 +6,9 @@ import me.winter.trapgame.shared.packet.*;
 import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
-import java.awt.Point;
+import java.awt.*;
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +137,7 @@ public class ClientConnection
 			PacketOutWelcome packetWelcome = (PacketOutWelcome)packet;
 
 			welcomed = true;
-			client.getBoard().init(packetWelcome.getPlayerId(), packetWelcome.getPlayers());
+			client.getBoard().init(packetWelcome.getPlayerId(), packetWelcome.getPlayers(), packetWelcome.getBoardWidth(), packetWelcome.getBoardHeight());
 			client.goToBoard();
 			client.getScheduler().addTask(keepAliveTask);
 			return;
@@ -174,13 +169,13 @@ public class ClientConnection
 
 		if(packet instanceof PacketOutPlace)
 		{
-			client.getBoard().place(((PacketOutPlace)packet).getPlayerId(), ((PacketOutPlace)packet).getLocation());
+			client.getBoard().getPlayBoard().place(((PacketOutPlace)packet).getPlayerId(), ((PacketOutPlace)packet).getLocation());
 			return;
 		}
 
 		if(packet instanceof PacketOutFill)
 		{
-			client.getBoard().fill(((PacketOutFill)packet).getPlayerId(), ((PacketOutFill)packet).getLocation());
+			client.getBoard().getPlayBoard().fill(((PacketOutFill)packet).getPlayerId(), ((PacketOutFill)packet).getLocation());
 			return;
 		}
 
@@ -198,9 +193,9 @@ public class ClientConnection
 
 		if(packet instanceof PacketOutSpectator)
 		{
-			client.getBoard().setSpectator(true);
+			client.getBoard().getPlayBoard().setSpectator(true);
 			for(Map.Entry<Point, Integer> entry : ((PacketOutSpectator)packet).getBoardContent().entrySet())
-				client.getBoard().place(entry.getValue(), entry.getKey());
+				client.getBoard().getPlayBoard().place(entry.getValue(), entry.getKey());
 			return;
 		}
 
@@ -260,18 +255,17 @@ public class ClientConnection
 		{
 			close();
 			JOptionPane.showMessageDialog(client, "Sorry, you were disconnected because the server stopped responding.", "Server stopped responding", JOptionPane.ERROR_MESSAGE);
-			return;
 		}
 		catch(SocketException ex)
 		{
-
+			close();
 		}
 		catch(Exception ex)
 		{
 			if(client.getUserProperties().isDebugMode())
 				ex.printStackTrace(System.err);
+			close();
 		}
-		close();
 	}
 
 	private void sendOutput()

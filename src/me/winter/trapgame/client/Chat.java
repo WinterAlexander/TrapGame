@@ -12,7 +12,7 @@ import java.awt.event.KeyListener;
  *
  * Created by Alexander Winter on 2016-03-27.
  */
-public class Chat extends JPanel
+public class Chat extends JPanel implements KeyListener
 {
 	private TrapGameBoard board;
 
@@ -28,34 +28,7 @@ public class Chat extends JPanel
 		this.textField = new JTextField();
 		this.textArea = new JTextPane();
 
-		this.textField.addKeyListener(new KeyListener()
-		{
-			@Override
-			public void keyTyped(KeyEvent e)
-			{
-
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e)
-			{
-
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e)
-			{
-				if(!textField.hasFocus())
-					return;
-
-				if(e.getKeyCode() != KeyEvent.VK_ENTER)
-					return;
-
-				if(textField.getText().length() > 0)
-					board.getContainer().getConnection().sendPacketLater(new PacketInChat(textField.getText()));
-				textField.setText("");
-			}
-		});
+		this.textField.addKeyListener(this);
 
 		textArea.setEditable(false);
 		textArea.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -81,10 +54,44 @@ public class Chat extends JPanel
 	public void sendMessage(String message)
 	{
 		textArea.setText(message + "\n" + textArea.getText());
+		board.revalidate();
+		board.repaint();
 	}
 
 	public void reset()
 	{
 		textArea.setText("");
+		board.revalidate();
+		board.repaint();
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e)
+	{
+		if(!textField.hasFocus())
+			return;
+
+		board.revalidate();
+		board.repaint();
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e)
+	{
+		if(!textField.hasFocus())
+			return;
+
+		if(e.getKeyCode() != KeyEvent.VK_ENTER)
+			return;
+
+		if(textField.getText().length() > 0)
+			board.getContainer().getConnection().sendPacketLater(new PacketInChat(textField.getText()));
+		textField.setText("");
 	}
 }
