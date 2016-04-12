@@ -1,4 +1,9 @@
-package me.winter.trapgame.server;
+package me.winter.trapgame.server.state;
+
+import me.winter.trapgame.server.Player;
+import me.winter.trapgame.server.TrapGameServer;
+
+import java.awt.*;
 
 /**
  * Represents a state of the game when there's not enough players to play
@@ -23,7 +28,7 @@ public class StandbyState extends State
 
 		int amount = getServer().getMinPlayers() - getServer().getPlayers().size();
 
-		getServer().broadcast("The game need " + amount + " more player" + (amount > 1 ? "1" : "") + " to start.");
+		getServer().broadcast(Color.gray, "Need " + amount + " more player" + (amount > 1 ? "1" : "") + " to start.");
 	}
 
 	@Override
@@ -35,7 +40,7 @@ public class StandbyState extends State
 	@Override
 	public void start()
 	{
-		getServer().broadcast("Sorry, there's not enough players anymore to play. Please wait.");
+		getServer().broadcast(Color.lightGray, "Sorry, there's not enough players. Please wait.");
 	}
 
 	@Override

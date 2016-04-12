@@ -1,4 +1,4 @@
-package me.winter.trapgame.client;
+package me.winter.trapgame.client.board;
 
 import me.winter.trapgame.shared.PlayerInfo;
 
@@ -146,8 +146,8 @@ public class BoardMenu extends JPanel
 		add(buttonContainer, BorderLayout.SOUTH);
 		add(statsContainer, BorderLayout.CENTER);
 
-		revalidate();
-		repaint();
+		getParent().revalidate();
+		getParent().repaint();
 	}
 
 	public TrapGameBoard getBoard()

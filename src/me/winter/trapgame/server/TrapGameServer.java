@@ -1,12 +1,13 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.server.state.StandbyState;
+import me.winter.trapgame.server.state.State;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.Scheduler;
 import me.winter.trapgame.shared.packet.PacketOutBoardSize;
 import me.winter.trapgame.shared.packet.PacketOutWelcome;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
 import me.winter.trapgame.shared.packet.PacketOutLeave;
-import me.winter.trapgame.util.StringUtil;
 
 import java.awt.*;
 import java.io.File;
@@ -167,7 +168,7 @@ public class TrapGameServer
 		getConnection().sendToAll(new PacketOutJoin(player.getInfo()));
 		getPlayers().add(player);
 		player.getConnection().sendPacket(new PacketOutWelcome(player.getId(), getPlayersInfo(), boardWidth, boardHeight));
-		broadcast(player.getName() + " has joined the game.");
+		broadcast(player.getFormattedName() + " has joined the game.");
 		getState().join(player);
 	}
 
@@ -175,7 +176,7 @@ public class TrapGameServer
 	{
 		getStatsManager().save(player.getName(), player.getInfo().getStats());
 		getPlayers().remove(player);
-		broadcast(player.getName() + " has left the game.");
+		broadcast(player.getFormattedName() + " has left the game.");
 		getState().leave(player);
 		getConnection().sendToAll(new PacketOutLeave(player.getId()));
 	}
@@ -239,17 +240,21 @@ public class TrapGameServer
 
 	public Color getColor(int id)
 	{
-		if(id < COLORS.length)
-			return COLORS[id];
-
-		return new Color(COLORS[id].getRed() + id, COLORS[id].getGreen() + id, COLORS[id].getBlue());
+		return COLORS[id % COLORS.length];
 	}
 
 	public void broadcast(String message)
 	{
-		System.out.println("[Broadcast] " + message);
+		getConsole().getConsoleSender().sendMessage(message);
 
 		getPlayers().forEach(player -> player.sendMessage(message));
+	}
+
+	public void broadcast(Color color, String message)
+	{
+		getConsole().getConsoleSender().sendMessage(message);
+
+		getPlayers().forEach(player -> player.sendMessage(color, message));
 	}
 
 	public Scheduler getScheduler()

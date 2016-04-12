@@ -1,1 +1,0 @@
-  - On Kubuntu, the server isn't stopping when using /stop and no players even joined

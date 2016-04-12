@@ -1,4 +1,7 @@
-package me.winter.trapgame.server;
+package me.winter.trapgame.server.state;
+
+import me.winter.trapgame.server.Player;
+import me.winter.trapgame.server.TrapGameServer;
 
 /**
  * Represents a state of the game server

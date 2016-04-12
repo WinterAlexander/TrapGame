@@ -1,6 +1,10 @@
-package me.winter.trapgame.server;
+package me.winter.trapgame.server.state;
 
+import me.winter.trapgame.server.Player;
+import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.shared.Task;
+
+import java.awt.*;
 
 /**
  * Represents the state of the game when there's enough players to start but we let a timer run to to let others join
@@ -40,7 +44,7 @@ public class WaitingState extends State
 	public void start()
 	{
 		getServer().getScheduler().addTask(task);
-		getServer().broadcast("There's now enough players, the game will start in " + timer + " second" + (timer > 1 ? "s" : "") + ".");
+		getServer().broadcast("The game will start in " + timer + " second" + (timer > 1 ? "s" : "") + ".");
 	}
 
 	@Override
@@ -64,7 +68,7 @@ public class WaitingState extends State
 			case 3:
 			case 2:
 			case 1:
-				getServer().broadcast("The game is starting in " + timer + " second" + (timer > 1 ? "s" : "") + ".");
+				getServer().broadcast(Color.lightGray, "Starting in " + timer + " second" + (timer > 1 ? "s" : "") + "...");
 				return;
 
 			case 0:

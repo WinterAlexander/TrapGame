@@ -1,4 +1,7 @@
-package me.winter.trapgame.client;
+package me.winter.trapgame.client.menu;
+
+import me.winter.trapgame.client.TrapGameClient;
+import me.winter.trapgame.client.UserProperties;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

@@ -98,6 +98,13 @@ public class ServerConnection
 
 			String name = ((PacketInJoin)packet).getPlayerName();
 
+			String invalidReason = getInvalidNameReason(name);
+			if(invalidReason != null)
+			{
+				sendPacket(new PacketOutKick(invalidReason), bufPacket.getAddress(), bufPacket.getPort());
+				continue;
+			}
+
 			while(!server.isAvailable(name))
 				name += "_";
 
@@ -284,5 +291,19 @@ public class ServerConnection
 	public void setAcceptingNewClients(boolean acceptNewClients)
 	{
 		this.acceptNewClients = acceptNewClients;
+	}
+
+	public static String getInvalidNameReason(String name)
+	{
+		if(name.length() < 3)
+			return "Your name should have at least 3 characters.";
+
+		if(name.length() > 20)
+			return "Your name can't have more than 20 characters.";
+
+		if(!name.matches("^[A-Za-z0-9_]+$"))
+			return "Your name can only have letters, numbers and underscores.";
+
+		return null;
 	}
 }

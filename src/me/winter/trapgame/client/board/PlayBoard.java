@@ -1,4 +1,4 @@
-package me.winter.trapgame.client;
+package me.winter.trapgame.client.board;
 
 import me.winter.trapgame.shared.BoardFiller;
 import me.winter.trapgame.shared.PlayerInfo;
@@ -16,7 +16,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;

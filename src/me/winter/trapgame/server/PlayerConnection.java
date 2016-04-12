@@ -1,5 +1,7 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.server.state.GameState;
+import me.winter.trapgame.server.state.State;
 import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.*;
 

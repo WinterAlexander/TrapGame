@@ -1,5 +1,7 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.util.StringUtil;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -31,7 +33,7 @@ public class ConsoleSender implements CommandSender
 	@Override
 	public void sendMessage(String message)
 	{
-		System.out.println(message);
+		System.out.println(StringUtil.noHTML(message));
 	}
 
 	@Override

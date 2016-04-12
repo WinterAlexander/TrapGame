@@ -1,5 +1,7 @@
 package me.winter.trapgame.client;
 
+import me.winter.trapgame.client.board.TrapGameBoard;
+import me.winter.trapgame.client.menu.TrapGameMenu;
 import me.winter.trapgame.shared.Scheduler;
 import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.util.FileUtil;

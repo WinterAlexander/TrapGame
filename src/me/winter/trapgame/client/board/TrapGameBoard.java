@@ -1,16 +1,13 @@
-package me.winter.trapgame.client;
+package me.winter.trapgame.client.board;
 
-import me.winter.trapgame.shared.BoardFiller;
+import me.winter.trapgame.client.TrapGameClient;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.PlayerStats;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +55,9 @@ public class TrapGameBoard extends JPanel
 
 		add(chat, BoardLayout.RIGHT);
 		add(boardMenu, BoardLayout.LEFT);
+
+		getLayout().addLayoutComponent(BoardLayout.DOWN, chat);
+		getLayout().addLayoutComponent(BoardLayout.UP, boardMenu);
 	}
 
 	@Override

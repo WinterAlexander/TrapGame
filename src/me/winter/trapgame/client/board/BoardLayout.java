@@ -1,4 +1,4 @@
-package me.winter.trapgame.client;
+package me.winter.trapgame.client.board;
 
 import java.awt.*;
 
@@ -115,13 +115,13 @@ public class BoardLayout implements LayoutManager
 
 				board.setBounds(sideWidth, 0, board.getWidth(), board.getHeight());
 
-				if(up != null)
+				if(up != null && up != left && up != right)
 				{
 					up.setSize(0, 0);
 					up.setBounds(0, 0, 0, 0);
 				}
 
-				if(down != null)
+				if(down != null && down != left && down != right)
 				{
 					down.setSize(0, 0);
 					down.setBounds(0, 0, 0, 0);
@@ -147,13 +147,13 @@ public class BoardLayout implements LayoutManager
 
 			board.setBounds(0, sideHeight, board.getWidth(), board.getHeight());
 
-			if(left != null)
+			if(left != null && left != up && left != down)
 			{
 				left.setSize(0, 0);
 				left.setBounds(0, 0, 0, 0);
 			}
 
-			if(right != null)
+			if(right != null && right != up && right != down)
 			{
 				right.setSize(0, 0);
 				right.setBounds(0, 0, 0, 0);

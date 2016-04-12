@@ -1,12 +1,14 @@
 package me.winter.trapgame.util;
 
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -184,5 +186,58 @@ public class StringUtil
 		{
 			return false;
 		}
+	}
+
+	public static String htmlSpecialChars(String html)
+	{
+		StringBuilder builder = new StringBuilder(html);
+
+		for(int index = 0; index < builder.length(); index++)
+		{
+			String toInsert;
+
+			switch(builder.charAt(index))
+			{
+				case '<':
+					toInsert = "&lt;";
+					break;
+
+				case '>':
+					toInsert = "&gt;";
+					break;
+
+				case '\'':
+					toInsert = "&#39;";
+					break;
+
+				case '"':
+					toInsert = "&quot;";
+					break;
+
+				case '&':
+					toInsert = "&amp;";
+					break;
+
+				default:
+					continue;
+			}
+
+			builder.deleteCharAt(index);
+			builder.insert(index, toInsert);
+
+			index += toInsert.length() - 1;
+		}
+
+		return builder.toString();
+	}
+
+	public static String toCSS(Color color)
+	{
+		return "rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")";
+	}
+
+	public static String noHTML(String html)
+	{
+		return html.replaceAll("\n|\r", "").replaceAll("<br\\s*/?>", "\n").replaceAll("<[^<>]+>", "");
 	}
 }

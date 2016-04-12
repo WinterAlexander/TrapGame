@@ -95,4 +95,12 @@ public class FileUtil
 			throw new RuntimeException("Can't copy " + file + " from archive to " + directory.getAbsolutePath(), e);
 		}
 	}
+
+	public static InputStream resourceAsStream(String resourceName)
+	{
+		if(!resourceName.startsWith("/"))
+			resourceName = "/" + resourceName;
+
+		return FileUtil.class.getResourceAsStream(resourceName);
+	}
 }

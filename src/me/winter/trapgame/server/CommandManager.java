@@ -1,6 +1,7 @@
 package me.winter.trapgame.server;
 
 import me.winter.trapgame.server.command.*;
+import me.winter.trapgame.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,8 @@ public class CommandManager
 
 	public void execute(CommandSender sender, String input)
 	{
+		input = StringUtil.htmlSpecialChars(input);
+
 		String originalInput = input;
 		String label = null;
 		List<String> argsList = new ArrayList<>();

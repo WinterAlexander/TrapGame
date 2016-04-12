@@ -3,7 +3,9 @@ package me.winter.trapgame.server;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.packet.PacketOutChat;
 import me.winter.trapgame.shared.packet.PacketOutKick;
+import me.winter.trapgame.util.StringUtil;
 
+import java.awt.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -39,16 +41,32 @@ public class Player implements CommandSender
 		return info.getName();
 	}
 
+	public String getFormattedName()
+	{
+		return getFormattedName(getName());
+	}
+
+	private String getFormattedName(String name)
+	{
+		return "<span style=\"color: " + StringUtil.toCSS(getInfo().getColor()) + ";\">" + name + "</span>";
+	}
+
 	@Override
 	public void chat(String message)
 	{
-		getServer().broadcast(getName() + ": " + message);
+		getServer().broadcast(getFormattedName(getName() + ":") + " " + message);
 	}
 
 	@Override
 	public void sendMessage(String message)
 	{
 		getConnection().sendPacket(new PacketOutChat(message));
+	}
+
+	@Override
+	public void sendMessage(Color color, String message)
+	{
+		sendMessage("<span style=\"color: " + StringUtil.toCSS(color) + ";\">" + message + "</span>");
 	}
 
 	public void kick(String message)
@@ -65,7 +83,7 @@ public class Player implements CommandSender
 
 	public void timeOut()
 	{
-		getServer().broadcast(getName() + " has timed out.");
+		getServer().broadcast(Color.lightGray, getName() + " has timed out.");
 		leave();
 	}
 
