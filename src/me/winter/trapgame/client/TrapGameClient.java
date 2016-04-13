@@ -8,11 +8,11 @@ import me.winter.trapgame.util.FileUtil;
 import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
-import java.awt.Toolkit;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Represents the client for TrapGame
@@ -30,8 +30,11 @@ public class TrapGameClient extends JFrame
 	{
 		try
 		{
-			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			new TrapGameClient().start();
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+			TrapGameClient client = new TrapGameClient();
+			client.load();
+			client.start();
 		}
 		catch(Throwable throwable)//catch copied from NewX
 		{
@@ -47,6 +50,7 @@ public class TrapGameClient extends JFrame
 	private Scheduler scheduler;
 	private ClientConnection connection;
 	private UserProperties userProperties;
+	private ResourceManager resourceManager;
 
 	private TrapGameMenu menu;
 	private TrapGameBoard board;
@@ -62,11 +66,14 @@ public class TrapGameClient extends JFrame
 		scheduler = new Scheduler();
 		connection = new ClientConnection(this);
 		userProperties = new UserProperties(new File(FileUtil.getAppData() + "/.TrapGame/user.properties"));
-		userProperties.loadIfPresent();
+		resourceManager = new SimpleResourceManager();
 
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 
-		setSize((int)dimension.getWidth() / 2, (int)dimension.getHeight() / 2);
+		int width = (int)(dimension.getWidth() * 3 / 4);
+
+		setSize(width, width * 9 / 16);
+		setResizable(false);
 		setLocation((int)dimension.getWidth() / 2 - getWidth() / 2, (int)dimension.getHeight() / 2 - getHeight() / 2);
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -80,12 +87,29 @@ public class TrapGameClient extends JFrame
 			}
 		});
 
+		JPanel loading = new JPanel();
+		loading.setLayout(new BorderLayout());
+
+		JLabel loadingText = new JLabel("Loading...", SwingConstants.CENTER);
+		loadingText.setFont(new Font("Verdana", Font.BOLD, 18));
+		loading.add(loadingText, BorderLayout.CENTER);
+		setContentPane(loading);
+
+		setVisible(true);
+	}
+
+	public void load() throws IOException
+	{
+		userProperties.loadIfPresent();
+		resourceManager.scan("/index.properties");
+		resourceManager.load();
+
 		menu = new TrapGameMenu(this);
 		board = new TrapGameBoard(this);
 
 		setContentPane(menu);
-
-		setVisible(true);
+		revalidate();
+		repaint();
 	}
 
 	public void start()
@@ -181,5 +205,10 @@ public class TrapGameClient extends JFrame
 	public TrapGameBoard getBoard()
 	{
 		return board;
+	}
+
+	public ResourceManager getResourceManager()
+	{
+		return resourceManager;
 	}
 }

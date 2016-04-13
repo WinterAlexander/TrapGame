@@ -1,10 +1,14 @@
 package me.winter.trapgame.client.board;
 
 import me.winter.trapgame.shared.packet.PacketInChat;
+import me.winter.trapgame.util.FileUtil;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.io.*;
 import java.util.List;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -25,8 +29,6 @@ public class Chat extends JPanel implements KeyListener
 	private JTextPane textArea;
 	private JTextField textField;
 
-	private String style;
-
 	public Chat(TrapGameBoard board)
 	{
 		this.board = board;
@@ -35,13 +37,24 @@ public class Chat extends JPanel implements KeyListener
 
 		messages = new ArrayList<>();
 
-		textField = new JTextField();
+		textField = new JTextField()
+		{
+			@Override
+			public void paint(Graphics g)
+			{
+				g.drawImage(board.getContainer().getResourceManager().getImage("chat-input"), 0, 0, getWidth(), getHeight(), null);
+
+				super.paint(g);
+			}
+		};
 		textArea = new JTextPane()
 		{
 			@Override
-			protected void paintComponent(Graphics g)
+			public void paint(Graphics g)
 			{
-				super.paintComponent(g);
+				g.drawImage(board.getContainer().getResourceManager().getImage("chat-background"), 0, 0, getWidth(), getHeight(), null);
+
+				super.paint(g);
 			}
 		};
 
@@ -50,12 +63,13 @@ public class Chat extends JPanel implements KeyListener
 		textArea.setContentType("text/html");
 		textArea.setEditable(false);
 		textArea.setFont(new Font("Arial", Font.PLAIN, 18));
-		textArea.setForeground(Color.WHITE);
-		textArea.setBackground(new Color(0, 0, 0));
+		textArea.setForeground(Color.BLACK);
+		textArea.setBackground(new Color(0, 0, 0, 0));
 
 		textField.setFont(new Font("Arial", Font.PLAIN, 18));
-		textField.setForeground(Color.WHITE);
-		textField.setBackground(new Color(0, 0, 0));
+		textField.setForeground(Color.BLACK);
+		textField.setBackground(new Color(0, 0, 0, 0));
+		textField.setBorder(new EmptyBorder(4, 4, 4, 4));
 		((DefaultCaret)textArea.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		setLayout(new BorderLayout());
@@ -67,24 +81,6 @@ public class Chat extends JPanel implements KeyListener
 
 		//add(scroll, BorderLayout.EAST);
 		add(textField, BorderLayout.SOUTH);
-
-		try
-		{
-			StringBuilder styleBuilder = new StringBuilder();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(Chat.class.getResourceAsStream("/chat.css")));
-
-			String line;
-			while((line = reader.readLine()) != null)
-				styleBuilder.append(line);
-
-			reader.close();
-			style = styleBuilder.toString();
-		}
-		catch(IOException ex)
-		{
-			ex.printStackTrace(System.err);
-			style = "";
-		}
 	}
 
 	public void sendMessage(String message)
@@ -94,7 +90,7 @@ public class Chat extends JPanel implements KeyListener
 
 		builder.append("<head><style>");
 
-		builder.append(style);
+		builder.append(board.getContainer().getResourceManager().getText("chat-style"));
 
 		builder.append("</style></head><body><ul>");
 
@@ -118,8 +114,8 @@ public class Chat extends JPanel implements KeyListener
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		if(!textField.hasFocus())
-			return;
+		//if(!textField.hasFocus())
+		//	return;
 	}
 
 	@Override

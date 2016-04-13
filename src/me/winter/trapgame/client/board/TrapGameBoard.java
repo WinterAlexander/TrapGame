@@ -22,48 +22,36 @@ public class TrapGameBoard extends JPanel
 	private TrapGameClient container;
 
 	private PlayBoard playBoard;
-	private BoardMenu boardMenu;
+	private Scoreboard scoreboard;
 	private Chat chat;
 
 	private List<PlayerInfo> players;
 	private int playerId;
 
-	private Image buttonFrame, background;
 
 	public TrapGameBoard(TrapGameClient container)
 	{
 		this.container = container;
 
-		try
-		{
-			buttonFrame = ImageIO.read(ClassLoader.class.getResourceAsStream("/frame.png"));
-			background = ImageIO.read(ClassLoader.class.getResourceAsStream("/background.png"));
-		}
-		catch(IOException ex)
-		{
-			System.err.println("Failed to load image(s)");
-			ex.printStackTrace(System.err);
-		}
-
 		setBackground(new Color(0, 0, 0, 0));
 
 		chat = new Chat(this);
-		boardMenu = new BoardMenu(this);
+		scoreboard = new Scoreboard(this);
 		playBoard = null;
 
 		setLayout(new BoardLayout());
 
 		add(chat, BoardLayout.RIGHT);
-		add(boardMenu, BoardLayout.LEFT);
+		add(scoreboard, BoardLayout.LEFT);
 
 		getLayout().addLayoutComponent(BoardLayout.DOWN, chat);
-		getLayout().addLayoutComponent(BoardLayout.UP, boardMenu);
+		getLayout().addLayoutComponent(BoardLayout.UP, scoreboard);
 	}
 
 	@Override
 	public void paintComponent(Graphics graphics)
 	{
-		graphics.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+		graphics.drawImage(container.getResourceManager().getImage("background"), 0, 0, getWidth(), getHeight(), null);
 		super.paintComponent(graphics);
 	}
 
@@ -74,7 +62,7 @@ public class TrapGameBoard extends JPanel
 
 		playBoard = new PlayBoard(this, width, height);
 		add(playBoard, BoardLayout.BOARD);
-		boardMenu.build();
+		scoreboard.build();
 		revalidate();
 		repaint();
 	}
@@ -84,7 +72,7 @@ public class TrapGameBoard extends JPanel
 		for(int index : stats.keySet())
 			getPlayer(index).setStats(stats.get(index));
 
-		boardMenu.build();
+		scoreboard.build();
 	}
 
 	public void setBoardSize(int boardWidth, int boardHeight)
@@ -148,7 +136,7 @@ public class TrapGameBoard extends JPanel
 		if(!inGame())
 			throw new IllegalStateException("Game board not initialized");
 		players.add(info);
-		boardMenu.build();
+		scoreboard.build();
 	}
 
 	public void leave(int playerId)
@@ -157,7 +145,7 @@ public class TrapGameBoard extends JPanel
 			return;
 
 		players.removeIf(player -> player.getPlayerId() == playerId);
-		boardMenu.build();
+		scoreboard.build();
 	}
 
 
@@ -179,10 +167,5 @@ public class TrapGameBoard extends JPanel
 	public Chat getChat()
 	{
 		return chat;
-	}
-
-	public Image getButtonFrame()
-	{
-		return buttonFrame;
 	}
 }

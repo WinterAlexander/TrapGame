@@ -43,7 +43,7 @@ public class SkipCommand implements Command
 	public void execute(CommandSender player, String label, String[] arguments)
 	{
 		player.getServer().getState().skip();
-		player.sendMessage("The state has been skipped.");
+		//player.sendMessage("The state has been skipped.");
 	}
 
 	@Override

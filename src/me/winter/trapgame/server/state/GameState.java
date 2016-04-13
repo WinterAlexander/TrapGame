@@ -54,7 +54,7 @@ public class GameState extends State
 	@Override
 	public void start()
 	{
-		getServer().broadcast("Go !");
+		getServer().broadcast(Color.red, "Go !");
 		getServer().getConnection().sendToAll(new PacketOutStatus(PacketOutStatus.GAME_START));
 	}
 
@@ -170,7 +170,7 @@ public class GameState extends State
 			{
 				if(playersWithThatScore == 1)
 				{
-					message += players[0].getName() + " has won the game !";
+					message += players[0].getName() + " has won !";
 					players[0].getInfo().getStats().addWin();
 				}
 				else

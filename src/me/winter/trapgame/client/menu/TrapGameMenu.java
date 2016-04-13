@@ -16,7 +16,6 @@ import java.io.IOException;
  */
 public class TrapGameMenu extends JPanel
 {
-	private BufferedImage logo;
 	private TrapGameClient container;
 
 	private JTextField playerName;
@@ -27,19 +26,9 @@ public class TrapGameMenu extends JPanel
 	{
 		this.container = container;
 
-		try
-		{
-			logo = ImageIO.read(ClassLoader.class.getResourceAsStream("/logo.png"));
-		}
-		catch(IOException ex)
-		{
-			System.err.println("Failed to load logo image");
-			ex.printStackTrace(System.err);
-		}
-
 		setLayout(new GridBagLayout());
 
-		JLabel logoLabel = new JLabel(new ImageIcon(logo));
+		JLabel logoLabel = new JLabel(new ImageIcon(container.getResourceManager().getImage("logo")));
 
 		playerName = new JTextField();
 		playerName.setPreferredSize(new Dimension(200, 25));

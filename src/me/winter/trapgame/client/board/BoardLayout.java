@@ -3,7 +3,7 @@ package me.winter.trapgame.client.board;
 import java.awt.*;
 
 /**
- * A custom layout made to organize the TrapGameBoard as needed
+ * <p>A custom layout made to organize the TrapGameBoard as needed</p>
  *
  * Created by 1541869 on 2016-04-07.
  */
@@ -98,8 +98,10 @@ public class BoardLayout implements LayoutManager
 			{
 				board.setSize(parent.getHeight(), parent.getHeight());
 
-				int sideWidth = (parent.getWidth() - board.getWidth()) / 2;
+				int sideWidth = (parent.getWidth() - board.getWidth());
 
+				if(left != null && right != null) //s'il y en a 2, les deux se partagent la moitié de l'espace
+					sideWidth /= 2;
 
 				if(left != null)
 				{
@@ -110,10 +112,10 @@ public class BoardLayout implements LayoutManager
 				if(right != null)
 				{
 					right.setSize(sideWidth, board.getHeight());
-					right.setBounds(board.getWidth() + sideWidth, 0, sideWidth, board.getHeight());
+					right.setBounds(board.getWidth() + (left != null ? sideWidth : 0), 0, sideWidth, board.getHeight());
 				}
 
-				board.setBounds(sideWidth, 0, board.getWidth(), board.getHeight());
+				board.setBounds(left != null ? sideWidth : 0, 0, board.getWidth(), board.getHeight());
 
 				if(up != null && up != left && up != right)
 				{
@@ -131,7 +133,10 @@ public class BoardLayout implements LayoutManager
 
 			board.setSize(parent.getWidth(), parent.getWidth());
 
-			int sideHeight = (parent.getHeight() - board.getHeight()) / 2;
+			int sideHeight = (parent.getHeight() - board.getHeight());
+
+			if(up != null && down != null) //s'il y en a 2, les deux se partagent la moitié de l'espace
+				sideHeight /= 2;
 
 			if(up != null)
 			{
@@ -142,10 +147,10 @@ public class BoardLayout implements LayoutManager
 			if(down != null)
 			{
 				down.setSize(board.getWidth(), sideHeight);
-				down.setBounds(0, board.getHeight() + sideHeight, board.getWidth(), sideHeight);
+				down.setBounds(0, board.getHeight() + (up != null ? sideHeight : 0), board.getWidth(), sideHeight);
 			}
 
-			board.setBounds(0, sideHeight, board.getWidth(), board.getHeight());
+			board.setBounds(0, up != null ? sideHeight : 0, board.getWidth(), board.getHeight());
 
 			if(left != null && left != up && left != down)
 			{

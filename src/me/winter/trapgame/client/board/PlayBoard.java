@@ -5,19 +5,12 @@ import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.packet.PacketInClick;
 import me.winter.trapgame.shared.packet.PacketInCursorMove;
 
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,43 +21,19 @@ import java.util.Map;
  */
 public class PlayBoard extends JPanel implements MouseMotionListener, MouseListener
 {
-
 	private TrapGameBoard container;
 
 	private Map<Point, PlayerInfo> scores;
 	private int boardWidth, boardHeight;
 	private boolean boardLocked, spectator;
 
-	private BufferedImage baseCursor;
 	private Map<Color, BufferedImage> preloaded;
-
-	private Clip clickSound;
 
 	public PlayBoard(TrapGameBoard container, int width, int height)
 	{
 		this.container = container;
 		this.scores = new HashMap<>();
 		preloaded = new HashMap<>();
-		try
-		{
-			baseCursor = ImageIO.read(ClassLoader.class.getResourceAsStream("/cursor.png"));
-		}
-		catch(IOException ex)
-		{
-			ex.printStackTrace();
-		}
-
-		try
-		{
-			this.clickSound = AudioSystem.getClip();
-			AudioInputStream inputStream = AudioSystem.getAudioInputStream(PlayBoard.class.getResourceAsStream("/click.wav"));
-			this.clickSound.open(inputStream);
-		}
-		catch(LineUnavailableException | UnsupportedAudioFileException | IOException ex)
-		{
-			ex.printStackTrace(System.err);
-			this.clickSound = null;
-		}
 
 		addMouseMotionListener(this);
 		addMouseListener(this);
@@ -99,24 +68,27 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	@Override
 	public void paint(Graphics graphics)
 	{
-		int buttonWidth = getWidth() / getBoardWidth();
-		int buttonHeight = getHeight() / getBoardHeight();
+		graphics.drawImage(container.getContainer().getResourceManager().getImage("background"), -getX(), 0, container.getWidth(), container.getHeight(), null);
+
+		float buttonWidth = getWidth() / (float)getBoardWidth();
+		float buttonHeight = getHeight() / (float)getBoardHeight();
 
 		for(int x = 0; x < getBoardWidth(); x++)
 		{
 			for(int y = 0; y < getBoardHeight(); y++)
 			{
 				PlayerInfo player = scores.get(new Point(x, y));
-				Color color;
 
 				if(player == null)
-					color = Color.WHITE;
-				else
-					color = player.getColor();
+					continue;
 
-				graphics.setColor(color);
-				graphics.fillRect(x * buttonWidth, y * buttonHeight, buttonWidth, buttonHeight);
-				graphics.drawImage(container.getButtonFrame(), x * buttonWidth, y * buttonHeight, buttonWidth, buttonHeight, null);
+				graphics.setColor(player.getColor());
+
+				int xCeil = (int)((x + 1) * buttonWidth) > (int)(x * buttonWidth) + (int)buttonWidth ? 1 : 0;
+				int yCeil = (int)((y + 1) * buttonHeight) > (int)(y * buttonHeight) + (int)buttonHeight ? 1 : 0;
+
+				graphics.fillRect((int)(x * buttonWidth), (int)(y * buttonHeight), (int)buttonWidth + xCeil, (int)buttonHeight + yCeil);
+				graphics.drawImage(container.getContainer().getResourceManager().getImage("game-button"), (int)(x * buttonWidth), (int)(y * buttonHeight), (int)buttonWidth + xCeil, (int)buttonHeight + yCeil, null);
 			}
 		}
 
@@ -132,6 +104,8 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 	public BufferedImage getCursorImage(Color color, boolean transparency)
 	{
+		BufferedImage baseCursor = (BufferedImage)container.getContainer().getResourceManager().getImage("cursor");
+
 		if(!transparency)
 		{
 			BufferedImage image = new BufferedImage(baseCursor.getWidth(), baseCursor.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -200,15 +174,15 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		if(playerId == container.getClient().getPlayerId())
 			playClickSound();
 
-		container.revalidate();
-		container.repaint();
+		revalidate();
+		repaint();
 	}
 
 	public void fill(int playerId, Point point)
 	{
 		BoardFiller.tryFill(point, container.getPlayer(playerId), scores, getBoardWidth(), getBoardHeight());
-		container.revalidate();
-		container.repaint();
+		revalidate();
+		repaint();
 	}
 
 	@Override
@@ -265,8 +239,8 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 	public void playClickSound()
 	{
-		clickSound.setFramePosition(0);
-		clickSound.start();
+		container.getContainer().getResourceManager().getSound("click").setFramePosition(0);
+		container.getContainer().getResourceManager().getSound("click").start();
 	}
 
 	public Map<Point, PlayerInfo> getScores()

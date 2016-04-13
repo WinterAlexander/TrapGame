@@ -83,7 +83,7 @@ public class Player implements CommandSender
 
 	public void timeOut()
 	{
-		getServer().broadcast(Color.lightGray, getName() + " has timed out.");
+		getServer().broadcast(Color.gray, getName() + " has timed out.");
 		leave();
 	}
 

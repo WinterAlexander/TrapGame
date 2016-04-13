@@ -68,7 +68,7 @@ public class WaitingState extends State
 			case 3:
 			case 2:
 			case 1:
-				getServer().broadcast(Color.lightGray, "Starting in " + timer + " second" + (timer > 1 ? "s" : "") + "...");
+				getServer().broadcast(Color.gray, "Starting in " + timer + " second" + (timer > 1 ? "s" : "") + "...");
 				return;
 
 			case 0:

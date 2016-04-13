@@ -40,7 +40,7 @@ public class StandbyState extends State
 	@Override
 	public void start()
 	{
-		getServer().broadcast(Color.lightGray, "Sorry, there's not enough players. Please wait.");
+		getServer().broadcast(Color.gray, "Sorry, there's not enough players. Please wait.");
 	}
 
 	@Override

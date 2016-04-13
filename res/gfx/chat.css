@@ -2,8 +2,8 @@ ul
 {
 	list-style-type: none;
 	margin: 0;
-    padding: 0;
+    padding: 5, 5, 5, 5;
 	font-family: Verdana, Arial;
 	font-size: 14px;
-	color: #FFFFFF;
+	color: #202020;
 }

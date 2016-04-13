@@ -13,14 +13,15 @@ import java.awt.event.MouseListener;
  *
  * Created by 1541869 on 2016-04-07.
  */
-public class BoardMenu extends JPanel
+public class Scoreboard extends JPanel
 {
 	private TrapGameBoard board;
 
-	public BoardMenu(TrapGameBoard board)
+	public Scoreboard(TrapGameBoard board)
 	{
 		this.board = board;
-		setLayout(new BorderLayout());
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		setBackground(new Color(0, 0, 0, 0));
 	}
 
 	/**
@@ -32,65 +33,6 @@ public class BoardMenu extends JPanel
 	public void build()
 	{
 		removeAll();
-		JButton leaveButton = new JButton("Disconnect from server");
-
-		leaveButton.addMouseListener(new MouseListener()
-		{
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e)
-			{
-				board.getContainer().getConnection().close();
-				board.dispose();
-				board.getContainer().goToMenu();
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e)
-			{
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e)
-			{
-
-			}
-		});
-
-		setBackground(new Color(0, 0, 0, 0));
-
-		JPanel buttonContainer = new JPanel();
-		buttonContainer.setBackground(new Color(0, 0, 0, 0));
-		buttonContainer.add(leaveButton);
-
-		JPanel statsContainer = new JPanel();
-
-		statsContainer.setBackground(new Color(0, 0, 0, 0));
-
-		JLabel leaderBoard = new JLabel("Scores");
-		leaderBoard.setFont(new Font("Verdana", Font.BOLD, 20));
-
-		//leaderBoard.setPreferredSize(new Dimension(Integer.MAX_VALUE, 128));
-		leaderBoard.setForeground(Color.WHITE);
-
-		JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
-		separator.setForeground(Color.WHITE);
-		separator.setPreferredSize(new Dimension(Integer.MAX_VALUE / 2, 1));
-
-		statsContainer.add(leaderBoard);
-		statsContainer.add(separator);
 
 		for(PlayerInfo info : getBoard().getPlayers())
 		{
@@ -138,16 +80,19 @@ public class BoardMenu extends JPanel
 			playerStats.add(ratio);
 			playerStats.add(Box.createVerticalGlue());
 
-			statsContainer.add(playerStats);
+			add(playerStats);
 		}
 
-		statsContainer.setPreferredSize(statsContainer.getPreferredSize());
+		revalidate();
+		repaint();
+	}
 
-		add(buttonContainer, BorderLayout.SOUTH);
-		add(statsContainer, BorderLayout.CENTER);
+	@Override
+	public void paint(Graphics g)
+	{
+		g.drawImage(board.getContainer().getResourceManager().getImage("scoreboard"), 0, 0, getWidth(), getHeight(), null);
 
-		getParent().revalidate();
-		getParent().repaint();
+		super.paintComponent(g);
 	}
 
 	public TrapGameBoard getBoard()
