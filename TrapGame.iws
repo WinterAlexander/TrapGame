@@ -7,35 +7,19 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1fee9220-2597-4e37-adc9-761efedba5d3" name="Default" comment="Added a loading screen, greatly improved GUI and remade many game images">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/background.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/chat.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/cursor.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/frame.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/input.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/logo.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/scoreboard.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/sfx/click.wav" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/chat.css" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/background.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/chat.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/click.wav" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/cursor.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/frame.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/logo.png" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/BoardMenu.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Scoreboard.java" />
+    <list default="true" id="1fee9220-2597-4e37-adc9-761efedba5d3" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/board.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/gfx/background.png" afterPath="$PROJECT_DIR$/res/gfx/background.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/gfx/input.png" afterPath="$PROJECT_DIR$/res/gfx/input.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/gfx/scoreboard.png" afterPath="$PROJECT_DIR$/res/gfx/scoreboard.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TrapGame.iml" afterPath="$PROJECT_DIR$/TrapGame.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TrapGame.iws" afterPath="$PROJECT_DIR$/TrapGame.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/index.properties" afterPath="$PROJECT_DIR$/res/index.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleResourceManager.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleResourceManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/BoardLayout.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/BoardLayout.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Chat.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Chat.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/TrapGameBoard.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/TrapGameBoard.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/Player.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/Player.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/command/SkipCommand.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/command/SkipCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/state/GameState.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/state/GameState.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/state/StandbyState.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/state/StandbyState.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/state/WaitingState.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/state/WaitingState.java" />
     </list>
@@ -68,44 +52,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TrapGameClient.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="102" column="24" selection-start-line="102" selection-start-column="24" selection-end-line="102" selection-end-column="24" />
-              <folding>
-                <element signature="e#4548#4549#0" expanded="true" />
-                <element signature="e#4577#4578#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SkipCommand.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/server/command/SkipCommand.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="45" column="10" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/server/Player.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="85" column="40" selection-start-line="85" selection-start-column="40" selection-end-line="85" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="PlayBoard.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="184" column="8" selection-start-line="184" selection-start-column="8" selection-end-line="184" selection-end-column="8" />
+              <caret line="69" column="5" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -114,10 +65,37 @@
       <file leaf-file-name="Chat.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/board/Chat.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.60199004">
-              <caret line="117" column="10" selection-start-line="117" selection-start-column="10" selection-end-line="117" selection-end-column="10" />
+            <state vertical-scroll-proportion="0.6531049">
+              <caret line="83" column="59" selection-start-line="83" selection-start-column="59" selection-end-line="83" selection-end-column="59" />
               <folding />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.properties" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/index.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleLayout.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleLayout.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="50" column="13" selection-start-line="50" selection-start-column="13" selection-end-line="50" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="input.png" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/gfx/input.png">
+          <provider selected="true" editor-type-id="images">
+            <state />
           </provider>
         </entry>
       </file>
@@ -126,7 +104,13 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="71" column="23" selection-start-line="71" selection-start-column="23" selection-end-line="71" selection-end-column="23" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#1590#1591#0" expanded="false" />
+                <element signature="e#1609#1610#0" expanded="false" />
+                <element signature="e#1646#1647#0" expanded="false" />
+                <element signature="e#1671#1672#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -136,7 +120,13 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="7" column="2" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#320#321#0" expanded="false" />
+                <element signature="e#347#348#0" expanded="false" />
+                <element signature="e#859#860#0" expanded="false" />
+                <element signature="e#879#880#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -146,7 +136,13 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="42" column="40" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#371#372#0" expanded="false" />
+                <element signature="e#391#392#0" expanded="false" />
+                <element signature="e#823#824#0" expanded="false" />
+                <element signature="e#914#915#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -156,7 +152,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="64" column="25" selection-start-line="64" selection-start-column="25" selection-end-line="64" selection-end-column="25" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -166,7 +164,13 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="83" column="9" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#2707#2708#0" expanded="false" />
+                <element signature="e#2726#2727#0" expanded="false" />
+                <element signature="e#2773#2774#0" expanded="false" />
+                <element signature="e#2798#2799#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -193,7 +197,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/me/winter/trapgame/server/command/TimerCommand.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/server/command/StopCommand.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/server/command/StatsCommand.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/server/command/ListCommand.java" />
@@ -231,7 +234,6 @@
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/TrapDesktopLayout.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/BoardMenu.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/BoardLayout.java" />
-        <option value="$PROJECT_DIR$/res/index.properties" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/TrapGameBoard.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleResourceManager.java" />
@@ -241,8 +243,10 @@
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/server/state/WaitingState.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/server/state/StandbyState.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/server/state/GameState.java" />
-        <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Scoreboard.java" />
+        <option value="$PROJECT_DIR$/TrapGame.iws" />
+        <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java" />
+        <option value="$PROJECT_DIR$/res/index.properties" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Chat.java" />
       </list>
     </option>
@@ -288,6 +292,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -544,11 +550,23 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TrapGame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TrapGame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1182,7 +1200,13 @@
       <option name="project" value="LOCAL" />
       <updated>1460430348509</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="Added a loading screen, greatly improved GUI and remade many game images">
+      <created>1460591872982</created>
+      <option name="number" value="00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1460591872983</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1191,12 +1215,12 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3265306" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3265306" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32913387" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2244898" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2244898" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1749634" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1269,13 +1293,24 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/board/Scoreboard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="83" column="9" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2707#2708#0" expanded="false" />
+            <element signature="e#2726#2727#0" expanded="false" />
+            <element signature="e#2773#2774#0" expanded="false" />
+            <element signature="e#2798#2799#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleResourceManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1460590264000" expanded="true" signature="43:91" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1291,7 +1326,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="58" column="20" selection-start-line="58" selection-start-column="20" selection-end-line="58" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1413,7 +1447,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1435,7 +1468,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="306" column="20" selection-start-line="306" selection-start-column="20" selection-end-line="306" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1443,7 +1475,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="99" column="5" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1467,7 +1498,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="35" column="53" selection-start-line="35" selection-start-column="53" selection-end-line="35" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1475,7 +1505,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="21" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1483,7 +1512,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="58" column="20" selection-start-line="58" selection-start-column="20" selection-end-line="58" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1491,7 +1519,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="243" column="0" selection-start-line="243" selection-start-column="0" selection-end-line="243" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1499,9 +1526,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="41" column="8" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="8" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1509,7 +1533,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="9" column="21" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1517,63 +1540,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#5638#5639#0" expanded="false" />
-            <element signature="e#5656#5657#0" expanded="false" />
-            <element signature="e#5707#5708#0" expanded="false" />
-            <element signature="e#5750#5751#0" expanded="false" />
-            <element signature="e#6387#6388#0" expanded="false" />
-            <element signature="e#6427#6428#0" expanded="false" />
-            <element signature="e#6816#6817#0" expanded="false" />
-            <element signature="e#6839#6840#0" expanded="false" />
-            <element signature="e#6868#6869#0" expanded="false" />
-            <element signature="e#6887#6888#0" expanded="false" />
-            <element signature="e#6926#6927#0" expanded="false" />
-            <element signature="e#6951#6952#0" expanded="false" />
-            <element signature="e#6989#6990#0" expanded="false" />
-            <element signature="e#7010#7011#0" expanded="false" />
-            <element signature="e#7055#7056#0" expanded="false" />
-            <element signature="e#7079#7080#0" expanded="false" />
-            <element signature="e#7122#7123#0" expanded="false" />
-            <element signature="e#7148#7149#0" expanded="false" />
-            <element signature="e#7195#7196#0" expanded="false" />
-            <element signature="e#7223#7224#0" expanded="false" />
-            <element signature="e#7262#7263#0" expanded="false" />
-            <element signature="e#7283#7284#0" expanded="false" />
-            <element signature="e#7316#7317#0" expanded="false" />
-            <element signature="e#7338#7339#0" expanded="false" />
-            <element signature="e#7376#7377#0" expanded="false" />
-            <element signature="e#7403#7404#0" expanded="false" />
-            <element signature="e#7435#7436#0" expanded="false" />
-            <element signature="e#7459#7460#0" expanded="false" />
-            <element signature="e#7506#7507#0" expanded="false" />
-            <element signature="e#7541#7542#0" expanded="false" />
-            <element signature="e#7573#7574#0" expanded="false" />
-            <element signature="e#7597#7598#0" expanded="false" />
-            <element signature="e#7644#7645#0" expanded="false" />
-            <element signature="e#7679#7680#0" expanded="false" />
-            <element signature="e#7977#7978#0" expanded="false" />
-            <element signature="e#8002#8003#0" expanded="false" />
-            <element signature="e#8034#8035#0" expanded="false" />
-            <element signature="e#8058#8059#0" expanded="false" />
-            <element signature="e#8092#8093#0" expanded="false" />
-            <element signature="e#8118#8119#0" expanded="false" />
-            <element signature="e#8169#8170#0" expanded="false" />
-            <element signature="e#8208#8209#0" expanded="false" />
-            <element signature="e#8242#8243#0" expanded="false" />
-            <element signature="e#8265#8266#0" expanded="false" />
-            <element signature="e#8314#8315#0" expanded="false" />
-            <element signature="e#8347#8348#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleLayout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1589,7 +1555,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="117" column="60" selection-start-line="117" selection-start-column="60" selection-end-line="117" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1609,21 +1574,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/index.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="23" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleResourceManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="100" column="11" selection-start-line="100" selection-start-column="11" selection-end-line="100" selection-end-column="11" />
-          <folding>
-            <marker date="1460590264000" expanded="true" signature="43:91" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1642,7 +1596,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="45" column="10" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#476#477#0" expanded="false" />
+            <element signature="e#496#497#0" expanded="false" />
+            <element signature="e#545#546#0" expanded="false" />
+            <element signature="e#589#590#0" expanded="false" />
+            <element signature="e#636#637#0" expanded="false" />
+            <element signature="e#703#704#0" expanded="false" />
+            <element signature="e#744#745#0" expanded="false" />
+            <element signature="e#765#766#0" expanded="false" />
+            <element signature="e#998#999#0" expanded="false" />
+            <element signature="e#1016#1017#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1650,7 +1616,31 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="85" column="40" selection-start-line="85" selection-start-column="40" selection-end-line="85" selection-end-column="40" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#820#821#0" expanded="false" />
+            <element signature="e#852#853#0" expanded="false" />
+            <element signature="e#892#893#0" expanded="false" />
+            <element signature="e#920#921#0" expanded="false" />
+            <element signature="e#958#959#0" expanded="false" />
+            <element signature="e#999#1000#0" expanded="false" />
+            <element signature="e#1204#1205#0" expanded="false" />
+            <element signature="e#1283#1284#0" expanded="false" />
+            <element signature="e#1339#1340#0" expanded="false" />
+            <element signature="e#1400#1401#0" expanded="false" />
+            <element signature="e#1940#1941#0" expanded="false" />
+            <element signature="e#1977#1978#0" expanded="false" />
+            <element signature="e#2027#2028#0" expanded="false" />
+            <element signature="e#2047#2048#0" expanded="false" />
+            <element signature="e#2080#2081#0" expanded="false" />
+            <element signature="e#2098#2099#0" expanded="false" />
+            <element signature="e#2143#2144#0" expanded="false" />
+            <element signature="e#2167#2168#0" expanded="false" />
+            <element signature="e#2212#2213#0" expanded="false" />
+            <element signature="e#2235#2236#0" expanded="false" />
+            <element signature="e#2284#2285#0" expanded="false" />
+            <element signature="e#2317#2318#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1658,7 +1648,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="2" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#320#321#0" expanded="false" />
+            <element signature="e#347#348#0" expanded="false" />
+            <element signature="e#859#860#0" expanded="false" />
+            <element signature="e#879#880#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1666,15 +1662,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="42" column="40" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="184" column="8" selection-start-line="184" selection-start-column="8" selection-end-line="184" selection-end-column="8" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#371#372#0" expanded="false" />
+            <element signature="e#391#392#0" expanded="false" />
+            <element signature="e#823#824#0" expanded="false" />
+            <element signature="e#914#915#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1682,7 +1676,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="83" column="9" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2707#2708#0" expanded="false" />
+            <element signature="e#2726#2727#0" expanded="false" />
+            <element signature="e#2773#2774#0" expanded="false" />
+            <element signature="e#2798#2799#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1690,7 +1690,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="71" column="23" selection-start-line="71" selection-start-column="23" selection-end-line="71" selection-end-column="23" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1590#1591#0" expanded="false" />
+            <element signature="e#1609#1610#0" expanded="false" />
+            <element signature="e#1646#1647#0" expanded="false" />
+            <element signature="e#1671#1672#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1698,14 +1704,53 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="64" column="25" selection-start-line="64" selection-start-column="25" selection-end-line="64" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TrapGame.iws">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="109" column="20" selection-start-line="109" selection-start-column="20" selection-end-line="109" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/gfx/input.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="69" column="5" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="13" selection-start-line="50" selection-start-column="13" selection-end-line="50" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/index.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/board/Chat.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.60199004">
-          <caret line="117" column="10" selection-start-line="117" selection-start-column="10" selection-end-line="117" selection-end-column="10" />
+        <state vertical-scroll-proportion="0.6531049">
+          <caret line="83" column="59" selection-start-line="83" selection-start-column="59" selection-end-line="83" selection-end-column="59" />
           <folding />
         </state>
       </provider>

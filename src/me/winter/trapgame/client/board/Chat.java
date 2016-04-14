@@ -1,5 +1,6 @@
 package me.winter.trapgame.client.board;
 
+import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.shared.packet.PacketInChat;
 import me.winter.trapgame.util.FileUtil;
 
@@ -69,18 +70,18 @@ public class Chat extends JPanel implements KeyListener
 		textField.setFont(new Font("Arial", Font.PLAIN, 18));
 		textField.setForeground(Color.BLACK);
 		textField.setBackground(new Color(0, 0, 0, 0));
-		textField.setBorder(new EmptyBorder(4, 4, 4, 4));
+		textField.setBorder(new EmptyBorder(5, 10, 5, 10));
 		((DefaultCaret)textArea.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-		setLayout(new BorderLayout());
-		add(textArea, BorderLayout.CENTER);
+		setLayout(new SimpleLayout());
+		add(textField, SimpleLayout.constraints(0d, 0d, 1d, 1d / 12d));
 
 		//JScrollPane scroll = new JScrollPane(textArea);
 		//scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		//scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		//add(scroll, BorderLayout.EAST);
-		add(textField, BorderLayout.SOUTH);
+		add(textArea, SimpleLayout.constraints(0d, 1d / 12d, 1d, 11d / 12d));
 	}
 
 	public void sendMessage(String message)

@@ -69,6 +69,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	public void paint(Graphics graphics)
 	{
 		graphics.drawImage(container.getContainer().getResourceManager().getImage("background"), -getX(), 0, container.getWidth(), container.getHeight(), null);
+		graphics.drawImage(container.getContainer().getResourceManager().getImage("board"), 0, 0, getWidth(), getHeight(), null);
 
 		float buttonWidth = getWidth() / (float)getBoardWidth();
 		float buttonHeight = getHeight() / (float)getBoardHeight();
