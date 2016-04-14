@@ -184,7 +184,7 @@ public class GameState extends State
 			else
 				players[i].getInfo().getStats().addLose();
 
-			message += "\n " + (i + playersWithThatScore) + ": " + players[i].getName() + " (Score: " + scores[i] + ")";
+			message += "<br /> " + (i + playersWithThatScore) + ": " + players[i].getName() + " (Score: " + scores[i] + ")";
 		}
 
 		getServer().getConnection().sendToAllLater(new PacketOutUpdateStats(getServer().getPlayersInfo()));

@@ -30,7 +30,7 @@ public class TrapGameClient extends JFrame
 	{
 		try
 		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 			TrapGameClient client = new TrapGameClient();
 			client.load();

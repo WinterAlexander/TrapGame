@@ -43,17 +43,31 @@ public class Chat extends JPanel implements KeyListener
 			@Override
 			public void paint(Graphics g)
 			{
-				g.drawImage(board.getContainer().getResourceManager().getImage("chat-input"), 0, 0, getWidth(), getHeight(), null);
+				Graphics2D g2draw = (Graphics2D)g;
+
+				g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+				g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+				g2draw.drawImage(board.getContainer().getResourceManager().getImage("background"), -Chat.this.getX() - getX(), -Chat.this.getY() - getY(), board.getWidth(), board.getHeight(), null);
+				g2draw.drawImage(board.getContainer().getResourceManager().getImage("chat-input"), 0, 0, getWidth(), getHeight(), null);
 
 				super.paint(g);
 			}
 		};
+
 		textArea = new JTextPane()
 		{
 			@Override
 			public void paint(Graphics g)
 			{
-				g.drawImage(board.getContainer().getResourceManager().getImage("chat-background"), 0, 0, getWidth(), getHeight(), null);
+				Graphics2D g2draw = (Graphics2D)g;
+
+				g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+				g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+				g2draw.drawImage(board.getContainer().getResourceManager().getImage("background"), -Chat.this.getX() - getX(), -Chat.this.getY() - getY(), board.getWidth(), board.getHeight(), null);
 
 				super.paint(g);
 			}

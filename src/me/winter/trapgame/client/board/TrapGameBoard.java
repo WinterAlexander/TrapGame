@@ -48,13 +48,6 @@ public class TrapGameBoard extends JPanel
 		getLayout().addLayoutComponent(BoardLayout.UP, scoreboard);
 	}
 
-	@Override
-	public void paintComponent(Graphics graphics)
-	{
-		graphics.drawImage(container.getResourceManager().getImage("background"), 0, 0, getWidth(), getHeight(), null);
-		super.paintComponent(graphics);
-	}
-
 	public void init(int playerId, List<PlayerInfo> players, int width, int height)
 	{
 		this.playerId = playerId;
@@ -98,6 +91,7 @@ public class TrapGameBoard extends JPanel
 	{
 		playBoard.getScores().clear();
 		playBoard.setBoardLocked(true);
+		scoreboard.build();
 
 		revalidate();
 		repaint();
@@ -162,6 +156,11 @@ public class TrapGameBoard extends JPanel
 	public PlayBoard getPlayBoard()
 	{
 		return playBoard;
+	}
+
+	public Scoreboard getScoreboard()
+	{
+		return scoreboard;
 	}
 
 	public Chat getChat()

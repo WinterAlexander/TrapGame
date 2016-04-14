@@ -4,6 +4,7 @@ import me.winter.trapgame.shared.BoardFiller;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.packet.PacketInClick;
 import me.winter.trapgame.shared.packet.PacketInCursorMove;
+import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +26,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 	private Map<Point, PlayerInfo> scores;
 	private int boardWidth, boardHeight;
-	private boolean boardLocked, spectator;
+	private boolean boardLocked, spectator, mouseIn;
 
 	private Map<Color, BufferedImage> preloaded;
 
@@ -34,6 +35,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		this.container = container;
 		this.scores = new HashMap<>();
 		preloaded = new HashMap<>();
+		mouseIn = false;
 
 		addMouseMotionListener(this);
 		addMouseListener(this);
@@ -68,8 +70,14 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	@Override
 	public void paint(Graphics graphics)
 	{
-		graphics.drawImage(container.getContainer().getResourceManager().getImage("background"), -getX(), 0, container.getWidth(), container.getHeight(), null);
-		graphics.drawImage(container.getContainer().getResourceManager().getImage("board"), 0, 0, getWidth(), getHeight(), null);
+		Graphics2D g2draw = (Graphics2D) graphics;
+
+		g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+		g2draw.drawImage(container.getContainer().getResourceManager().getImage("background"), -getX(), 0, container.getWidth(), container.getHeight(), null);
+		//g2draw.drawImage(container.getContainer().getResourceManager().getImage("board"), 0, 0, getWidth(), getHeight(), null);
 
 		float buttonWidth = getWidth() / (float)getBoardWidth();
 		float buttonHeight = getHeight() / (float)getBoardHeight();
@@ -80,16 +88,48 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 			{
 				PlayerInfo player = scores.get(new Point(x, y));
 
-				if(player == null)
-					continue;
-
-				graphics.setColor(player.getColor());
-
 				int xCeil = (int)((x + 1) * buttonWidth) > (int)(x * buttonWidth) + (int)buttonWidth ? 1 : 0;
 				int yCeil = (int)((y + 1) * buttonHeight) > (int)(y * buttonHeight) + (int)buttonHeight ? 1 : 0;
 
-				graphics.fillRect((int)(x * buttonWidth), (int)(y * buttonHeight), (int)buttonWidth + xCeil, (int)buttonHeight + yCeil);
-				graphics.drawImage(container.getContainer().getResourceManager().getImage("game-button"), (int)(x * buttonWidth), (int)(y * buttonHeight), (int)buttonWidth + xCeil, (int)buttonHeight + yCeil, null);
+				int width = (int)buttonWidth + xCeil;
+				int height = (int)buttonHeight + yCeil;
+
+				if(player != null)
+				{
+					g2draw.setColor(new ColorTransformer(player.getColor(), 200));
+					g2draw.fillRoundRect((int)(x * buttonWidth), (int)(y * buttonHeight), width, height, width / 4, height / 4);
+				}
+				else if(!isSpectator() && !isBoardLocked() && mouseIn && isHover(new Point(x, y)))
+				{
+					boolean aroundOwn = false;
+					boolean atLeastOne = false;
+
+					for(Point point : scores.keySet())
+					{
+						if(scores.get(point) == container.getClient())
+						{
+							atLeastOne = true;
+
+							if(point.getX() + 1 == x && point.getY() == y
+							|| point.getX() - 1 == x && point.getY() == y
+							|| point.getX() == x && point.getY() + 1 == y
+							|| point.getX() == x && point.getY() - 1 == y)
+							{
+								aroundOwn = true;
+								break;
+							}
+						}
+					}
+
+					if(!atLeastOne || aroundOwn)
+					{
+						g2draw.setColor(new ColorTransformer(container.getClient().getColor(), 100));
+						g2draw.fillRoundRect((int)(x * buttonWidth), (int)(y * buttonHeight), width, height, width / 4, height / 4);
+					}
+				}
+
+				g2draw.drawImage(container.getContainer().getResourceManager().getImage("game-button"), (int)(x * buttonWidth), (int)(y * buttonHeight), (int)buttonWidth + xCeil, (int)buttonHeight + yCeil, null);
+
 			}
 		}
 
@@ -97,7 +137,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		{
 			if(player == container.getClient())
 				continue;
-			graphics.drawImage(getCursorImage(player.getColor(), true),
+			g2draw.drawImage(getCursorImage(player.getColor(), true),
 					(int)(player.getCursorX() * getWidth()) - 16,
 					(int)(player.getCursorY() * getHeight()) - 16, null);
 		}
@@ -156,6 +196,22 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		return image;
 	}
 
+	public boolean isHover(Point point)
+	{
+		return new Point((int)(container.getClient().getCursorX() * getBoardWidth()), (int)(container.getClient().getCursorY() * getBoardHeight())).equals(point);
+	}
+
+	public int getScore(PlayerInfo info)
+	{
+		int score = 0;
+
+		for(Point point : scores.keySet())
+			if(scores.get(point) == info)
+				score++;
+
+		return score;
+	}
+
 	public void place(int playerId, Point point)
 	{
 		if(boardLocked && !spectator)
@@ -169,7 +225,6 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 				|| scores.containsKey(point))
 			return;
 
-
 		scores.put(point, player);
 
 		if(playerId == container.getClient().getPlayerId())
@@ -177,6 +232,8 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 		revalidate();
 		repaint();
+
+		SwingUtilities.invokeLater(() -> container.getScoreboard().build());
 	}
 
 	public void fill(int playerId, Point point)
@@ -184,6 +241,8 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		BoardFiller.tryFill(point, container.getPlayer(playerId), scores, getBoardWidth(), getBoardHeight());
 		revalidate();
 		repaint();
+
+		SwingUtilities.invokeLater(() -> container.getScoreboard().build());
 	}
 
 	@Override
@@ -197,7 +256,8 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	{
 		container.getClient().setCursor((float)e.getX() / getWidth(), (float)e.getY() / getHeight());
 		container.getContainer().getConnection().sendPacketLater(new PacketInCursorMove(container.getClient().getCursorX(), container.getClient().getCursorY()));
-
+		revalidate();
+		repaint();
 	}
 
 	@Override
@@ -229,13 +289,17 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-
+		mouseIn = true;
+		revalidate();
+		repaint();
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-
+		mouseIn = false;
+		revalidate();
+		repaint();
 	}
 
 	public void playClickSound()
