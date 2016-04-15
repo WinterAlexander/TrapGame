@@ -80,7 +80,7 @@ public class CommandManager
 			return;
 		}
 
-		System.out.println(sender.getName() + " executed command: " + originalInput);
+		server.getLogger().info(sender.getName() + " executed command: " + originalInput);
 		command.execute(sender, label, argsList.toArray(new String[argsList.size()]));
 	}
 

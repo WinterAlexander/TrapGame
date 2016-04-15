@@ -14,6 +14,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Represents a connection from the server side accepting new clients
@@ -45,7 +46,7 @@ public class ServerConnection
 			new Thread(this::lookForAlive).start();
 
 			acceptNewClients = true;
-			System.out.println("The server is listening on " + port);
+			server.getLogger().info("The server is listening on " + port);
 		}
 		catch(IOException exception)
 		{
@@ -121,8 +122,7 @@ public class ServerConnection
 		}
 		catch(Exception ex)
 		{
-			if(server.isDebugMode())
-				ex.printStackTrace(System.err);
+			server.getLogger().log(Level.WARNING, "Unexpected exception", ex);
 		}
 	}
 

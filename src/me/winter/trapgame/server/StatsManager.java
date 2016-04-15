@@ -4,6 +4,7 @@ import me.winter.trapgame.shared.PlayerStats;
 import me.winter.trapgame.util.FileUtil;
 
 import java.io.*;
+import java.util.logging.Level;
 
 /**
  * Manages all the server stats for players
@@ -45,16 +46,14 @@ public class StatsManager
 		}
 		catch(IOException ex)
 		{
-			System.err.println("An internal exception occurred when trying to load a player stats file (" + name + ").");
-			ex.printStackTrace(System.err);
+			getServer().getLogger().log(Level.SEVERE, "An internal exception occurred when trying to load a player stats file (\" + name + \").", ex);
 		}
 		catch(ClassNotFoundException classNotFoundEx)
 		{
-			System.err.println("Stats file for " + name + " is corrupted ! Adding .corrupt suffix to file name to prevent future problems.");
-
+			getServer().getLogger().warning("Stats file for " + name + " is corrupted ! Adding .corrupt suffix to file name to prevent future problems.");
 
 			if(!file.renameTo(new File(file.getAbsolutePath() + ".corrupt")))
-				System.err.println("Couldn't rename, please delete " + file.getName() + " manually.");
+				getServer().getLogger().severe("Couldn't rename, please delete " + file.getName() + " manually.");
 		}
 
 		return new PlayerStats(0, 0, 0);
@@ -71,8 +70,7 @@ public class StatsManager
 		}
 		catch(IOException ex)
 		{
-			System.err.println("An internal exception occurred when trying to create a player stats file (" + name + ").");
-			ex.printStackTrace(System.err);
+			getServer().getLogger().log(Level.SEVERE, "An internal exception occurred when trying to create a player stats file (" + name + ").", ex);
 			return;
 		}
 
@@ -84,10 +82,9 @@ public class StatsManager
 			outputStream.flush();
 			outputStream.close();
 		}
-		catch(IOException ex)
+		catch(Exception ex)
 		{
-			System.err.println("An internal exception occurred when trying to save a player stats file (" + name + ").");
-			ex.printStackTrace(System.err);
+			getServer().getLogger().log(Level.SEVERE, "An internal exception occurred when trying to save a player stats file (\" + name + \").", ex);
 		}
 
 	}

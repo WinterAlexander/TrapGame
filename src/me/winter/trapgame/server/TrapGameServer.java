@@ -8,11 +8,17 @@ import me.winter.trapgame.shared.packet.PacketOutBoardSize;
 import me.winter.trapgame.shared.packet.PacketOutWelcome;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
 import me.winter.trapgame.shared.packet.PacketOutLeave;
+import me.winter.trapgame.util.FileUtil;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.*;
 
 /**
  * Represents a server of TrapGame
@@ -23,6 +29,8 @@ import java.util.List;
  */
 public class TrapGameServer
 {
+	private static Logger trapGameLogger;
+
 	/**
 	 * Starts the server with a new instance of TrapGameServer
 	 *
@@ -57,14 +65,32 @@ public class TrapGameServer
 			if(args.length > 5 && StringUtil.isInt(args[5]))
 				boardHeight = Integer.parseInt(args[5]);*/
 
-			new TrapGameServer(/*port, password, minPlayers, maxPlayers, boardWidth, boardHeight*/).start();
-			System.out.println("Thanks for playing TrapGame ! :)");
+			trapGameLogger = Logger.getLogger("TrapGame");
+
+			trapGameLogger.setUseParentHandlers(false);
+
+			ConsoleHandler consoleHandler = new ConsoleHandler()
+			{
+				{
+					setOutputStream(System.out);
+				}
+			};
+
+			consoleHandler.setFormatter(new LogFormatter());
+			trapGameLogger.addHandler(consoleHandler);
+
+			new TrapGameServer(trapGameLogger).start();
+			trapGameLogger.info("Thanks for playing TrapGame ! :)");
 		}
 		catch(Throwable ex)
 		{
-			System.err.println("A fatal error occurred and stopped the server. Stack Trace:");
-			ex.printStackTrace(System.err);
+			trapGameLogger.log(Level.SEVERE, "A fatal error occurred and stopped the server.", ex);
 			System.exit(0);
+		}
+		finally
+		{
+			for(Handler handler : trapGameLogger.getHandlers())
+				handler.close();
 		}
 	}
 
@@ -95,6 +121,7 @@ public class TrapGameServer
 	private StatsManager statsManager;
 	private CommandManager commandManager;
 	private ServerConsole console;
+	private Logger logger;
 
 	private String password, superPassword;
 	private int minPlayers, maxPlayers;
@@ -104,10 +131,48 @@ public class TrapGameServer
 
 	private boolean stop;
 
-	public TrapGameServer()
+	public TrapGameServer(Logger logger)
 	{
-		ServerProperties properties = new ServerProperties(new File("server.properties"));
+		this.logger = logger;
+
+
+		ServerProperties properties = new ServerProperties(this, new File("server.properties"));
 		properties.loadIfPresent();
+
+		if(properties.isLoggingToDisk())
+		{
+			try
+			{
+				File logDir = new File("logs");
+
+				FileUtil.createDirectory(logDir);
+
+				File[] files = logDir.listFiles(file -> file.getName().endsWith(".log"));
+
+				int id = files.length;
+
+				String fileName;
+
+				do
+				{
+					id++;
+					fileName = "logs/" +
+							Calendar.getInstance().get(Calendar.YEAR) + "-" +
+							Calendar.getInstance().get(Calendar.MONTH) + "-" +
+							Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "_" + id + ".log";
+				}
+				while(new File(fileName).exists());
+
+				FileHandler fileHandler = new FileHandler(fileName);
+
+				fileHandler.setFormatter(new LogFormatter());
+				logger.addHandler(fileHandler);
+			}
+			catch(IOException ex)
+			{
+				logger.log(Level.SEVERE, "An internal error occurred while trying to add an handler file to logging.", ex);
+			}
+		}
 
 		scheduler = new Scheduler();
 		state = new StandbyState(this);
@@ -129,7 +194,7 @@ public class TrapGameServer
 
 	public synchronized void start()
 	{
-		System.out.println("TrapGame server should now be operational.");
+		getLogger().info("TrapGame server should now be operational.");
 
 		synchronized(getScheduler())
 		{
@@ -295,6 +360,11 @@ public class TrapGameServer
 	public ServerConsole getConsole()
 	{
 		return console;
+	}
+
+	public Logger getLogger()
+	{
+		return logger;
 	}
 
 	public String getPassword()

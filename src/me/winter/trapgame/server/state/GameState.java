@@ -170,7 +170,7 @@ public class GameState extends State
 			{
 				if(playersWithThatScore == 1)
 				{
-					message += players[0].getName() + " has won !";
+					message += players[0].getFormattedName() + " has won !";
 					players[0].getInfo().getStats().addWin();
 				}
 				else
@@ -184,7 +184,7 @@ public class GameState extends State
 			else
 				players[i].getInfo().getStats().addLose();
 
-			message += "<br /> " + (i + playersWithThatScore) + ": " + players[i].getName() + " (Score: " + scores[i] + ")";
+			message += "<br /> " + (i + playersWithThatScore) + ": " + players[i].getFormattedName() + " (Score: " + scores[i] + ")";
 		}
 
 		getServer().getConnection().sendToAllLater(new PacketOutUpdateStats(getServer().getPlayersInfo()));

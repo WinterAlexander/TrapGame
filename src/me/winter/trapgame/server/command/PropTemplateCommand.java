@@ -42,7 +42,7 @@ public class PropTemplateCommand implements Command
 	@Override
 	public void execute(CommandSender player, String label, String[] arguments)
 	{
-		ServerProperties properties = new ServerProperties(new File("server.properties"));
+		ServerProperties properties = new ServerProperties(player.getServer(), new File("server.properties"));
 		properties.setPort(1254);
 		properties.setPassword("");
 		properties.setMinPlayers(2);
@@ -50,6 +50,7 @@ public class PropTemplateCommand implements Command
 		properties.setBoardWidth(10);
 		properties.setBoardHeight(10);
 		properties.setTimer(30);
+		properties.setLogToDisk(false);
 
 		properties.save();
 		player.sendMessage("server.properties file created.");

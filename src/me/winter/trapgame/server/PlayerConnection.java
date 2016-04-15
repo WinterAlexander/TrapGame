@@ -93,8 +93,7 @@ public class PlayerConnection
 			return;
 		}
 
-		if(getPlayer().getServer().isDebugMode())
-			System.out.println("The packet sent by " + getPlayer().getName() + " isn't appropriate: " + packet.getClass().getName());
+		getPlayer().getServer().getLogger().warning("The packet sent by " + getPlayer().getName() + " isn't appropriate: " + packet.getClass().getName());
 	}
 
 	public Player getPlayer()

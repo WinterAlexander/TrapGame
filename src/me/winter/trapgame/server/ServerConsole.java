@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 /**
  *
@@ -46,13 +47,15 @@ public class ServerConsole
 			{
 				while(System.in.available() != 0)
 				{
+					String line = scanner.nextLine();
+
 					server.getScheduler().addTask(new Task(0, false,
-							() -> server.getCommandManager().execute(consoleSender, scanner.nextLine())));
+							() -> server.getCommandManager().execute(consoleSender, line)));
 				}
 			}
 			catch(IOException ex)
 			{
-				ex.printStackTrace(System.err);
+				server.getLogger().log(Level.SEVERE, "An internal exception occurred while listening to system input", ex);
 			}
 
 		}

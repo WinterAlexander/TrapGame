@@ -4,8 +4,10 @@ import me.winter.trapgame.util.StringUtil;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
 
 /**
+ * Represents the console sender of the server, the player having access to the command-line of the local machine
  *
  * Created by 1541869 on 2016-04-05.
  */
@@ -33,7 +35,7 @@ public class ConsoleSender implements CommandSender
 	@Override
 	public void sendMessage(String message)
 	{
-		System.out.println(StringUtil.noHTML(message));
+		console.getServer().getLogger().info("[CHAT] " + StringUtil.noHTML(message));
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class ConsoleSender implements CommandSender
 		}
 		catch(UnknownHostException ex)
 		{
-			ex.printStackTrace(System.err);
+			console.getServer().getLogger().log(Level.SEVERE, "Unexpected exception while trying to get local ip", ex);
 			return null;
 		}
 	}

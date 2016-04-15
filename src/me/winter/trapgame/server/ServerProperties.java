@@ -4,6 +4,7 @@ import me.winter.trapgame.util.FileUtil;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.logging.Level;
 
 /**
  * Represents a configuration file for TrapGame
@@ -13,10 +14,12 @@ import java.util.Properties;
  */
 public class ServerProperties extends Properties
 {
+	private TrapGameServer server;
 	private File file;
 
-	public ServerProperties(File file)
+	public ServerProperties(TrapGameServer server, File file)
 	{
+		this.server = server;
 		this.file = file;
 	}
 
@@ -31,8 +34,7 @@ public class ServerProperties extends Properties
 		}
 		catch(IOException ex)
 		{
-			System.err.println("Failed to load proprieties file " + file.getName());
-			ex.printStackTrace(System.err);
+			server.getLogger().log(Level.WARNING, "Failed to load properties file " + file.getName(), ex);
 		}
 	}
 
@@ -45,8 +47,8 @@ public class ServerProperties extends Properties
 		}
 		catch(IOException ex)
 		{
-			System.err.println("Failed to save proprieties file " + file.getName());
-			ex.printStackTrace(System.err);
+
+			server.getLogger().log(Level.WARNING, "Failed to save properties file " + file.getName(), ex);
 		}
 	}
 
@@ -180,5 +182,15 @@ public class ServerProperties extends Properties
 	public void setSuperPassword(String superPassword)
 	{
 		setProperty("super-password", superPassword);
+	}
+
+	public boolean isLoggingToDisk()
+	{
+		return Boolean.parseBoolean(getProperty("log-to-disk"));
+	}
+
+	public void setLogToDisk(boolean log)
+	{
+		setProperty("log-to-disk", log + "");
 	}
 }
