@@ -1228,6 +1228,7 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added 0.4.1 downloads to readme" />
     <MESSAGE value="CPU usage is now fine with object.wait and object.notify" />
     <MESSAGE value="Auto filling added ! Making version 0.5" />
     <MESSAGE value="Added version 0.5 to the readme" />
@@ -1252,8 +1253,7 @@
     <MESSAGE value="Added a loading screen, greatly improved GUI and remade many game images" />
     <MESSAGE value="Still working on the GUI ! It's starting to look good" />
     <MESSAGE value="GUI is almost done, there's only the leaderboard and the main menu remaining." />
-    <MESSAGE value="Game look is done ! Build an 0.7 version and added screenshots to the readme. Rebuilding the menu is the last thing to do before releasing an official version !" />
-    <option name="LAST_COMMIT_MESSAGE" value="Game look is done ! Build an 0.7 version and added screenshots to the readme. Rebuilding the menu is the last thing to do before releasing an official version !" />
+    <option name="LAST_COMMIT_MESSAGE" value="GUI is almost done, there's only the leaderboard and the main menu remaining." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
