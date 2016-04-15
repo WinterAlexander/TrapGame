@@ -153,8 +153,6 @@ public class TrapGameClient extends JFrame
 			return;
 
 		setContentPane(menu);
-		revalidate();
-		repaint();
 	}
 
 	public void goToBoard()
@@ -163,8 +161,6 @@ public class TrapGameClient extends JFrame
 			return;
 
 		setContentPane(board);
-		revalidate();
-		repaint();
 	}
 
 	public boolean inMenu()

@@ -55,9 +55,12 @@ public class TrapGameBoard extends JPanel
 
 		playBoard = new PlayBoard(this, width, height);
 		add(playBoard, BoardLayout.BOARD);
-		scoreboard.build();
-		revalidate();
-		repaint();
+
+		SwingUtilities.invokeLater(() -> {
+			scoreboard.build();
+			revalidate();
+			repaint();
+		});
 	}
 
 	public void updateStats(Map<Integer, PlayerStats> stats)

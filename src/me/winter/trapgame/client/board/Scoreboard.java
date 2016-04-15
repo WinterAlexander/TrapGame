@@ -18,19 +18,11 @@ public class Scoreboard extends JPanel
 {
 	private TrapGameBoard board;
 
-	private JPanel statsContainer;
-
 	public Scoreboard(TrapGameBoard board)
 	{
 		this.board = board;
 		setLayout(new SimpleLayout());
 		setBackground(new Color(0, 0, 0, 0));
-
-		statsContainer = new JPanel();
-		statsContainer.setLayout(new BoxLayout(statsContainer, BoxLayout.PAGE_AXIS));
-
-		add(statsContainer, SimpleLayout.constraints(1d / 4, 1d / 6d, 1d / 2d, 5d / 6d));
-		statsContainer.setBackground(new Color(0, 0, 0, 0));
 	}
 
 	/**
@@ -41,11 +33,10 @@ public class Scoreboard extends JPanel
 	 */
 	public void build()
 	{
-		statsContainer.removeAll();
+		removeAll();
 
 		List<PlayerInfo> leaderBoard = new ArrayList<>(getBoard().getPlayers());
 		leaderBoard.sort((player1, player2) -> board.getPlayBoard().getScore(player2) - board.getPlayBoard().getScore(player1));
-
 
 		for(int index = 0; index < leaderBoard.size(); index++)
 		{
@@ -54,54 +45,29 @@ public class Scoreboard extends JPanel
 
 			JPanel playerStats = new JPanel();
 			playerStats.setBackground(new Color(0, 0, 0, 0));
-			playerStats.setBorder(new EmptyBorder(10, 10, 10, 10));
 			playerStats.setLayout(new BoxLayout(playerStats, BoxLayout.PAGE_AXIS));
 
 			JLabel name = new JLabel((index + 1) + ": " + player.getName());
-			name.setFont(new Font("Verdana", Font.BOLD, 20));
+			name.setFont(new Font("Verdana", Font.BOLD, board.getContainer().getHeight() / 32));
 			name.setForeground(player.getColor());
 
-			Font font = new Font("Verdana", Font.PLAIN, 18);
-
-			JLabel scores = new JLabel("Scores: " + board.getPlayBoard().getScore(player));
-			scores.setFont(font);
+			JLabel scores = new JLabel("Score: " + board.getPlayBoard().getScore(player));
+			scores.setFont(new Font("Verdana", Font.PLAIN, board.getContainer().getHeight() / 36));
 			scores.setForeground(player.getColor());
 
-			JLabel wins = new JLabel("Wins: " + player.getStats().getWins());
-			wins.setFont(font);
-			wins.setForeground(player.getColor());
-
-			JLabel loses = new JLabel("Loses: " + player.getStats().getLoses());
-			loses.setFont(font);
-			loses.setForeground(player.getColor());
-
-			JLabel draws = new JLabel("Draws: " + player.getStats().getDraws());
-			draws.setFont(font);
-			draws.setForeground(player.getColor());
-
-			JLabel ratio = new JLabel("Ratio: " + player.getStats().getRoundedWinLoseRatio());
-			ratio.setFont(font);
-			ratio.setForeground(player.getColor());
-
-			JSeparator statsSeparator = new JSeparator(JSeparator.HORIZONTAL);
-			statsSeparator.setForeground(player.getColor());
+			JLabel winsloses = new JLabel("Stats: " + player.getStats().getWins() + " / " + player.getStats().getLoses() + " (" + player.getStats().getRoundedWinLoseRatio() + ")");
+			winsloses.setFont(new Font("Verdana", Font.PLAIN, board.getContainer().getHeight() / 35));
+			winsloses.setForeground(player.getColor());
 
 			playerStats.add(Box.createVerticalGlue());
 			playerStats.add(name);
-			playerStats.add(statsSeparator);
+			playerStats.add(Box.createVerticalGlue());
 			playerStats.add(scores);
 			playerStats.add(Box.createVerticalGlue());
-			playerStats.add(wins);
-			playerStats.add(Box.createVerticalGlue());
-			playerStats.add(loses);
-			playerStats.add(Box.createVerticalGlue());
-			playerStats.add(draws);
-			playerStats.add(Box.createVerticalGlue());
-			playerStats.add(ratio);
+			playerStats.add(winsloses);
 			playerStats.add(Box.createVerticalGlue());
 
-			statsContainer.add(playerStats);
-			statsContainer.add(Box.createVerticalGlue());
+			add(playerStats, SimpleLayout.constraints(1d / 16d, 1d / 6d + index * 3d / 20d, 7d / 8d, 1d / 8d));
 		}
 
 		revalidate();

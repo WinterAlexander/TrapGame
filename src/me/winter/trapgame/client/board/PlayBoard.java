@@ -36,6 +36,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		this.scores = new HashMap<>();
 		preloaded = new HashMap<>();
 		mouseIn = false;
+		boardLocked = true;
 
 		addMouseMotionListener(this);
 		addMouseListener(this);

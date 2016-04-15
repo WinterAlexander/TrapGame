@@ -31,7 +31,7 @@ public class PlayerStats implements Serializable
 
 	public double getWinLoseRatio()
 	{
-		return (double)wins / (double)loses;
+		return (double)wins / (double)(loses > 0 ? loses : 1);
 	}
 
 	public float getRoundedWinLoseRatio()
