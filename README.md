@@ -3,8 +3,8 @@ A multi-player form-based desktop game about strategy and spam-clicking
 If you are interested into the project, leave me a mail: a.w1nter@hotmail.com
 
 Screenshots:
-![alt tag](https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot1.png =300x)
-![alt tag](https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot2.png =300x)
+<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot1.png" width="128px" /> 
+<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot2.png" width="128px" /> 
 
 Project in development. Downloads:
 
