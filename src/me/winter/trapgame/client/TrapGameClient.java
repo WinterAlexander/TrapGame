@@ -2,8 +2,10 @@ package me.winter.trapgame.client;
 
 import me.winter.trapgame.client.board.TrapGameBoard;
 import me.winter.trapgame.client.menu.TrapGameMenu;
+import me.winter.trapgame.shared.GameTranslation;
 import me.winter.trapgame.shared.Scheduler;
 import me.winter.trapgame.shared.Task;
+import me.winter.trapgame.shared.TrapGameLogFormatter;
 import me.winter.trapgame.util.FileUtil;
 import me.winter.trapgame.util.StringUtil;
 
@@ -13,6 +15,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents the client for TrapGame
@@ -22,6 +28,8 @@ import java.io.IOException;
  */
 public class TrapGameClient extends JFrame
 {
+	private static Logger trapGameLogger;
+
 	/**
 	 * Launches the app, opening a frame
 	 * @param args execution arguments are unused
@@ -32,41 +40,64 @@ public class TrapGameClient extends JFrame
 		{
 			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-			TrapGameClient client = new TrapGameClient();
+			trapGameLogger = Logger.getLogger("TrapGameClient");
+
+			trapGameLogger.setUseParentHandlers(false);
+
+			ConsoleHandler consoleHandler = new ConsoleHandler()
+			{
+				{
+					setOutputStream(System.out);
+				}
+			};
+
+			consoleHandler.setFormatter(new TrapGameLogFormatter());
+			trapGameLogger.addHandler(consoleHandler);
+
+			TrapGameClient client = new TrapGameClient(trapGameLogger);
 			client.load();
 			client.start();
 		}
 		catch(Throwable throwable)//catch copied from NewX
 		{
-			throwable.printStackTrace(System.err);
+			trapGameLogger.log(Level.SEVERE, "Client crashed", throwable);
 			JFrame frame = new JFrame();
 			JOptionPane.showMessageDialog(frame, "We are sorry, an internal error occurred during your game session: \n\n" + StringUtil.getStackTrace(throwable) + "\nPlease report this error to me at a.w1nter@hotmail.com", "TrapGame has crashed :(", JOptionPane.ERROR_MESSAGE);
 			frame.dispose();
 			System.exit(-1);
 		}
-
+		finally
+		{
+			for(Handler handler : trapGameLogger.getHandlers())
+				handler.close();
+			trapGameLogger = null;
+		}
 	}
 
 	private Scheduler scheduler;
 	private ClientConnection connection;
 	private UserProperties userProperties;
+	private GameTranslation lang;
 	private ResourceManager resourceManager;
+	private Logger logger;
 
 	private TrapGameMenu menu;
 	private TrapGameBoard board;
+	private JLabel loadingText;
 
 	/**
 	 * Default and unique constructor, builds a JFrame ready to display the game and puts it visible
 	 *
 	 */
-	public TrapGameClient()
+	public TrapGameClient(Logger logger)
 	{
 		super("TrapGame");
 
-		scheduler = new Scheduler();
+		this.logger = logger;
+		scheduler = new Scheduler(logger);
 		connection = new ClientConnection(this);
-		userProperties = new UserProperties(new File(FileUtil.getAppData() + "/.TrapGame/user.properties"));
-		resourceManager = new SimpleResourceManager();
+		userProperties = new UserProperties(logger, new File(FileUtil.getAppData() + "/.TrapGame/user.properties"));
+		resourceManager = new SimpleResourceManager(logger);
 
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -90,7 +121,7 @@ public class TrapGameClient extends JFrame
 		JPanel loading = new JPanel();
 		loading.setLayout(new BorderLayout());
 
-		JLabel loadingText = new JLabel("Loading...", SwingConstants.CENTER);
+		loadingText = new JLabel("...", SwingConstants.CENTER);
 		loadingText.setFont(new Font("Verdana", Font.BOLD, 18));
 		loading.add(loadingText, BorderLayout.CENTER);
 		setContentPane(loading);
@@ -101,6 +132,21 @@ public class TrapGameClient extends JFrame
 	public void load() throws IOException
 	{
 		userProperties.loadIfPresent();
+
+		lang = new GameTranslation(userProperties.getLanguage());
+
+		try
+		{
+			lang.load();
+		}
+		catch(IOException ex)
+		{
+			logger.log(Level.WARNING, "Couldn't load lang file", ex);
+		}
+
+
+		loadingText.setText(lang.getLine("client_loading"));
+
 		resourceManager.scan("/index.properties");
 		resourceManager.load();
 
@@ -193,6 +239,11 @@ public class TrapGameClient extends JFrame
 		this.userProperties = userProperties;
 	}
 
+	public GameTranslation getLang()
+	{
+		return lang;
+	}
+
 	public TrapGameMenu getMenu()
 	{
 		return menu;
@@ -206,5 +257,10 @@ public class TrapGameClient extends JFrame
 	public ResourceManager getResourceManager()
 	{
 		return resourceManager;
+	}
+
+	public Logger getLogger()
+	{
+		return logger;
 	}
 }

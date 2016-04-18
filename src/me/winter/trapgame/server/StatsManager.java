@@ -16,11 +16,13 @@ public class StatsManager
 {
 	private TrapGameServer server;
 	private File directory;
+	private boolean save;
 
-	public StatsManager(TrapGameServer server, File directory)
+	public StatsManager(TrapGameServer server, File directory, boolean save)
 	{
 		this.server = server;
 		this.directory = directory;
+		this.save = save;
 	}
 
 	private File getFile(String name)
@@ -61,6 +63,9 @@ public class StatsManager
 
 	public void save(String name, PlayerStats stats)
 	{
+		if(!save)
+			return;
+
 		File file = getFile(name);
 
 		try

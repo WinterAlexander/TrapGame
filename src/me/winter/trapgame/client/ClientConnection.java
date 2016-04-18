@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
 
 /**
  * Represents a connection established by the client and server
@@ -100,10 +101,13 @@ public class ClientConnection
 
 			udpSocket.send(data);
 		}
+		catch(SocketException ex)
+		{
+			close();
+		}
 		catch(Exception ex)
 		{
-			if(client.getUserProperties().isDebugMode())
-				ex.printStackTrace(System.err);
+			client.getLogger().log(Level.SEVERE, "An unexpected exception occurred while trying to keep connection alive", ex);
 		}
 	}
 
@@ -223,8 +227,7 @@ public class ClientConnection
 			return;
 		}
 
-		if(client.getUserProperties().isDebugMode())
-			System.out.println("The packet sent by server isn't appropriate: " + packet.getClass().getName());
+		client.getLogger().log(Level.INFO, "The packet sent by server isn't appropriate: " + packet.getClass().getName());
 	}
 
 	private void acceptInput()
@@ -262,8 +265,7 @@ public class ClientConnection
 		}
 		catch(Exception ex)
 		{
-			if(client.getUserProperties().isDebugMode())
-				ex.printStackTrace(System.err);
+			client.getLogger().log(Level.WARNING, "An unexpected exception occurred while accepting input", ex);
 			close();
 		}
 	}
@@ -287,7 +289,7 @@ public class ClientConnection
 				}
 				catch(InterruptedException ex)
 				{
-					ex.printStackTrace(System.err);
+					client.getLogger().log(Level.WARNING, "An unexpected exception occurred while waiting new output to send in client connection", ex);
 				}
 			}
 		}

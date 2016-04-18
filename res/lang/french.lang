@@ -1,0 +1,10 @@
+client_loading=Chargement...
+client_score=Score:
+client_stats=Stats:
+client_username=Votre nom:
+client_address=Adresse du serveur:
+client_password=Mot de passe:
+client_connect_button=Connexion
+client_remember=Se rappeler
+client_connection_failed_title=Connexion impossible
+client_connection_failed_message=La connexion au serveur a échoué.

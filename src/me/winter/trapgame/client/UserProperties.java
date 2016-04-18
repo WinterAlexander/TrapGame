@@ -3,7 +3,10 @@ package me.winter.trapgame.client;
 import me.winter.trapgame.util.FileUtil;
 
 import java.io.*;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Client-side properties file used to save some user settings
@@ -13,10 +16,17 @@ import java.util.Properties;
  */
 public class UserProperties extends Properties
 {
+	private Optional<Logger> logger;
 	private File file;
 
 	public UserProperties(File file)
 	{
+		this(null, file);
+	}
+
+	public UserProperties(Logger logger, File file)
+	{
+		this.logger = Optional.ofNullable(logger);
 		this.file = file;
 	}
 
@@ -36,8 +46,7 @@ public class UserProperties extends Properties
 		}
 		catch(IOException ex)
 		{
-			System.err.println("Failed to load proprieties file " + file.getName());
-			ex.printStackTrace(System.err);
+			logger.ifPresent(logger -> logger.log(Level.WARNING, "Failed to load properties file " + file.getName(), ex));
 		}
 	}
 
@@ -47,12 +56,11 @@ public class UserProperties extends Properties
 		{
 			FileUtil.createDirectory(file.getParentFile());
 			FileUtil.createFile(file);
-			store(new BufferedOutputStream(new FileOutputStream(file)), "Information saved on user's demand");
+			store(new BufferedOutputStream(new FileOutputStream(file)), "User settings");
 		}
 		catch(IOException ex)
 		{
-			System.err.println("Failed to save proprieties file " + file.getName());
-			ex.printStackTrace(System.err);
+			logger.ifPresent(logger -> logger.log(Level.WARNING, "Failed to save properties file " + file.getName(), ex));
 		}
 	}
 
@@ -94,5 +102,15 @@ public class UserProperties extends Properties
 	public void setDebugMode(boolean debugMode)
 	{
 		setProperty("debug-mode", debugMode + "");
+	}
+
+	public String getLanguage()
+	{
+		return getProperty("language", "english");
+	}
+
+	public void setLanguage(String language)
+	{
+		setProperty("language", language);
 	}
 }

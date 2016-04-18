@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.logging.Level;
 
 /**
  *  The menu used to connect to a server (and eventually to do more things)
@@ -37,18 +38,18 @@ public class TrapGameMenu extends JPanel
 		serverPassword = new JPasswordField();
 		serverPassword.setPreferredSize(new Dimension(200, 25));
 
-		JLabel nameLabel = new JLabel("User name:");
+		JLabel nameLabel = new JLabel(getContainer().getLang().getLine("client_username"));
 		nameLabel.setHorizontalAlignment(JLabel.RIGHT);
 
-		JLabel serverLabel = new JLabel("Server address:");
+		JLabel serverLabel = new JLabel(getContainer().getLang().getLine("client_address"));
 		serverLabel.setHorizontalAlignment(JLabel.RIGHT);
 
-		JLabel passwordLabel = new JLabel("Server password:");
+		JLabel passwordLabel = new JLabel(getContainer().getLang().getLine("client_password"));
 		passwordLabel.setHorizontalAlignment(JLabel.RIGHT);
 
-		final JCheckBox saveProprieties = new JCheckBox("Remember me");
+		final JCheckBox saveProprieties = new JCheckBox(getContainer().getLang().getLine("client_remember"));
 
-		JButton button = new JButton("Connect");
+		JButton button = new JButton(getContainer().getLang().getLine("client_connect_button"));
 
 		button.addActionListener(event -> {
 			try
@@ -70,8 +71,13 @@ public class TrapGameMenu extends JPanel
 			}
 			catch(Exception ex)
 			{
-				JOptionPane.showMessageDialog(getContainer(), "Sorry but the connection to this server failed: \n" + ex.getMessage(), "Connection failed", JOptionPane.ERROR_MESSAGE);
-				ex.printStackTrace(System.err);
+				JOptionPane.showMessageDialog(getContainer(), getContainer().getLang().getLine("client_connection_failed_message") + "\n" +
+						ex.getMessage(),getContainer().getLang().getLine("client_connection_failed_title"), JOptionPane.ERROR_MESSAGE);
+
+				if(getContainer().getUserProperties().isDebugMode())
+					getContainer().getLogger().log(Level.INFO, "Couldn't connect to server", ex);
+				else
+					getContainer().getLogger().log(Level.INFO, "Couldn't connect to server");
 			}
 		});
 

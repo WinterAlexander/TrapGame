@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>A simple resource manager method-blocking and not multi-threaded
@@ -20,17 +22,19 @@ import java.util.*;
  */
 public class SimpleResourceManager implements ResourceManager
 {
+	private Logger logger;
 	private Properties paths;
 	private Map<String, Object> resources;
 
-	public SimpleResourceManager()
+	public SimpleResourceManager(Logger logger)
 	{
+		this.logger = logger;
 		paths = new Properties();
 		resources = new HashMap<>();
 	}
 
 	@Override
-	public void scan(String index) throws FileNotFoundException
+	public void scan(String index) throws IOException
 	{
 		try
 		{
@@ -39,11 +43,13 @@ public class SimpleResourceManager implements ResourceManager
 		}
 		catch(FileNotFoundException ex)
 		{
+			logger.log(Level.SEVERE, "Index of resources was not found.", ex);
 			throw ex;
 		}
 		catch(IOException ex)
 		{
-			ex.printStackTrace(System.err);
+			logger.log(Level.SEVERE, "An internal exception occurred while scanning index of resources.", ex);
+			throw ex;
 		}
 	}
 
@@ -78,7 +84,7 @@ public class SimpleResourceManager implements ResourceManager
 		}
 		catch(IOException | LineUnavailableException | UnsupportedAudioFileException ex)
 		{
-			ex.printStackTrace(System.err);
+			logger.log(Level.WARNING, "An internal exception occurred while loading a file fetch from indexer.", ex);
 		}
 	}
 
@@ -123,7 +129,7 @@ public class SimpleResourceManager implements ResourceManager
 			}
 			catch(LineUnavailableException lineUnavailable)
 			{
-				lineUnavailable.printStackTrace(System.err);
+				logger.log(Level.WARNING, "An internal exception occurred while making an empty clip.", ex);
 				return null;
 			}
 		}

@@ -3,9 +3,14 @@ package me.winter.trapgame.shared;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Scheduler 
 {
+	private Optional<Logger> logger;
+
 	private List<Task> tasks;
 	private long pauseTime;
 	private long lastPause;
@@ -14,6 +19,12 @@ public class Scheduler
 
 	public Scheduler()
 	{
+		this(null);
+	}
+
+	public Scheduler(Logger logger)
+	{
+		this.logger = Optional.ofNullable(logger);
 		this.tasks = new ArrayList<>();
 		this.pause = true;
 		this.lastPause = System.nanoTime() / 1_000_000;
@@ -93,8 +104,7 @@ public class Scheduler
 			catch(Exception ex)
 			{
 				cancel(task);
-				System.err.println("Error in scheduler with task " + task.toString());
-				ex.printStackTrace(System.err);
+				logger.ifPresent(logger -> logger.log(Level.SEVERE, "Error in scheduler with task " + task.toString(), ex));
 			}
 		}
 

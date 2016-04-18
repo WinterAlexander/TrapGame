@@ -3,8 +3,10 @@ package me.winter.trapgame.server;
 import me.winter.trapgame.util.FileUtil;
 
 import java.io.*;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a configuration file for TrapGame
@@ -14,12 +16,17 @@ import java.util.logging.Level;
  */
 public class ServerProperties extends Properties
 {
-	private TrapGameServer server;
+	private Optional<Logger> logger;
 	private File file;
 
-	public ServerProperties(TrapGameServer server, File file)
+	public ServerProperties(File file)
 	{
-		this.server = server;
+		this(null, file);
+	}
+
+	public ServerProperties(Logger logger, File file)
+	{
+		this.logger = Optional.ofNullable(logger);
 		this.file = file;
 	}
 
@@ -34,7 +41,7 @@ public class ServerProperties extends Properties
 		}
 		catch(IOException ex)
 		{
-			server.getLogger().log(Level.WARNING, "Failed to load properties file " + file.getName(), ex);
+			logger.ifPresent(logger -> logger.log(Level.WARNING, "Failed to load properties file " + file.getName(), ex));
 		}
 	}
 
@@ -47,8 +54,7 @@ public class ServerProperties extends Properties
 		}
 		catch(IOException ex)
 		{
-
-			server.getLogger().log(Level.WARNING, "Failed to save properties file " + file.getName(), ex);
+			logger.ifPresent(logger -> logger.log(Level.WARNING, "Failed to save properties file " + file.getName(), ex));
 		}
 	}
 

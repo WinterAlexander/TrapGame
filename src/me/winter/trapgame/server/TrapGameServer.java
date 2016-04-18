@@ -4,6 +4,7 @@ import me.winter.trapgame.server.state.StandbyState;
 import me.winter.trapgame.server.state.State;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.Scheduler;
+import me.winter.trapgame.shared.TrapGameLogFormatter;
 import me.winter.trapgame.shared.packet.PacketOutBoardSize;
 import me.winter.trapgame.shared.packet.PacketOutWelcome;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
@@ -13,10 +14,8 @@ import me.winter.trapgame.util.FileUtil;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
 
@@ -65,7 +64,7 @@ public class TrapGameServer
 			if(args.length > 5 && StringUtil.isInt(args[5]))
 				boardHeight = Integer.parseInt(args[5]);*/
 
-			trapGameLogger = Logger.getLogger("TrapGame");
+			trapGameLogger = Logger.getLogger("TrapGameServer");
 
 			trapGameLogger.setUseParentHandlers(false);
 
@@ -76,21 +75,25 @@ public class TrapGameServer
 				}
 			};
 
-			consoleHandler.setFormatter(new LogFormatter());
+			consoleHandler.setFormatter(new TrapGameLogFormatter());
 			trapGameLogger.addHandler(consoleHandler);
 
-			new TrapGameServer(trapGameLogger).start();
+			ServerProperties properties = new ServerProperties(trapGameLogger, new File("server.properties"));
+			properties.loadIfPresent();
+
+			new TrapGameServer(properties, trapGameLogger).start();
 			trapGameLogger.info("Thanks for playing TrapGame ! :)");
 		}
 		catch(Throwable ex)
 		{
 			trapGameLogger.log(Level.SEVERE, "A fatal error occurred and stopped the server.", ex);
-			System.exit(0);
+			System.exit(-1);
 		}
 		finally
 		{
 			for(Handler handler : trapGameLogger.getHandlers())
 				handler.close();
+			trapGameLogger = null;
 		}
 	}
 
@@ -131,13 +134,9 @@ public class TrapGameServer
 
 	private boolean stop;
 
-	public TrapGameServer(Logger logger)
+	public TrapGameServer(ServerProperties properties, Logger logger)
 	{
 		this.logger = logger;
-
-
-		ServerProperties properties = new ServerProperties(this, new File("server.properties"));
-		properties.loadIfPresent();
 
 		if(properties.isLoggingToDisk())
 		{
@@ -165,7 +164,7 @@ public class TrapGameServer
 
 				FileHandler fileHandler = new FileHandler(fileName);
 
-				fileHandler.setFormatter(new LogFormatter());
+				fileHandler.setFormatter(new TrapGameLogFormatter());
 				logger.addHandler(fileHandler);
 			}
 			catch(IOException ex)
@@ -174,11 +173,11 @@ public class TrapGameServer
 			}
 		}
 
-		scheduler = new Scheduler();
+		scheduler = new Scheduler(logger);
 		state = new StandbyState(this);
 		players = new ArrayList<>();
 		connection = new ServerConnection(this, properties.getPort());
-		statsManager = new StatsManager(this, new File("stats"));
+		statsManager = new StatsManager(this, new File("stats"), false);
 		commandManager = new CommandManager(this);
 		console = new ServerConsole(this);
 		stop = false;

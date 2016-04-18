@@ -35,7 +35,7 @@ public class ConsoleSender implements CommandSender
 	@Override
 	public void sendMessage(String message)
 	{
-		console.getServer().getLogger().info("[CHAT] " + StringUtil.noHTML(message));
+		console.getServer().getLogger().info("Chat: " + StringUtil.noHTML(message));
 	}
 
 	@Override

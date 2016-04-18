@@ -51,11 +51,11 @@ public class Scoreboard extends JPanel
 			name.setFont(new Font("Verdana", Font.BOLD, board.getContainer().getHeight() / 32));
 			name.setForeground(player.getColor());
 
-			JLabel scores = new JLabel("Score: " + board.getPlayBoard().getScore(player));
+			JLabel scores = new JLabel(board.getContainer().getLang().getLine("client_score") + " " + board.getPlayBoard().getScore(player));
 			scores.setFont(new Font("Verdana", Font.PLAIN, board.getContainer().getHeight() / 36));
 			scores.setForeground(player.getColor());
 
-			JLabel winsloses = new JLabel("Stats: " + player.getStats().getWins() + " / " + player.getStats().getLoses() + " (" + player.getStats().getRoundedWinLoseRatio() + ")");
+			JLabel winsloses = new JLabel(board.getContainer().getLang().getLine("client_stats") + " " + player.getStats().getWins() + " / " + player.getStats().getLoses() + " (" + player.getStats().getRoundedWinLoseRatio() + ")");
 			winsloses.setFont(new Font("Verdana", Font.PLAIN, board.getContainer().getHeight() / 35));
 			winsloses.setForeground(player.getColor());
 

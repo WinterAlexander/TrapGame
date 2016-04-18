@@ -3,6 +3,7 @@ package me.winter.trapgame.client;
 import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -25,13 +26,13 @@ public interface ResourceManager
 	 *
 	 * @param index The name of the index file to scan
 	 */
-	void scan(String index) throws FileNotFoundException;
+	void scan(String index) throws IOException;
 
 	/**
 	 * Loads the resources if necessary.
 	 *
 	 */
-	void load();
+	void load() throws IOException;
 
 	/**
 	 * @return All the scanned resources name
