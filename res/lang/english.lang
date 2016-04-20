@@ -6,10 +6,17 @@
 client_loading=Loading...
 client_score=Score:
 client_stats=Stats:
+
+client_howto_button=How to play
+client_join_button=Join Game
+client_host_button=Host Game
+client_leave_button=Quit
+
 client_username=Your name:
 client_address=Server address:
 client_password=Server password:
 client_connect_button=Connect
 client_remember=Remember me
+
 client_connection_failed_title=Connection failed
 client_connection_failed_message=The connection to this server failed.

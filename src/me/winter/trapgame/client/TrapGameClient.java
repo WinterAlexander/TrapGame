@@ -40,7 +40,7 @@ public class TrapGameClient extends JFrame
 		{
 			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-			trapGameLogger = Logger.getLogger("TrapGameClient");
+			trapGameLogger = Logger.getLogger("Client");
 
 			trapGameLogger.setUseParentHandlers(false);
 
@@ -132,6 +132,9 @@ public class TrapGameClient extends JFrame
 	public void load() throws IOException
 	{
 		userProperties.loadIfPresent();
+
+		if(userProperties.isDebugMode())
+			setResizable(true);
 
 		lang = new GameTranslation(userProperties.getLanguage());
 

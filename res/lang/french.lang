@@ -1,10 +1,17 @@
 client_loading=Chargement...
 client_score=Score:
 client_stats=Stats:
+
+client_howto_button=Comment jouer
+client_join_button=Rejoindre une partie
+client_host_button=HÃ©berger une partie
+client_leave_button=Quitter
+
 client_username=Votre nom:
 client_address=Adresse du serveur:
 client_password=Mot de passe:
 client_connect_button=Connexion
 client_remember=Se rappeler
+
 client_connection_failed_title=Connexion impossible
-client_connection_failed_message=La connexion au serveur a échoué.
+client_connection_failed_message=La connexion au serveur a Ã©chouÃ©e.

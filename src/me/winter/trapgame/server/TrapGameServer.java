@@ -64,7 +64,7 @@ public class TrapGameServer
 			if(args.length > 5 && StringUtil.isInt(args[5]))
 				boardHeight = Integer.parseInt(args[5]);*/
 
-			trapGameLogger = Logger.getLogger("TrapGameServer");
+			trapGameLogger = Logger.getLogger("Server");
 
 			trapGameLogger.setUseParentHandlers(false);
 

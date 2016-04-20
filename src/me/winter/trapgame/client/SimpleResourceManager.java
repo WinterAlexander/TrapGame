@@ -64,12 +64,14 @@ public class SimpleResourceManager implements ResourceManager
 			{
 				case "image":
 					resources.put(name, ImageIO.read(FileUtil.resourceAsStream(path)));
+					logger.info("Image " + name + " has been loaded properly.");
 					break;
 
 				case "sound":
 					Clip clip = AudioSystem.getClip();
 					clip.open(AudioSystem.getAudioInputStream(FileUtil.resourceAsStream(path)));
 					resources.put(name, clip);
+					logger.info("Sound " + name + " has been loaded properly.");
 					break;
 
 				case "text":
@@ -80,12 +82,15 @@ public class SimpleResourceManager implements ResourceManager
 					while((line = reader.readLine()) != null)
 						builder.append(line);
 					resources.put(name, builder.toString());
+					logger.info("File " + name + " has been loaded properly.");
 			}
 		}
 		catch(IOException | LineUnavailableException | UnsupportedAudioFileException ex)
 		{
 			logger.log(Level.WARNING, "An internal exception occurred while loading a file fetch from indexer.", ex);
 		}
+
+		logger.info("Done loading resources.");
 	}
 
 	@Override

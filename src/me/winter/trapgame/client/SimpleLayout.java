@@ -60,25 +60,40 @@ public class SimpleLayout implements LayoutManager
 		}
 	}
 
+	public static String constraints(float scaleX, float scaleY, float x, float y, float width, float height)
+	{
+		return constraints((double)scaleX, (double)scaleY, (double)x, (double)y, (double)width, (double)height);
+	}
+
 	public static String constraints(float x, float y, float width, float height)
 	{
-		return x + "," + y + "," + width + "," + height;
+		return constraints((double)x, (double)y, (double)width, (double)height);
+	}
+
+	public static String constraints(double scaleX, double scaleY, double x, double y, double width, double height)
+	{
+		return constraints(x / scaleX, y / scaleY, width / scaleX, height / scaleY);
 	}
 
 	public static String constraints(double x, double y, double width, double height)
 	{
-		return constraints((float)x, (float)y, (float)width, (float)height);
+		return x + "," + y + "," + width + "," + height;
+	}
+
+	public static String constraints(int scaleX, int scaleY, int x, int y, int width, int height)
+	{
+		return constraints((double)scaleX, (double)scaleY, (double)x, (double)y, (double)width, (double)height);
 	}
 
 	public static String constraints(int x, int y, int width, int height)
 	{
-		return constraints((float)x / 100, (float)y / 100, (float)width / 100, (float)height / 100);
+		return constraints(100, 100, x, y, width, height);
 	}
 
 	private static class ComponentGuide
 	{
 		private Component component;
-		private float x, y, width, height;
+		private double x, y, width, height;
 
 		public ComponentGuide(Component component, String constraints)
 		{
@@ -98,13 +113,19 @@ public class SimpleLayout implements LayoutManager
 			}
 		}
 
-		public ComponentGuide(Component component, float x, float y, float width, float height)
+		public ComponentGuide(Component component, double x, double y, double width, double height)
 		{
 			this.component = component;
 			this.x = x;
 			this.y = y;
 			this.width = width;
 			this.height = height;
+		}
+
+		@Override
+		public String toString()
+		{
+			return x + ", " + y + ", " + width + ", " + height;
 		}
 
 		public Component getComponent()
@@ -117,42 +138,42 @@ public class SimpleLayout implements LayoutManager
 			this.component = component;
 		}
 
-		public float getX()
+		public double getX()
 		{
 			return x;
 		}
 
-		public void setX(float x)
+		public void setX(double x)
 		{
 			this.x = x;
 		}
 
-		public float getY()
+		public double getY()
 		{
 			return y;
 		}
 
-		public void setY(float y)
+		public void setY(double y)
 		{
 			this.y = y;
 		}
 
-		public float getWidth()
+		public double getWidth()
 		{
 			return width;
 		}
 
-		public void setWidth(float width)
+		public void setWidth(double width)
 		{
 			this.width = width;
 		}
 
-		public float getHeight()
+		public double getHeight()
 		{
 			return height;
 		}
 
-		public void setHeight(float height)
+		public void setHeight(double height)
 		{
 			this.height = height;
 		}

@@ -1,173 +1,99 @@
 package me.winter.trapgame.client.menu;
 
+import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.client.TrapGameClient;
-import me.winter.trapgame.client.UserProperties;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.logging.Level;
 
 /**
- *  The menu used to connect to a server (and eventually to do more things)
+ * <p>A BorderLayout menu separated by 2 sections</p>
  *
- * Created by Alexander Winter on 2016-03-27.
+ * <p>Created by 1541869 on 2016-04-19.</p>
  */
 public class TrapGameMenu extends JPanel
 {
-	private TrapGameClient container;
+	private TrapGameClient client;
 
-	private JTextField playerName;
-	private JTextField serverAddress;
-	private JPasswordField serverPassword;
-
-	public TrapGameMenu(TrapGameClient container)
+	public TrapGameMenu(TrapGameClient client)
 	{
-		this.container = container;
+		this.client = client;
 
-		setLayout(new GridBagLayout());
+		setLayout(new GridLayout(1, 2));
 
-		JLabel logoLabel = new JLabel(new ImageIcon(container.getResourceManager().getImage("logo")));
-
-		playerName = new JTextField();
-		playerName.setPreferredSize(new Dimension(200, 25));
-		serverAddress = new JTextField();
-		serverAddress.setPreferredSize(new Dimension(200, 25));
-		serverPassword = new JPasswordField();
-		serverPassword.setPreferredSize(new Dimension(200, 25));
-
-		JLabel nameLabel = new JLabel(getContainer().getLang().getLine("client_username"));
-		nameLabel.setHorizontalAlignment(JLabel.RIGHT);
-
-		JLabel serverLabel = new JLabel(getContainer().getLang().getLine("client_address"));
-		serverLabel.setHorizontalAlignment(JLabel.RIGHT);
-
-		JLabel passwordLabel = new JLabel(getContainer().getLang().getLine("client_password"));
-		passwordLabel.setHorizontalAlignment(JLabel.RIGHT);
-
-		final JCheckBox saveProprieties = new JCheckBox(getContainer().getLang().getLine("client_remember"));
-
-		JButton button = new JButton(getContainer().getLang().getLine("client_connect_button"));
-
-		button.addActionListener(event -> {
-			try
-			{
-				String name = playerName.getText(),
-						password = new String(serverPassword.getPassword()),
-						server = serverAddress.getText();
-
-				if(saveProprieties.isSelected())
-				{
-					UserProperties properties = getContainer().getUserProperties();
-					properties.setLastName(name);
-					properties.setLastPassword(password);
-					properties.setLastServer(server);
-					properties.save();
-				}
-
-				getContainer().getConnection().connectTo(server, password, name);
-			}
-			catch(Exception ex)
-			{
-				JOptionPane.showMessageDialog(getContainer(), getContainer().getLang().getLine("client_connection_failed_message") + "\n" +
-						ex.getMessage(),getContainer().getLang().getLine("client_connection_failed_title"), JOptionPane.ERROR_MESSAGE);
-
-				if(getContainer().getUserProperties().isDebugMode())
-					getContainer().getLogger().log(Level.INFO, "Couldn't connect to server", ex);
-				else
-					getContainer().getLogger().log(Level.INFO, "Couldn't connect to server");
-			}
-		});
-
-		GridBagConstraints bagConstraints = new GridBagConstraints();
-
-		bagConstraints.fill = GridBagConstraints.BOTH;
-		bagConstraints.anchor = GridBagConstraints.EAST;
-
-		bagConstraints.insets = new Insets(5, 5, 5, 5);
-
-		bagConstraints.gridx = 0;
-		bagConstraints.gridy = 0;
-
-		bagConstraints.gridwidth = 3;
-		bagConstraints.gridheight = 1;
-
-		add(logoLabel, bagConstraints);
-
-		bagConstraints.gridy++;
-
-		bagConstraints.gridwidth = 1;
-		bagConstraints.gridheight = 1;
-
-		add(nameLabel, bagConstraints);
-
-		bagConstraints.gridx++;
-		bagConstraints.gridwidth = 2;
-
-		add(playerName, bagConstraints);
-
-		bagConstraints.gridx = 0;
-		bagConstraints.gridy++;
-		bagConstraints.gridwidth = 1;
-
-		add(serverLabel, bagConstraints);
-
-		bagConstraints.gridx++;
-		bagConstraints.gridwidth = 2;
-
-		add(serverAddress, bagConstraints);
-
-		bagConstraints.gridx = 0;
-		bagConstraints.gridy++;
-		bagConstraints.gridwidth = 1;
-
-		add(passwordLabel, bagConstraints);
-
-		bagConstraints.gridx++;
-		bagConstraints.gridwidth = 2;
-
-		add(serverPassword, bagConstraints);
-
-		bagConstraints.gridx = 1;
-		bagConstraints.gridy++;
-		bagConstraints.gridwidth = 1;
-
-		add(button, bagConstraints);
-
-		bagConstraints.gridx++;
-
-		add(saveProprieties, bagConstraints);
-
-		UserProperties properties = getContainer().getUserProperties();
-
-		if(properties.exists())
+		JPanel buttonContainer = new JPanel()
 		{
-			playerName.setText(properties.getLastName());
-			serverPassword.setText(properties.getLastPassword());
-			serverAddress.setText(properties.getLastServer());
-		}
+			@Override
+			public void paint(Graphics graphics)
+			{
+				Graphics2D g2draw = (Graphics2D) graphics;
 
+				g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+				g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+				g2draw.drawImage(getClient().getResourceManager().getImage("background"), 0, 0, getClient().getWidth(), getClient().getHeight(), null);
+
+				super.paint(graphics);
+			}
+		};
+		buttonContainer.setBackground(new Color(0, 0, 0, 0));
+		buttonContainer.setLayout(new SimpleLayout());
+
+		ImagePanel logo = new ImagePanel(client.getResourceManager().getImage("logo"));
+
+		JButton howtoplay = new JButton(getLangLine("client_howto_button"));
+		howtoplay.addActionListener(event -> setRightPane(new HostForm()));
+
+		JButton joinGame = new JButton(getLangLine("client_join_button"));
+		joinGame.addActionListener(event -> setRightPane(new JoinForm(getClient())));
+
+		JButton hostGame = new JButton(getLangLine("client_host_button"));
+		hostGame.addActionListener(event -> setRightPane(new HostForm()));
+
+		JButton leave = new JButton(getLangLine("client_leave_button"));
+		leave.addActionListener(event -> getClient().stop());
+
+		buttonContainer.add(logo, SimpleLayout.constraints(8, 9,
+				0, 1, 8, 8 / 5));
+
+		buttonContainer.add(howtoplay, SimpleLayout.constraints(8, 9,
+				2, 4, 4, 0.75));
+
+		buttonContainer.add(joinGame, SimpleLayout.constraints(8, 9,
+				2, 5, 4, 0.75));
+
+		buttonContainer.add(hostGame, SimpleLayout.constraints(8, 9,
+				2, 6, 4, 0.75));
+
+		buttonContainer.add(leave, SimpleLayout.constraints(8, 9,
+				2, 7, 4, 0.75));
+
+
+		add(buttonContainer);
+		add(new DemoPlayBoard(this));
 	}
 
-	public void paintComponent(Graphics g)
+	public void setRightPane(Component component)
 	{
-		super.paintComponent(g);
+		remove(1);
+		add(component);
+		revalidate();
+		repaint();
 	}
 
-	public TrapGameClient getContainer()
+	public String getLangLine(String line)
 	{
-		return container;
+		return client.getLang().getLine(line);
 	}
 
-	public JTextField getServerAddress()
+	public TrapGameClient getClient()
 	{
-		return serverAddress;
+		return client;
 	}
 
-	public JTextField getPlayerName()
+	public void setClient(TrapGameClient client)
 	{
-		return playerName;
+		this.client = client;
 	}
 }
