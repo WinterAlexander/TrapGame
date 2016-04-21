@@ -1,4 +1,4 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +15,13 @@ public class ImagePanel extends JPanel
 	public ImagePanel(Image image)
 	{
 		this.image = image;
+		setBackground(new Color(0, 0, 0, 0));
 	}
 
 	@Override
-	public void paint(Graphics graphics)
+	public void paintComponent(Graphics graphics)
 	{
+		super.paintComponent(graphics);
 		Graphics2D g2draw = (Graphics2D) graphics;
 
 		g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

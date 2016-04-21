@@ -7,9 +7,22 @@ img
 	box-shadow: none;
 }*/
 
-p
+ol, ul
 {
 	font-family: Arial;
-	font-size: 18px;
+	font-size: 20px;
 	padding: 0px 10px 0px 10px;
+}
+
+h1
+{
+	font-family: Arial;
+	font-size: 28px;
+	padding: 0px 10px 0px 10px;
+	text-decoration: underline;
+}
+
+li
+{
+	margins: 0 0 15px 0;
 }

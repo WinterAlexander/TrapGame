@@ -18,7 +18,7 @@ public class HostForm extends JPanel
 	}
 
 	@Override
-	public void paint(Graphics graphics)
+	public void paintComponent(Graphics graphics)
 	{
 		Graphics2D g2draw = (Graphics2D) graphics;
 

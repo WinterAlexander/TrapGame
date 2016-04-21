@@ -19,7 +19,7 @@ public class DemoPlayBoard extends JPanel
 	}
 
 	@Override
-	public void paint(Graphics graphics)
+	public void paintComponent(Graphics graphics)
 	{
 		int width = getWidth() * 15 / 16;
 

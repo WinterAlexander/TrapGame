@@ -41,7 +41,7 @@ public class Chat extends JPanel implements KeyListener
 		textField = new JTextField()
 		{
 			@Override
-			public void paint(Graphics g)
+			public void paintComponent(Graphics g)
 			{
 				Graphics2D g2draw = (Graphics2D)g;
 
@@ -52,14 +52,14 @@ public class Chat extends JPanel implements KeyListener
 				g2draw.drawImage(board.getContainer().getResourceManager().getImage("background"), -Chat.this.getX() - getX(), -Chat.this.getY() - getY(), board.getWidth(), board.getHeight(), null);
 				g2draw.drawImage(board.getContainer().getResourceManager().getImage("chat-input"), 0, 0, getWidth(), getHeight(), null);
 
-				super.paint(g);
+				super.paintComponent(g);
 			}
 		};
 
 		textArea = new JTextPane()
 		{
 			@Override
-			public void paint(Graphics g)
+			public void paintComponent(Graphics g)
 			{
 				Graphics2D g2draw = (Graphics2D)g;
 
@@ -69,7 +69,7 @@ public class Chat extends JPanel implements KeyListener
 
 				g2draw.drawImage(board.getContainer().getResourceManager().getImage("background"), -Chat.this.getX() - getX(), -Chat.this.getY() - getY(), board.getWidth(), board.getHeight(), null);
 
-				super.paint(g);
+				super.paintComponent(g);
 			}
 		};
 

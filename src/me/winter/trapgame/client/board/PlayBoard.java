@@ -69,7 +69,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	}
 
 	@Override
-	public void paint(Graphics graphics)
+	public void paintComponent(Graphics graphics)
 	{
 		Graphics2D g2draw = (Graphics2D) graphics;
 

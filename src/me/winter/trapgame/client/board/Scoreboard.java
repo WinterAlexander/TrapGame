@@ -75,7 +75,7 @@ public class Scoreboard extends JPanel
 	}
 
 	@Override
-	public void paint(Graphics g)
+	public void paintComponent(Graphics g)
 	{
 		Graphics2D g2draw = (Graphics2D) g;
 
@@ -86,7 +86,7 @@ public class Scoreboard extends JPanel
 		g2draw.drawImage(board.getContainer().getResourceManager().getImage("background"), 0, 0, board.getWidth(), board.getHeight(), null);
 		g2draw.drawImage(board.getContainer().getResourceManager().getImage("scoreboard"), 0, 0, getWidth(), getHeight(), null);
 
-		super.paint(g);
+		super.paintComponent(g);
 	}
 
 	public TrapGameBoard getBoard()

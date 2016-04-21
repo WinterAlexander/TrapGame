@@ -1,15 +1,13 @@
 package me.winter.trapgame.client.menu;
 
+import me.winter.trapgame.client.ImagePanel;
 import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.client.TrapGameClient;
-import me.winter.trapgame.shared.Task;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.logging.Level;
 
 /**
  * <p>A BorderLayout menu separated by 2 sections</p>
@@ -29,7 +27,7 @@ public class TrapGameMenu extends JPanel
 		JPanel buttonContainer = new JPanel()
 		{
 			@Override
-			public void paint(Graphics graphics)
+			public void paintComponent(Graphics graphics)
 			{
 				Graphics2D g2draw = (Graphics2D) graphics;
 
@@ -39,7 +37,7 @@ public class TrapGameMenu extends JPanel
 
 				g2draw.drawImage(getClient().getResourceManager().getImage("background"), 0, 0, getClient().getWidth(), getClient().getHeight(), null);
 
-				super.paint(graphics);
+				super.paintComponent(graphics);
 			}
 		};
 		buttonContainer.setBackground(new Color(0, 0, 0, 0));
@@ -71,13 +69,13 @@ public class TrapGameMenu extends JPanel
 				0, 1, 8, 8d / 5d));
 
 		buttonContainer.add(howtoplay, SimpleLayout.constraints(8, 9,
-				2, 4, 4, 0.75));
+				2, 3.5, 4, 0.75));
 
 		buttonContainer.add(joinGame, SimpleLayout.constraints(8, 9,
-				2, 5, 4, 0.75));
+				2, 4.5, 4, 0.75));
 
 		buttonContainer.add(hostGame, SimpleLayout.constraints(8, 9,
-				2, 6, 4, 0.75));
+				2, 5.5, 4, 0.75));
 
 		buttonContainer.add(leave, SimpleLayout.constraints(8, 9,
 				2, 7, 4, 0.75));
