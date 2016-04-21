@@ -153,6 +153,11 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 			BufferedImage image = new BufferedImage(baseCursor.getWidth(), baseCursor.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
 			Graphics2D graphics2D = image.createGraphics();
+
+			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			graphics2D.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
 			graphics2D.setColor(Color.white);
 			graphics2D.fillRect(0, 0, image.getWidth(), image.getHeight());
 			graphics2D.drawImage(getCursorImage(color, true), 0, 0, null);

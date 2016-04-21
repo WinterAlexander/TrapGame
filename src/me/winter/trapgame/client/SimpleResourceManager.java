@@ -85,9 +85,9 @@ public class SimpleResourceManager implements ResourceManager
 					logger.info("File " + name + " has been loaded properly.");
 			}
 		}
-		catch(IOException | LineUnavailableException | UnsupportedAudioFileException ex)
+		catch(Exception ex)
 		{
-			logger.log(Level.WARNING, "An internal exception occurred while loading a file fetch from indexer.", ex);
+			logger.log(Level.WARNING, "An internal exception occurred while loading " + name, ex);
 		}
 
 		logger.info("Done loading resources.");

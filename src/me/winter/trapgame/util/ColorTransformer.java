@@ -10,6 +10,8 @@ import java.awt.color.ColorSpace;
  */
 public class ColorTransformer extends Color
 {
+	public static final ColorTransformer TRANSPARENT = new ColorTransformer(0, 0, 0, 0);
+
 	public ColorTransformer(int r, int g, int b)
 	{
 		super(r, g, b);

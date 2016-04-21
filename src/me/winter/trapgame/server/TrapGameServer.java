@@ -97,7 +97,7 @@ public class TrapGameServer
 		}
 	}
 
-	private static final Color[] COLORS = new Color[]{
+	public static final Color[] COLORS = new Color[]{
 			new Color(255, 0, 0),       //1
 			new Color(3, 140, 252),     //2
 			new Color(241, 223, 1),     //3
