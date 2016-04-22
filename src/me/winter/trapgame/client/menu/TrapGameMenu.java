@@ -51,11 +51,15 @@ public class TrapGameMenu extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				setRightPane(new DemoPlayBoard(TrapGameMenu.this));
+				setRightPane(new DemoPlayBoard(TrapGameMenu.this, 6));
 			}
 		});
 
-		JLabel copyright = new JLabel("<html>Free & Open source game<br>by Alexander Winter");;
+		JLabel copyright = new JLabel("<html><div style=\"text-align: right\">" +
+				"Free & Open source game<br>by Alexander Winter" +
+				"</div></html>");
+
+		copyright.setAlignmentX(JLabel.RIGHT_ALIGNMENT);
 		copyright.setHorizontalAlignment(JLabel.RIGHT);
 		copyright.setVerticalAlignment(JLabel.TOP);
 		copyright.setFont(new Font("Verdana", Font.PLAIN, 16));
@@ -99,7 +103,7 @@ public class TrapGameMenu extends JPanel
 				0, 1, 8, 1.6));
 
 		buttonContainer.add(copyright, SimpleLayout.constraints(8, 9,
-				0, 2.4, 8, 1.1));
+				4, 2.4, 4, 1.1));
 
 		buttonContainer.add(howtoplay, SimpleLayout.constraints(8, 9,
 				2, 3.5, 4, 0.75));
@@ -115,7 +119,12 @@ public class TrapGameMenu extends JPanel
 
 
 		add(buttonContainer);
-		add(new DemoPlayBoard(this));
+		add(new DemoPlayBoard(this, 6));
+	}
+
+	public Component getRightPane()
+	{
+		return getComponent(1);
 	}
 
 	public void setRightPane(Component component)

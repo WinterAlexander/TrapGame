@@ -2,6 +2,7 @@ package me.winter.trapgame.client.menu;
 
 import me.winter.trapgame.client.TrapGameClient;
 import me.winter.trapgame.client.UserProperties;
+import me.winter.trapgame.util.ColorTransformer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -47,6 +48,7 @@ public class JoinForm extends JPanel
 		passwordLabel.setHorizontalAlignment(JLabel.RIGHT);
 
 		final JCheckBox saveProprieties = new JCheckBox(getContainer().getLang().getLine("client_remember"));
+		saveProprieties.setBackground(ColorTransformer.TRANSPARENT);
 
 		JButton button = new JButton(getContainer().getLang().getLine("client_connect_button"));
 

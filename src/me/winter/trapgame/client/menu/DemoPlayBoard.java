@@ -1,7 +1,13 @@
 package me.winter.trapgame.client.menu;
 
+import me.winter.trapgame.server.TrapGameServer;
+import me.winter.trapgame.shared.Task;
+import me.winter.trapgame.util.BetterRandom;
+import me.winter.trapgame.util.ColorTransformer;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
 
 /**
  * <p>A play board used in the menu to show a small part of the gameplay</p>
@@ -12,19 +18,31 @@ public class DemoPlayBoard extends JPanel
 {
 	private TrapGameMenu menu;
 
-	public DemoPlayBoard(TrapGameMenu menu)
+	private Map<Point, Color> board;
+	private int boardWidth;
+
+	public DemoPlayBoard(TrapGameMenu menu, int boardWidth)
 	{
 		this.menu = menu;
 		setBackground(new Color(0, 0, 0, 0));
+		board = new HashMap<>();
+		this.boardWidth = boardWidth;
+
+		BetterRandom random = new BetterRandom();
+
+		for(int i = 0; i < 4; i++)
+		{
+			menu.getClient().getScheduler().addTask(new DemoPlay(this, TrapGameServer.COLORS[i]));
+		}
 	}
 
 	@Override
 	public void paintComponent(Graphics graphics)
 	{
-		int width = getWidth() * 15 / 16;
+		int paneWidth = getWidth() * 15 / 16;
 
-		int x = getWidth() / 2 - width / 2;
-		int y = getHeight() / 2 - width / 2;
+		int paneX = getWidth() / 2 - paneWidth / 2;
+		int paneY = getHeight() / 2 - paneWidth / 2;
 
 		Graphics2D g2draw = (Graphics2D) graphics;
 
@@ -33,5 +51,63 @@ public class DemoPlayBoard extends JPanel
 		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
 		g2draw.drawImage(menu.getClient().getResourceManager().getImage("background"), -getX(), 0, menu.getClient().getWidth(), menu.getClient().getHeight(), null);
+
+		float buttonWidth = paneWidth / (float)boardWidth;
+
+		for(int x = 0; x < boardWidth; x++)
+		{
+			for(int y = 0; y < boardWidth; y++)
+			{
+				Color color = board.get(new Point(x, y));
+
+				int xCeil = (int)((x + 1) * buttonWidth) > (int)(x * buttonWidth) + (int)buttonWidth ? 1 : 0;
+				int yCeil = (int)((y + 1) * buttonWidth) > (int)(y * buttonWidth) + (int)buttonWidth ? 1 : 0;
+
+				int width = (int)buttonWidth + xCeil;
+				int height = (int)buttonWidth + yCeil;
+
+				if(color != null)
+				{
+					g2draw.setColor(new ColorTransformer(color, 200));
+					g2draw.fillRoundRect(paneX + (int)(x * buttonWidth), paneY + (int)(y * buttonWidth), width, height, width / 4, height / 4);
+				}
+
+				g2draw.drawImage(menu.getClient().getResourceManager().getImage("game-button"), paneX + (int)(x * buttonWidth), paneY + (int)(y * buttonWidth), (int)buttonWidth + xCeil, (int)buttonWidth + yCeil, null);
+
+			}
+		}
+	}
+
+	public boolean isActive()
+	{
+		return getMenu().getRightPane() != this;
+	}
+
+	public void place(Point point, Color color)
+	{
+		board.put(point, color);
+		revalidate();
+		repaint();
+
+		if(!menu.getClient().getResourceManager().getSound("click").isRunning())
+		{
+			menu.getClient().getResourceManager().getSound("click").setFramePosition(0);
+			menu.getClient().getResourceManager().getSound("click").start();
+		}
+	}
+
+	public TrapGameMenu getMenu()
+	{
+		return menu;
+	}
+
+	public int getBoardWidth()
+	{
+		return boardWidth;
+	}
+
+	public Map<Point, Color> getBoard()
+	{
+		return board;
 	}
 }
