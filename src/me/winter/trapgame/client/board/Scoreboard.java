@@ -2,6 +2,7 @@ package me.winter.trapgame.client.board;
 
 import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.shared.PlayerInfo;
+import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
 import java.util.List;
@@ -34,6 +35,24 @@ public class Scoreboard extends JPanel
 	public void build()
 	{
 		removeAll();
+
+		JPanel buttonContainer = new JPanel();
+		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.Y_AXIS));
+
+
+		JButton disconnect = new JButton(board.getContainer().getLang().getLine("client_disconnect"));
+		disconnect.addActionListener(event -> {
+			board.getContainer().getConnection().close();
+			board.dispose();
+			board.getContainer().goToMenu();
+		});
+		disconnect.setAlignmentX(Component.CENTER_ALIGNMENT);
+		buttonContainer.setBackground(ColorTransformer.TRANSPARENT);
+
+		buttonContainer.add(Box.createVerticalGlue());
+		buttonContainer.add(disconnect);
+
+		add(buttonContainer, SimpleLayout.constraints(0, 0.9, 1, 0.1));
 
 		List<PlayerInfo> leaderBoard = new ArrayList<>(getBoard().getPlayers());
 		leaderBoard.sort((player1, player2) -> board.getPlayBoard().getScore(player2) - board.getPlayBoard().getScore(player1));

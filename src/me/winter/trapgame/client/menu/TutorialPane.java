@@ -4,16 +4,11 @@ import me.winter.trapgame.client.ImagePanel;
 import me.winter.trapgame.client.ResourceManager;
 import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.server.TrapGameServer;
-import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

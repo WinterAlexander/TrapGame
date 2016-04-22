@@ -6,6 +6,7 @@
 client_loading=Loading...
 client_score=Score:
 client_stats=Stats:
+client_disconnect=Disconnect
 
 client_howto_button=How to play
 client_join_button=Join Game

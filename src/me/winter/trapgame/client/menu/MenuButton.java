@@ -17,6 +17,8 @@ public class MenuButton extends JButton
 		super(menu.getLangLine(text));
 
 		this.menu = menu;
+
+		setFont(new Font("Verdana", Font.PLAIN, 18));
 	}
 
 	@Override

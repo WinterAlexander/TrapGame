@@ -9,15 +9,15 @@ img
 
 ol, ul
 {
-	font-family: Arial;
+	font-family: Verdana;
 	font-size: 20px;
 	padding: 0px 10px 0px 10px;
 }
 
 h1
 {
-	font-family: Arial;
-	font-size: 28px;
+	font-family: Verdana;
+	font-size: 30px;
 	padding: 0px 10px 0px 10px;
 	text-decoration: underline;
 }

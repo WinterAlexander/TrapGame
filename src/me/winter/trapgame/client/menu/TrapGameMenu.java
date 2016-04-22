@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
+import java.util.logging.Level;
 
 /**
  * <p>A BorderLayout menu separated by 2 sections</p>
@@ -53,20 +55,51 @@ public class TrapGameMenu extends JPanel
 			}
 		});
 
-		JButton howtoplay = new JButton(getLangLine("client_howto_button"));
+		JLabel copyright = new JLabel("<html>Free & Open source game<br>by Alexander Winter");;
+		copyright.setHorizontalAlignment(JLabel.RIGHT);
+		copyright.setVerticalAlignment(JLabel.TOP);
+		copyright.setFont(new Font("Verdana", Font.PLAIN, 16));
+		copyright.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				if(!Desktop.isDesktopSupported())
+					return;
+
+				Desktop desktop = Desktop.getDesktop();
+
+				if(!desktop.isSupported(Desktop.Action.BROWSE))
+					return;
+
+				try
+				{
+					desktop.browse(new URL("https://github.com/WinterGuardian/TrapGame").toURI());
+				}
+				catch(Exception ex)
+				{
+					getClient().getLogger().log(Level.INFO, "Couldn't open github webpage", ex);
+				}
+			}
+		});
+
+		JButton howtoplay = new MenuButton(this, "client_howto_button");
 		howtoplay.addActionListener(event -> setRightPane(new TutorialPane(this)));
 
-		JButton joinGame = new JButton(getLangLine("client_join_button"));
+		JButton joinGame = new MenuButton(this, "client_join_button");
 		joinGame.addActionListener(event -> setRightPane(new JoinForm(getClient())));
 
-		JButton hostGame = new JButton(getLangLine("client_host_button"));
+		JButton hostGame = new MenuButton(this, "client_host_button");
 		hostGame.addActionListener(event -> setRightPane(new HostForm()));
 
-		JButton leave = new JButton(getLangLine("client_leave_button"));
+		JButton leave = new MenuButton(this, "client_leave_button");
 		leave.addActionListener(event -> getClient().stop());
 
-		buttonContainer.add(logo, SimpleLayout.constraints(8d, 9,
-				0, 1, 8, 8d / 5d));
+		buttonContainer.add(logo, SimpleLayout.constraints(8, 9,
+				0, 1, 8, 1.6));
+
+		buttonContainer.add(copyright, SimpleLayout.constraints(8, 9,
+				0, 2.4, 8, 1.1));
 
 		buttonContainer.add(howtoplay, SimpleLayout.constraints(8, 9,
 				2, 3.5, 4, 0.75));
