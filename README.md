@@ -14,6 +14,7 @@ Screenshots:
 
 Project in development. Downloads:
 
+  - Version 0.8 Client: http://bit.ly/1TndwsE Server: http://bit.ly/1ppvFLE
   - Version 0.7 Client: http://bit.ly/23zZj3M Server: http://bit.ly/23zZmfY
   - Version 0.6 Client: http://bit.ly/1YbKEor Server: http://bit.ly/1TwHpbI
   - Version 0.5 Client: http://bit.ly/1VoHhfQ Server: http://bit.ly/1Qb1Kww
