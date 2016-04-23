@@ -154,7 +154,7 @@ public class OldJoinForm extends JPanel
 		g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		g2draw.drawImage(getContainer().getResourceManager().getImage("background"), -getX(), 0, getContainer().getWidth(), getContainer().getHeight(), null);
+		g2draw.drawImage(getContainer().getResourceManager().getImage("background"), -getX(), 0, getContainer().getMenu().getWidth(), getContainer().getMenu().getHeight(), null);
 	}
 
 	public TrapGameClient getContainer()

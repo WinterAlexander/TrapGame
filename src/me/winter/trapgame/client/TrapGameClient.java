@@ -38,6 +38,8 @@ public class TrapGameClient extends JFrame
 	{
 		try
 		{
+
+
 			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 			trapGameLogger = Logger.getLogger("Client");
@@ -103,8 +105,9 @@ public class TrapGameClient extends JFrame
 
 		int width = (int)(dimension.getWidth() * 3 / 4);
 
+		setContentPane(new JPanel(new ForceScaleLayout(16, 9)));
 		setSize(width, width * 9 / 16);
-		setResizable(false);
+		setResizable(true);
 		setLocation((int)dimension.getWidth() / 2 - getWidth() / 2, (int)dimension.getHeight() / 2 - getHeight() / 2);
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -124,7 +127,7 @@ public class TrapGameClient extends JFrame
 		loadingText = new JLabel("...", SwingConstants.CENTER);
 		loadingText.setFont(new Font("Verdana", Font.BOLD, 18));
 		loading.add(loadingText, BorderLayout.CENTER);
-		setContentPane(loading);
+		getContentPane().add(loading);
 
 		setVisible(true);
 	}
@@ -133,8 +136,8 @@ public class TrapGameClient extends JFrame
 	{
 		userProperties.loadIfPresent();
 
-		if(userProperties.isDebugMode())
-			setResizable(true);
+		//if(userProperties.isDebugMode())
+		//  setResizable(true);
 
 		lang = new GameTranslation(userProperties.getLanguage());
 
@@ -153,12 +156,12 @@ public class TrapGameClient extends JFrame
 		resourceManager.scan("/index.properties");
 		resourceManager.load();
 
+		setIconImage(resourceManager.getImage("icon"));
+
 		menu = new TrapGameMenu(this);
 		board = new TrapGameBoard(this);
 
-		setContentPane(menu);
-		revalidate();
-		repaint();
+		goToMenu();
 	}
 
 	public void start()
@@ -198,29 +201,27 @@ public class TrapGameClient extends JFrame
 
 	public void goToMenu()
 	{
-		if(getContentPane() == menu)
-			return;
-
-		setContentPane(menu);
+		getContentPane().removeAll();
+		getContentPane().add(menu);
 	}
 
 	public void goToBoard()
 	{
-		if(getContentPane() == board)
-			return;
-
-		setContentPane(board);
+		getContentPane().removeAll();
+		getContentPane().add(board);
 	}
 
 	public boolean inMenu()
 	{
-		return getContentPane() == menu;
+		return getContentPane().getComponents()[0] == menu;
 	}
 
 	public boolean inBoard()
 	{
-		return getContentPane() == board;
+		return getContentPane().getComponents()[0] == board;
 	}
+
+
 
 	public Scheduler getScheduler()
 	{

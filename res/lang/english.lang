@@ -8,6 +8,9 @@ client_score=Score:
 client_stats=Stats:
 client_disconnect=Disconnect
 
+client_copyright_line1=Free & Open source game
+client_copyright_line2=by Alexander Winter
+
 client_howto_button=How to play
 client_join_button=Join Game
 client_host_button=Host Game

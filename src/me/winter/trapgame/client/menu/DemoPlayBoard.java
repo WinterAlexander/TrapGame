@@ -1,13 +1,12 @@
 package me.winter.trapgame.client.menu;
 
 import me.winter.trapgame.server.TrapGameServer;
-import me.winter.trapgame.shared.Task;
-import me.winter.trapgame.util.BetterRandom;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>A play board used in the menu to show a small part of the gameplay</p>
@@ -27,8 +26,6 @@ public class DemoPlayBoard extends JPanel
 		setBackground(new Color(0, 0, 0, 0));
 		board = new HashMap<>();
 		this.boardWidth = boardWidth;
-
-		BetterRandom random = new BetterRandom();
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -50,7 +47,7 @@ public class DemoPlayBoard extends JPanel
 		g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		g2draw.drawImage(menu.getClient().getResourceManager().getImage("background"), -getX(), 0, menu.getClient().getWidth(), menu.getClient().getHeight(), null);
+		g2draw.drawImage(menu.getClient().getResourceManager().getImage("background"), -getX(), 0, menu.getWidth(), menu.getHeight(), null);
 
 		float buttonWidth = paneWidth / (float)boardWidth;
 
@@ -69,7 +66,12 @@ public class DemoPlayBoard extends JPanel
 				if(color != null)
 				{
 					g2draw.setColor(new ColorTransformer(color, 200));
-					g2draw.fillRoundRect(paneX + (int)(x * buttonWidth), paneY + (int)(y * buttonWidth), width, height, width / 4, height / 4);
+					g2draw.fillRoundRect(
+							paneX + (int)(x * buttonWidth) + (int)(3 * buttonWidth / 256),
+							paneY + (int)(y * buttonWidth) + (int)(3 * buttonWidth / 256),
+							width - (int)(3 * buttonWidth / 128),
+							height - (int)(3 * buttonWidth / 128),
+							width / 6, height / 6);
 				}
 
 				g2draw.drawImage(menu.getClient().getResourceManager().getImage("game-button"), paneX + (int)(x * buttonWidth), paneY + (int)(y * buttonWidth), (int)buttonWidth + xCeil, (int)buttonWidth + yCeil, null);
@@ -80,7 +82,7 @@ public class DemoPlayBoard extends JPanel
 
 	public boolean isActive()
 	{
-		return getMenu().getRightPane() != this;
+		return getMenu().getRightPane() == this;
 	}
 
 	public void place(Point point, Color color)

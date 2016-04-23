@@ -2,6 +2,9 @@ client_loading=Chargement...
 client_score=Score:
 client_stats=Stats:
 
+client_copyright_line1=Jeu libre et gratuit
+client_copyright_line2=par Alexander Winter
+
 client_howto_button=Comment jouer
 client_join_button=Rejoindre une partie
 client_host_button=Héberger une partie

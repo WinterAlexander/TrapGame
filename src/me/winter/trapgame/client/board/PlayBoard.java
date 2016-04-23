@@ -98,7 +98,12 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 				if(player != null)
 				{
 					g2draw.setColor(new ColorTransformer(player.getColor(), 200));
-					g2draw.fillRoundRect((int)(x * buttonWidth), (int)(y * buttonHeight), width, height, width / 4, height / 4);
+					g2draw.fillRoundRect(
+							(int)(x * buttonWidth) + (int)(3 * buttonWidth / 256),
+							(int)(y * buttonHeight) + (int)(3 * buttonHeight / 256),
+							width - (int)(3 * buttonWidth / 128),
+							height - (int)(3 * buttonHeight / 128),
+							width / 6, height / 6);
 				}
 				else if(!isSpectator() && !isBoardLocked() && mouseIn && isHover(new Point(x, y)))
 				{
@@ -125,7 +130,12 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 					if(!atLeastOne || aroundOwn)
 					{
 						g2draw.setColor(new ColorTransformer(container.getClient().getColor(), 100));
-						g2draw.fillRoundRect((int)(x * buttonWidth), (int)(y * buttonHeight), width, height, width / 4, height / 4);
+						g2draw.fillRoundRect(
+								(int)(x * buttonWidth) + (int)(3 * buttonWidth / 256),
+								(int)(y * buttonHeight) + (int)(3 * buttonHeight / 256),
+								width - (int)(3 * buttonWidth / 128),
+								height - (int)(3 * buttonHeight / 128),
+								width / 6, height / 6);
 					}
 				}
 

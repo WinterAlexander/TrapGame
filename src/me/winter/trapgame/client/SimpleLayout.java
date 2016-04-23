@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /**
- * A layout that uses
+ * A layout that uses proportions to set bounds of it's elements
  *
  * Created by Alexander Winter on 2016-04-07.
  */

@@ -37,7 +37,7 @@ public class TrapGameMenu extends JPanel
 				g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 				g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-				g2draw.drawImage(getClient().getResourceManager().getImage("background"), 0, 0, getClient().getWidth(), getClient().getHeight(), null);
+				g2draw.drawImage(getClient().getResourceManager().getImage("background"), 0, 0, TrapGameMenu.this.getWidth(), TrapGameMenu.this.getHeight(), null);
 
 				super.paintComponent(graphics);
 			}
@@ -55,15 +55,23 @@ public class TrapGameMenu extends JPanel
 			}
 		});
 
+
+		String line2 = getClient().getLang().getLine("client_copyright_line2");
+
+		if(!line2.contains("Alexander Winter"))
+			throw new Error("Piracy");
+
 		JLabel copyright = new JLabel("<html><div style=\"text-align: right\">" +
-				"Free & Open source game<br>by Alexander Winter" +
+				getClient().getLang().getLine("client_copyright_line1") +
+				"<br>" +
+				line2 +
 				"</div></html>");
 
 		copyright.setAlignmentX(JLabel.RIGHT_ALIGNMENT);
 		copyright.setHorizontalAlignment(JLabel.RIGHT);
 		copyright.setVerticalAlignment(JLabel.TOP);
 		copyright.setFont(new Font("Verdana", Font.PLAIN, 16));
-		copyright.addMouseListener(new MouseAdapter()
+		/*copyright.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mousePressed(MouseEvent e)
@@ -85,7 +93,7 @@ public class TrapGameMenu extends JPanel
 					getClient().getLogger().log(Level.INFO, "Couldn't open github webpage", ex);
 				}
 			}
-		});
+		});*/
 
 		JButton howtoplay = new MenuButton(this, "client_howto_button");
 		howtoplay.addActionListener(event -> setRightPane(new TutorialPane(this)));

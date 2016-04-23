@@ -28,11 +28,17 @@ public class DemoPlay extends Task
 	@Override
 	public void run()
 	{
-		if(demo.isActive())
+		if(!demo.isActive())
+		{
+			cancel();
 			return;
+		}
 
 		if(demo.getBoard().size() == demo.getBoardWidth() * demo.getBoardWidth())
+		{
+			cancel();
 			return;
+		}
 
 		if(!demo.getBoard().containsValue(color))
 		{
