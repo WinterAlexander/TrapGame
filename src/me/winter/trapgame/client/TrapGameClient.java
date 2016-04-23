@@ -11,6 +11,8 @@ import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -107,6 +109,7 @@ public class TrapGameClient extends JFrame
 
 		setContentPane(new JPanel(new ForceScaleLayout(16, 9)));
 		setSize(width, width * 9 / 16);
+		setMinimumSize(new Dimension(320, 200));
 		setResizable(true);
 		setLocation((int)dimension.getWidth() / 2 - getWidth() / 2, (int)dimension.getHeight() / 2 - getHeight() / 2);
 
@@ -118,6 +121,26 @@ public class TrapGameClient extends JFrame
 			public void windowClosing(WindowEvent e)
 			{
 				stop();
+			}
+		});
+
+		addKeyListener(new KeyAdapter()
+		{
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_F11)
+				{
+					GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+
+					if(device.getFullScreenWindow() != null)
+					{
+						device.setFullScreenWindow(null);
+						return;
+					}
+
+					device.setFullScreenWindow(TrapGameClient.this);
+				}
 			}
 		});
 

@@ -37,7 +37,7 @@ public class TutorialPane extends JPanel
 				g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 				g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-				g2draw.drawImage(menu.getClient().getResourceManager().getImage("background"), -TutorialPane.this.getX() - getX(), -TutorialPane.this.getY() - getY(), menu.getClient().getWidth(), menu.getClient().getHeight(), null);
+				g2draw.drawImage(menu.getClient().getResourceManager().getImage("background"), -TutorialPane.this.getX() - getX(), -TutorialPane.this.getY() - getY(), menu.getWidth(), menu.getHeight(), null);
 
 				g2draw.setColor(new Color(0, 0, 0, 20));
 				g2draw.fillRoundRect(0, 0, getWidth(), getHeight(), getWidth() / 8, getHeight() / 8);
@@ -77,7 +77,7 @@ public class TutorialPane extends JPanel
 		g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		g2draw.drawImage(menu.getClient().getResourceManager().getImage("background"), -getX(), 0, menu.getClient().getWidth(), menu.getClient().getHeight(), null);
+		g2draw.drawImage(menu.getClient().getResourceManager().getImage("background"), -getX(), 0, menu.getWidth(), menu.getHeight(), null);
 
 		super.paintComponent(graphics);
 	}

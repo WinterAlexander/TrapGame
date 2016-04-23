@@ -7,21 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fee9220-2597-4e37-adc9-761efedba5d3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dev/trapgame_logo_vertical.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/icon375.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/ForceScaleLayout.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TrapGame.ipr" afterPath="$PROJECT_DIR$/TrapGame.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TrapGame.iws" afterPath="$PROJECT_DIR$/TrapGame.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/index.properties" afterPath="$PROJECT_DIR$/res/index.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/lang/english.lang" afterPath="$PROJECT_DIR$/res/lang/english.lang" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/lang/french.lang" afterPath="$PROJECT_DIR$/res/lang/french.lang" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleLayout.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleLayout.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/PlayBoard.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/DemoPlay.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/DemoPlay.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/DemoPlayBoard.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/DemoPlayBoard.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/OldJoinForm.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/OldJoinForm.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TutorialPane.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TutorialPane.java" />
     </list>
     <ignored path="TrapGame.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -55,18 +44,18 @@
       <file leaf-file-name="TrapGameMenu.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9051724">
-              <caret line="95" column="13" selection-start-line="95" selection-start-column="13" selection-end-line="95" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.38793105">
+              <caret line="15" column="3" selection-start-line="15" selection-start-column="3" selection-end-line="15" selection-end-column="3" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3869#3870#0" expanded="true" />
-                <element signature="e#3898#3899#0" expanded="true" />
-                <element signature="e#4056#4057#0" expanded="true" />
-                <element signature="e#4100#4101#0" expanded="true" />
-                <element signature="e#4139#4140#0" expanded="true" />
-                <element signature="e#4159#4160#0" expanded="true" />
-                <element signature="e#4209#4210#0" expanded="true" />
-                <element signature="e#4236#4237#0" expanded="true" />
+                <element signature="e#3816#3817#0" expanded="true" />
+                <element signature="e#3845#3846#0" expanded="true" />
+                <element signature="e#4003#4004#0" expanded="true" />
+                <element signature="e#4047#4048#0" expanded="true" />
+                <element signature="e#4086#4087#0" expanded="true" />
+                <element signature="e#4106#4107#0" expanded="true" />
+                <element signature="e#4156#4157#0" expanded="true" />
+                <element signature="e#4183#4184#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -80,36 +69,6 @@
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HostForm.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/menu/HostForm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="30" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JoinForm.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/menu/JoinForm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MenuButton.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/menu/MenuButton.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -129,6 +88,39 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="17" column="28" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TrapGameClient.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="211" column="17" selection-start-line="211" selection-start-column="17" selection-end-line="211" selection-end-column="17" />
+              <folding>
+                <element signature="e#5428#5429#0" expanded="true" />
+                <element signature="e#5502#5503#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GraphicsDevice.java" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_65/src.zip!/java/awt/GraphicsDevice.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="298" column="41" selection-start-line="298" selection-start-column="41" selection-end-line="298" selection-end-column="41" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TutorialPane.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TutorialPane.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="79" column="121" selection-start-line="79" selection-start-column="121" selection-end-line="79" selection-end-column="121" />
               <folding />
             </state>
           </provider>
@@ -213,7 +205,6 @@
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/HostForm.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Chat.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/ImagePanel.java" />
-        <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TutorialPane.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/MenuButton.java" />
         <option value="$PROJECT_DIR$/dev/commands" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Scoreboard.java" />
@@ -233,9 +224,10 @@
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/ForceScalePane.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/SimpleLayout.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/ForceScaleLayout.java" />
-        <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/DemoPlayBoard.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/OldJoinForm.java" />
+        <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TutorialPane.java" />
+        <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java" />
         <option value="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java" />
       </list>
     </option>
@@ -911,12 +903,6 @@
       <option name="number" value="Default" />
       <updated>1459041082376</updated>
     </task>
-    <task id="LOCAL-00011" summary="Spectator mode added for players joining during game !">
-      <created>1459133713405</created>
-      <option name="number" value="00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1459133713405</updated>
-    </task>
     <task id="LOCAL-00012" summary="Some edits on game colors and new logos !">
       <created>1459137279818</created>
       <option name="number" value="00012" />
@@ -1205,7 +1191,13 @@
       <option name="project" value="LOCAL" />
       <updated>1461342211967</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Scaled the game in 16 : 9 while letting the window resizable">
+      <created>1461450208036</created>
+      <option name="number" value="00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1461450208036</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1292,13 +1284,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/ResourceManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="34" selection-start-line="34" selection-start-column="34" selection-end-line="34" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/util/CollectionUtil.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1411,16 +1396,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TutorialPane.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1588,21 +1563,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="223" column="4" selection-start-line="223" selection-start-column="4" selection-end-line="223" selection-end-column="4" />
-          <folding>
-            <element signature="e#5175#5176#0" expanded="true" />
-            <element signature="e#5232#5233#0" expanded="true" />
-            <element signature="e#5262#5263#0" expanded="true" />
-            <element signature="e#5320#5321#0" expanded="true" />
-            <element signature="e#5359#5360#0" expanded="true" />
-            <element signature="e#5382#5383#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/ImagePanel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1715,20 +1675,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TutorialPane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="79" column="121" selection-start-line="79" selection-start-column="121" selection-end-line="79" selection-end-column="121" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_65/src.zip!/java/awt/GraphicsDevice.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="298" column="41" selection-start-line="298" selection-start-column="41" selection-end-line="298" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="211" column="17" selection-start-line="211" selection-start-column="17" selection-end-line="211" selection-end-column="17" />
+          <folding>
+            <element signature="e#5428#5429#0" expanded="true" />
+            <element signature="e#5502#5503#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9051724">
-          <caret line="95" column="13" selection-start-line="95" selection-start-column="13" selection-end-line="95" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.38793105">
+          <caret line="15" column="3" selection-start-line="15" selection-start-column="3" selection-end-line="15" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3869#3870#0" expanded="true" />
-            <element signature="e#3898#3899#0" expanded="true" />
-            <element signature="e#4056#4057#0" expanded="true" />
-            <element signature="e#4100#4101#0" expanded="true" />
-            <element signature="e#4139#4140#0" expanded="true" />
-            <element signature="e#4159#4160#0" expanded="true" />
-            <element signature="e#4209#4210#0" expanded="true" />
-            <element signature="e#4236#4237#0" expanded="true" />
+            <element signature="e#3816#3817#0" expanded="true" />
+            <element signature="e#3845#3846#0" expanded="true" />
+            <element signature="e#4003#4004#0" expanded="true" />
+            <element signature="e#4047#4048#0" expanded="true" />
+            <element signature="e#4086#4087#0" expanded="true" />
+            <element signature="e#4106#4107#0" expanded="true" />
+            <element signature="e#4156#4157#0" expanded="true" />
+            <element signature="e#4183#4184#0" expanded="true" />
           </folding>
         </state>
       </provider>

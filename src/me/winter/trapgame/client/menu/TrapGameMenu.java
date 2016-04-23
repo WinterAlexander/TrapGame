@@ -8,8 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
-import java.util.logging.Level;
 
 /**
  * <p>A BorderLayout menu separated by 2 sections</p>
