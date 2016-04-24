@@ -7,6 +7,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -111,6 +112,7 @@ public class SimpleResourceManager implements ResourceManager
 	{
 		try
 		{
+			resources.get(name).getClass();
 			return (BufferedImage)resources.get(name);
 		}
 		catch(ClassCastException | NullPointerException ex)
@@ -124,6 +126,7 @@ public class SimpleResourceManager implements ResourceManager
 	{
 		try
 		{
+			resources.get(name).getClass();
 			return (Clip)resources.get(name);
 		}
 		catch(ClassCastException | NullPointerException ex)
@@ -143,13 +146,6 @@ public class SimpleResourceManager implements ResourceManager
 	@Override
 	public String getText(String name)
 	{
-		try
-		{
-			return resources.get(name).toString();
-		}
-		catch(NullPointerException ex)
-		{
-			return "null";
-		}
+		return resources.get(name) + "";
 	}
 }

@@ -105,6 +105,9 @@ public class TrapGameMenu extends JPanel
 		JButton leave = new MenuButton(this, "client_leave_button");
 		leave.addActionListener(event -> getClient().stop());
 
+		JButton french = new CountryFlag(this, "french");
+		JButton english = new CountryFlag(this, "english");
+
 		buttonContainer.add(logo, SimpleLayout.constraints(8, 9,
 				0, 1, 8, 1.6));
 
@@ -123,6 +126,11 @@ public class TrapGameMenu extends JPanel
 		buttonContainer.add(leave, SimpleLayout.constraints(8, 9,
 				2, 7, 4, 0.75));
 
+		buttonContainer.add(french, SimpleLayout.constraints(8, 9,
+				0.1, 9 - 0.1 - 0.54, 0.9, 0.54));
+
+		buttonContainer.add(english, SimpleLayout.constraints(8, 9,
+				1.1, 9 - 0.1 - 0.54, 0.9, 0.54));
 
 		add(buttonContainer);
 		add(new DemoPlayBoard(this, 6));

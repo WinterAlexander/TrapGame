@@ -22,7 +22,7 @@ public class PacketInJoin extends Packet
 
 	public PacketInJoin(String password, String playerName)
 	{
-		this.password = password;
+		setPassword(password);
 		this.playerName = playerName;
 	}
 
@@ -51,6 +51,12 @@ public class PacketInJoin extends Packet
 
 	public void setPassword(String password)
 	{
+		if(password == null)
+		{
+			this.password = "";
+			return;
+		}
+
 		this.password = password;
 	}
 

@@ -47,12 +47,10 @@ public class ClientConnection
 		keepAliveTask = new Task(4000, true, this::keepAlive);
 	}
 
-	public synchronized void connectTo(String addressName, String password, String playerName) throws IOException, TimeoutException
+	public void connectTo(String addressName, String password, String playerName) throws IOException, TimeoutException
 	{
-		if(!welcomed || isOpen())
-			return;
-
 		String[] parts = addressName.split(":");
+		int port = 1254;
 
 		if(parts.length == 2 && StringUtil.isInt(parts[1]))
 		{
@@ -60,9 +58,19 @@ public class ClientConnection
 			port = Integer.parseInt(parts[1]);
 		}
 
+		connectTo(InetAddress.getByName(addressName), port, password, playerName);
+	}
+
+	public synchronized void connectTo(InetAddress address, int port, String password, String playerName) throws IOException, TimeoutException
+	{
+		if(!welcomed || isOpen())
+			return;
+
+		this.port = port;
+		this.address = address;
+
 		udpSocket = new DatagramSocket();
 		udpSocket.setSoTimeout(30_000);
-		address = InetAddress.getByName(addressName);
 		sendPacket(new PacketInJoin(password, playerName));
 
 		welcomed = false;

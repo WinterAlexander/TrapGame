@@ -82,7 +82,7 @@ public class DemoPlayBoard extends JPanel
 
 	public boolean isActive()
 	{
-		return getMenu().getRightPane() == this;
+		return getMenu().getRightPane() == this && getMenu() == getMenu().getClient().getMenu();
 	}
 
 	public void place(Point point, Color color)

@@ -14,13 +14,20 @@ import java.awt.*;
  */
 public class JoinForm extends JPanel
 {
-	public JoinForm()
+	private TrapGameMenu menu;
+
+	public JoinForm(TrapGameMenu menu)
 	{
+		this.menu = menu;
+
 		setLayout(new SimpleLayout());
 
-		add(new ServerList(), SimpleLayout.constraints(10, 10, 1, 2, 8, 6));
+		add(new ServerList(this), SimpleLayout.constraints(10, 10, 1, 2, 8, 6));
 
 	}
 
-
+	public TrapGameMenu getMenu()
+	{
+		return menu;
+	}
 }

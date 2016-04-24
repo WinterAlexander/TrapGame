@@ -9,11 +9,18 @@ import javax.swing.*;
  */
 public class ServerList extends JPanel
 {
-	public ServerList()
+	private JoinForm joinForm;
+
+	public ServerList(JoinForm joinForm)
 	{
+		this.joinForm = joinForm;
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 	}
 
-
+	public JoinForm getJoinForm()
+	{
+		return joinForm;
+	}
 }

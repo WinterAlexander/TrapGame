@@ -40,8 +40,6 @@ public class TrapGameClient extends JFrame
 	{
 		try
 		{
-
-
 			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 			trapGameLogger = Logger.getLogger("Client");
@@ -180,6 +178,27 @@ public class TrapGameClient extends JFrame
 		resourceManager.load();
 
 		setIconImage(resourceManager.getImage("icon"));
+
+		menu = new TrapGameMenu(this);
+		board = new TrapGameBoard(this);
+
+		goToMenu();
+	}
+
+	public void reloadLang()
+	{
+		userProperties.loadIfPresent();
+
+		lang = new GameTranslation(userProperties.getLanguage());
+
+		try
+		{
+			lang.load();
+		}
+		catch(IOException ex)
+		{
+			logger.log(Level.WARNING, "Couldn't load lang file", ex);
+		}
 
 		menu = new TrapGameMenu(this);
 		board = new TrapGameBoard(this);
