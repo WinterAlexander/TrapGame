@@ -45,8 +45,8 @@ public class KickCommand implements Command
 
 		if(player == null)
 		{
-			sender.sendMessage("That player couldn't be found.\n" +
-					"Usage: " + getUsage());
+			sender.sendMessage("That player couldn't be found.");
+			sender.sendMessage("Usage: " + getUsage());
 			return;
 		}
 

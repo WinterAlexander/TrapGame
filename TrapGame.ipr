@@ -78,7 +78,10 @@
     </annotationProcessing>
   </component>
   <component name="CopyrightManager" default="" />
-  <component name="Encoding">
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
     <file url="file://$PROJECT_DIR$/res/lang/english.lang" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/res/lang/french.lang" charset="ISO-8859-1" />
     <file url="PROJECT" charset="UTF-8" />
@@ -252,7 +255,7 @@
       <module fileurl="file://$PROJECT_DIR$/TrapGame.iml" filepath="$PROJECT_DIR$/TrapGame.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="1.8_65" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="1.8_45" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">

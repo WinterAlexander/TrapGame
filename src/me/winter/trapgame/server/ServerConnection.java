@@ -39,14 +39,17 @@ public class ServerConnection
 
 			toSend = new ArrayList<>();
 			inputBuffer = new byte[8 * 1024];
-			udpSocket = new DatagramSocket(port);
+			if(port > 0)
+				udpSocket = new DatagramSocket(port);
+			else
+				udpSocket = new DatagramSocket();
 
 			new Thread(this::acceptInput).start();
 			new Thread(this::sendOutput).start();
 			new Thread(this::lookForAlive).start();
 
 			acceptNewClients = true;
-			server.getLogger().info("The server is listening on " + port);
+			server.getLogger().info("The server is listening on " + udpSocket.getLocalPort());
 		}
 		catch(IOException exception)
 		{

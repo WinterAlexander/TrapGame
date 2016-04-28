@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 
 /**
  * <p>A BorderLayout menu separated by 2 sections</p>
@@ -49,9 +50,10 @@ public class TrapGameMenu extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				setRightPane(new DemoPlayBoard(TrapGameMenu.this, 6));
+				setRightPane(new DemoPlayBoard(TrapGameMenu.this, 6 + new Random().nextInt(3)));
 			}
 		});
+		logo.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 
 		String line2 = getClient().getLang().getLine("client_copyright_line2");
@@ -97,10 +99,10 @@ public class TrapGameMenu extends JPanel
 		howtoplay.addActionListener(event -> setRightPane(new TutorialPane(this)));
 
 		JButton joinGame = new MenuButton(this, "client_join_button");
-		joinGame.addActionListener(event -> setRightPane(new OldJoinForm(getClient())));
+		joinGame.addActionListener(event -> setRightPane(new JoinForm(this)));
 
 		JButton hostGame = new MenuButton(this, "client_host_button");
-		hostGame.addActionListener(event -> setRightPane(new HostForm()));
+		hostGame.addActionListener(event -> setRightPane(new HostForm(this)));
 
 		JButton leave = new MenuButton(this, "client_leave_button");
 		leave.addActionListener(event -> getClient().stop());

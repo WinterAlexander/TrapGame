@@ -47,6 +47,36 @@ public class ClientConnection
 		keepAliveTask = new Task(4000, true, this::keepAlive);
 	}
 
+	public void connectTo(InetAddress address, InetAddress lan, int port, String password, String playerName)
+	{
+		try
+		{
+			client.getConnection().connectTo(address, port, password, playerName, 3000);
+		}
+		catch(Exception publicEx)
+		{
+			if(client.getUserProperties().isDebugMode())
+				client.getLogger().log(Level.INFO, "Couldn't connect to server with public IP", publicEx);
+
+			try
+			{
+				client.getConnection().connectTo(lan, port, password, playerName, 1000);
+			}
+			catch(Exception lanEx)
+			{
+				JOptionPane.showMessageDialog(client,
+						client.getLang().getLine("client_connection_failed_message"),
+						client.getLang().getLine("client_connection_failed_title"),
+						JOptionPane.ERROR_MESSAGE);
+
+				if(client.getUserProperties().isDebugMode())
+					client.getLogger().log(Level.INFO, "Couldn't connect to server with lan IP", lanEx);
+				else
+					client.getLogger().log(Level.INFO, "Couldn't connect to server");
+			}
+		}
+	}
+
 	public void connectTo(String addressName, String password, String playerName) throws IOException, TimeoutException
 	{
 		String[] parts = addressName.split(":");
@@ -58,10 +88,10 @@ public class ClientConnection
 			port = Integer.parseInt(parts[1]);
 		}
 
-		connectTo(InetAddress.getByName(addressName), port, password, playerName);
+		connectTo(InetAddress.getByName(addressName), port, password, playerName, 2000);
 	}
 
-	public synchronized void connectTo(InetAddress address, int port, String password, String playerName) throws IOException, TimeoutException
+	public synchronized void connectTo(InetAddress address, int port, String password, String playerName, int timeout) throws IOException, TimeoutException
 	{
 		if(!welcomed || isOpen())
 			return;
@@ -77,16 +107,24 @@ public class ClientConnection
 		new Thread(this::acceptInput).start();
 		new Thread(this::sendOutput).start();
 
-		client.getScheduler().addTask(new Task(2000, false, () ->
+		try
 		{
-			if(!welcomed)
+			synchronized(this)
 			{
-				JOptionPane.showMessageDialog(client, "Sorry but the server isn't responding.", "Connection failed", JOptionPane.ERROR_MESSAGE);
-				welcomed = true;
-				close();
+				wait(timeout);
 			}
+		}
+		catch(InterruptedException ex)
+		{
+			//Means it connected so nothing to do
+		}
 
-		}));
+		if(!welcomed)
+		{
+			welcomed = true;
+			close();
+			throw new TimeoutException("No answer after " + timeout + " milliseconds.");
+		}
 	}
 
 	public synchronized void sendPacketLater(Packet packet)
@@ -124,7 +162,6 @@ public class ClientConnection
 		if(!isOpen())
 			throw new IllegalStateException("Currently not connected to any server");
 
-
 		try
 		{
 			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -147,6 +184,11 @@ public class ClientConnection
 		if(packet instanceof PacketOutWelcome)
 		{
 			PacketOutWelcome packetWelcome = (PacketOutWelcome)packet;
+
+			synchronized(this)
+			{
+				notify();
+			}
 
 			welcomed = true;
 			client.getBoard().init(packetWelcome.getPlayerId(), packetWelcome.getPlayers(), packetWelcome.getBoardWidth(), packetWelcome.getBoardHeight());

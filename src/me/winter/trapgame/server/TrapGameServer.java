@@ -117,6 +117,8 @@ public class TrapGameServer
 			new Color(128, 128, 128),   //17
 			new Color(255, 157, 124)};  //18
 
+	private Logger logger;
+
 	private Scheduler scheduler;
 	private State state;
 	private List<Player> players;
@@ -124,13 +126,16 @@ public class TrapGameServer
 	private StatsManager statsManager;
 	private CommandManager commandManager;
 	private ServerConsole console;
-	private Logger logger;
+	private WebServerListUpdater listUpdater;
 
+
+	private String name, welcomeMessage;
 	private String password, superPassword;
 	private int minPlayers, maxPlayers;
 	private int boardWidth, boardHeight;
 	private int waitingTimer;
 	private boolean debugMode;
+	private long startTimestamp;
 
 	private boolean stop;
 
@@ -179,9 +184,21 @@ public class TrapGameServer
 		connection = new ServerConnection(this, properties.getPort());
 		statsManager = new StatsManager(this, new File("stats"), false);
 		commandManager = new CommandManager(this);
-		console = new ServerConsole(this);
+
+		if(properties.enableConsole())
+			console = new ServerConsole(this);
+		else
+			console = null;
+
+		if(properties.isPublic())
+			listUpdater = new WebServerListUpdater(this);
+		else
+			listUpdater = null;
+
 		stop = false;
 
+		this.name = properties.getServerName();
+		this.welcomeMessage = properties.getWelcomeMessage();
 		this.password = properties.getPassword();
 		this.superPassword = properties.getSuperPassword();
 		setMaxPlayers(properties.getMaxPlayers());
@@ -194,6 +211,7 @@ public class TrapGameServer
 	public synchronized void start()
 	{
 		getLogger().info("TrapGame server should now be operational.");
+		startTimestamp = System.currentTimeMillis();
 
 		synchronized(getScheduler())
 		{
@@ -233,6 +251,7 @@ public class TrapGameServer
 		getPlayers().add(player);
 		player.getConnection().sendPacket(new PacketOutWelcome(player.getId(), getPlayersInfo(), boardWidth, boardHeight));
 		broadcast(player.getFormattedName() + " has joined the game.");
+		player.sendMessage(getWelcomeMessage().replace("${SERVER}", getName()).replace("${PLAYER}", player.getName()));
 		getState().join(player);
 	}
 
@@ -366,6 +385,26 @@ public class TrapGameServer
 		return logger;
 	}
 
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public String getWelcomeMessage()
+	{
+		return welcomeMessage;
+	}
+
+	public void setWelcomeMessage(String welcomeMessage)
+	{
+		this.welcomeMessage = welcomeMessage;
+	}
+
 	public String getPassword()
 	{
 		return password;
@@ -398,7 +437,6 @@ public class TrapGameServer
 
 	public void setBoardSize(int boardWidth, int boardHeight)
 	{
-
 		this.boardWidth = boardWidth > 0 ? boardWidth : 1;
 		this.boardHeight = boardHeight > 0 ? boardHeight : 1;
 
@@ -433,5 +471,10 @@ public class TrapGameServer
 	public void setDebugMode(boolean debugMode)
 	{
 		this.debugMode = debugMode;
+	}
+
+	public long getStartTimestamp()
+	{
+		return startTimestamp;
 	}
 }

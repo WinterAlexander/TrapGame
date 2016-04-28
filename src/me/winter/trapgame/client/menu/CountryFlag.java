@@ -27,6 +27,7 @@ public class CountryFlag extends JButton
 		this.lang = lang;
 		setBorder(new EmptyBorder(0, 0, 0, 0));
 		setForeground(ColorTransformer.TRANSPARENT);
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		addMouseListener(new MouseAdapter()
 		{

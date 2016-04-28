@@ -245,12 +245,16 @@ public class TrapGameClient extends JFrame
 	{
 		getContentPane().removeAll();
 		getContentPane().add(menu);
+		revalidate();
+		repaint();
 	}
 
 	public void goToBoard()
 	{
 		getContentPane().removeAll();
 		getContentPane().add(board);
+		revalidate();
+		repaint();
 	}
 
 	public boolean inMenu()
@@ -262,8 +266,6 @@ public class TrapGameClient extends JFrame
 	{
 		return getContentPane().getComponents()[0] == board;
 	}
-
-
 
 	public Scheduler getScheduler()
 	{

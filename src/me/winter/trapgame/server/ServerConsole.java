@@ -1,13 +1,8 @@
 package me.winter.trapgame.server;
 
-import me.winter.trapgame.shared.PlayerInfo;
-import me.winter.trapgame.shared.PlayerStats;
 import me.winter.trapgame.shared.Task;
 
-import java.awt.*;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.logging.Level;
 

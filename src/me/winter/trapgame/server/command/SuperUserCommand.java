@@ -84,7 +84,7 @@ public class SuperUserCommand implements Command
 
 		if(password == null || password.length() == 0 || !(sender instanceof Player))
 		{
-			sender.sendMessage("Super user authentication has been disabled.");
+			sender.sendMessage("Self super user authentication has been disabled.");
 			return;
 		}
 

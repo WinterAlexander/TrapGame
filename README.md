@@ -29,11 +29,18 @@ https://dl.dropboxusercontent.com/u/65019675/TrapGame/versionX.X/TrapGame[Server
 But you have to specify the version and if you want the Server or not. Please tell 
 me if any is broken.
 
-The client has been made with swing and awt java libraries. I used java.net to
-send UDP packets between the client and the server. I first made the game with
-TCP but changed when the game got more reactive.
+The client has been made with swing and awt java libraries. I made the images by myself
+only with Gimp 2 and free of rights images founds on google.com I used java.net to
+send UDP packets between the client and the server. I first made the game with TCP but
+changed when the game got more reactive.
 
-Example of play: (BlockFarmers: https://www.youtube.com/watch?v=zAfJ4Ot8nkk)
+The game is in french and english and could be easily translated to another
+language, translations are loaded from a properties file. The game server can log
+to disk and both client and server are logging to console.
+
+This video is a gameplay video of a minecraft server plugin game I made:
+https://www.youtube.com/watch?v=zAfJ4Ot8nkk The gameplay is equivalent but the
+interface if obviously completely different.
 
 
 

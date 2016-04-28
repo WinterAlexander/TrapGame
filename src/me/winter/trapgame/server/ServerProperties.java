@@ -58,6 +58,26 @@ public class ServerProperties extends Properties
 		}
 	}
 
+	public String getServerName()
+	{
+		return getProperty("server-name", "TrapGame Server");
+	}
+
+	public void setServerName(String name)
+	{
+		setProperty("server-name", name);
+	}
+
+	public String getWelcomeMessage()
+	{
+		return getProperty("welcome-message", "Welcome ${PLAYER} to ${SERVER}, have fun !");
+	}
+
+	public void setWelcomeMessage(String message)
+	{
+		setProperty("welcome-message", message);
+	}
+
 	public int getPort()
 	{
 		try
@@ -198,5 +218,31 @@ public class ServerProperties extends Properties
 	public void setLogToDisk(boolean log)
 	{
 		setProperty("log-to-disk", log + "");
+	}
+
+	public boolean enableConsole()
+	{
+		if(getProperty("enable-console", "").equalsIgnoreCase("false"))
+			return false;
+
+		return true;
+	}
+
+	public void setEnableConsole(boolean enableConsole)
+	{
+		setProperty("enable-console", enableConsole + "");
+	}
+
+	public boolean isPublic()
+	{
+		if(getProperty("public", "").equalsIgnoreCase("false"))
+			return false;
+
+		return true;
+	}
+
+	public void setPublic(boolean publicServer)
+	{
+		setProperty("public", publicServer + "");
 	}
 }

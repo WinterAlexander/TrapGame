@@ -43,6 +43,8 @@ public class PropTemplateCommand implements Command
 	public void execute(CommandSender player, String label, String[] arguments)
 	{
 		ServerProperties properties = new ServerProperties(player.getServer().getLogger(), new File("server.properties"));
+		properties.setServerName("Fun server 2");
+		properties.setWelcomeMessage(properties.getWelcomeMessage());
 		properties.setPort(1254);
 		properties.setPassword("");
 		properties.setMinPlayers(2);
@@ -50,7 +52,11 @@ public class PropTemplateCommand implements Command
 		properties.setBoardWidth(10);
 		properties.setBoardHeight(10);
 		properties.setTimer(30);
+		properties.setPublic(true);
 		properties.setLogToDisk(true);
+		properties.setEnableConsole(true);
+		properties.setDebugMode(false);
+
 
 		properties.save();
 		player.sendMessage("server.properties file created.");

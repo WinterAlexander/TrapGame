@@ -1,6 +1,7 @@
 client_loading=Chargement...
 client_score=Score:
 client_stats=Stats:
+client_disconnect=Déconnexion
 
 client_copyright_line1=Jeu libre et gratuit
 client_copyright_line2=par Alexander Winter
@@ -17,4 +18,4 @@ client_connect_button=Connexion
 client_remember=Se rappeler
 
 client_connection_failed_title=Connexion impossible
-client_connection_failed_message=La connexion au serveur a Ã©chouÃ©e.
+client_connection_failed_message=La connexion au serveur a Échouée.

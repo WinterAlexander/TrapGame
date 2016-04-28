@@ -16,12 +16,12 @@ public class ImagePanel extends JPanel
 	{
 		this.image = image;
 		setBackground(new Color(0, 0, 0, 0));
+		setForeground(new Color(0, 0, 0, 0));
 	}
 
 	@Override
 	public void paintComponent(Graphics graphics)
 	{
-		super.paintComponent(graphics);
 		Graphics2D g2draw = (Graphics2D) graphics;
 
 		g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -29,6 +29,8 @@ public class ImagePanel extends JPanel
 		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
 		g2draw.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+
+		super.paintComponent(graphics);
 	}
 
 	public Image getImage()

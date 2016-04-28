@@ -19,6 +19,7 @@ public class MenuButton extends JButton
 		this.menu = menu;
 
 		setFont(new Font("Verdana", Font.PLAIN, 18));
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 
 	@Override

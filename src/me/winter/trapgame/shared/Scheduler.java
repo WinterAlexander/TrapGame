@@ -54,13 +54,6 @@ public class Scheduler
 	{
 		this.tasks.clear();
 	}
-
-	public void cancel(Runnable runnable)
-	{
-		for(Task task : new ArrayList<>(getTasks()))
-			if(task.equals(runnable))
-				cancel(task);
-	}
 	
 	public void update()
 	{
