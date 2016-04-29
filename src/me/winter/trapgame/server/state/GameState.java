@@ -58,6 +58,10 @@ public class GameState extends State
 		getServer().getConnection().sendToAll(new PacketOutStatus(PacketOutStatus.GAME_START));
 	}
 
+	public void resize()
+	{
+		boardContent.clear();
+	}
 
 	public boolean place(Player player, Point point)
 	{

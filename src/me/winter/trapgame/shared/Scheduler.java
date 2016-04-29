@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +32,16 @@ public class Scheduler
 		this.lastPauseTime = 0;
 		this.pauseTime = 0;
 	}
+
+	public void addTask(Runnable runnable, int delay)
+	{
+		addTask(runnable, delay, false);
+	}
+
+	public void addTask(Runnable runnable, int delay, boolean repeat)
+	{
+		addTask(new Task(delay, repeat, runnable));
+	}
 	
 	public synchronized void addTask(Task task)
 	{
@@ -45,11 +56,21 @@ public class Scheduler
 			this.addTask(task);
 	}
 	
-	public void cancel(Task task)
+	public void cancelTask(Task task)
 	{
 		this.tasks.remove(task);
 	}
-	
+
+	public void cancelTasks(Class<? extends Task> type)
+	{
+		cancelIf(type::isInstance);
+	}
+
+	public void cancelIf(Predicate<Task> filter)
+	{
+		this.tasks.removeIf(filter);
+	}
+
 	public void cancelAll()
 	{
 		this.tasks.clear();
@@ -77,7 +98,7 @@ public class Scheduler
 				{
 					task.run();
 					if(!task.isRepeating())
-						cancel(task);
+						cancelTask(task);
 					continue;
 				}
 
@@ -85,7 +106,7 @@ public class Scheduler
 				if(!task.isRepeating() && turns >= 1)
 				{
 					task.run();
-					cancel(task);
+					cancelTask(task);
 					continue;
 				}
 
@@ -96,7 +117,7 @@ public class Scheduler
 			}
 			catch(Exception ex)
 			{
-				cancel(task);
+				cancelTask(task);
 				logger.ifPresent(logger -> logger.log(Level.SEVERE, "Error in scheduler with task " + task.toString(), ex));
 			}
 		}

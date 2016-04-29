@@ -1,19 +1,20 @@
 package me.winter.trapgame.client.menu;
 
-import com.sun.istack.internal.NotNull;
 import me.winter.trapgame.client.ImagePanel;
-import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.client.TrapGameClient;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.IllegalFormatException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.net.*;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 /**
  * <p>Represents a server to be displayed in ServerList</p>
@@ -30,9 +31,15 @@ public class ServerPanel extends JPanel
 	private InetAddress address, lanAddress;
 	private int port;
 
-	public ServerPanel(ServerList serverList, String data)
+	private boolean useLan;
+
+	private JLabel ping;
+
+	public ServerPanel(ServerList serverList, String data) throws IllegalArgumentException
 	{
 		this.serverList = serverList;
+
+		this.useLan = false;
 
 		try
 		{
@@ -84,6 +91,8 @@ public class ServerPanel extends JPanel
 		this.lanAddress = lanAddress;
 		this.port = port;
 
+		this.useLan = false;
+
 		build();
 	}
 
@@ -123,14 +132,18 @@ public class ServerPanel extends JPanel
 		JLabel nameLabel = new JLabel(name);
 		nameLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
-		JLabel ip = new JLabel(address.toString() + ":" + port);
+		JLabel ip = new JLabel(address.getHostAddress() + ":" + port);
 		ip.setFont(new Font("Arial", Font.PLAIN, 20));
+		ip.setPreferredSize(new Dimension(300, (int)ip.getPreferredSize().getHeight()));
 
 		JLabel slots = new JLabel(players + " / " + maxPlayers, JLabel.RIGHT);
 		slots.setFont(new Font("Arial", Font.PLAIN, 20));
+		slots.setPreferredSize(new Dimension(100, (int)slots.getPreferredSize().getHeight()));
 
-		JLabel ping = new JLabel("23", JLabel.RIGHT);
+		ping = new JLabel("Pinging...", JLabel.RIGHT);
 		ping.setFont(new Font("Arial", Font.PLAIN, 20));
+
+		getServerList().getJoinForm().getMenu().getClient().getScheduler().addTask(() -> new Thread(this::ping).start(), 100);
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -140,13 +153,18 @@ public class ServerPanel extends JPanel
 		constraints.gridwidth = 2;
 		constraints.gridheight = 2;
 
+		constraints.anchor = GridBagConstraints.LINE_START;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+
 		add(joinButton, constraints);
 
 		constraints.gridx = 2;
 		constraints.gridy = 0;
 
-		constraints.gridwidth = 4;
+		constraints.gridwidth = 5;
 		constraints.gridheight = 1;
+
+		constraints.anchor = GridBagConstraints.CENTER;
 
 		add(nameLabel, constraints);
 
@@ -154,29 +172,111 @@ public class ServerPanel extends JPanel
 
 		add(ip, constraints);
 
-		constraints.gridx = 6;
+		constraints.gridx = 7;
 		constraints.gridy = 0;
 
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
 		add(slots, constraints);
 
-		constraints.gridx = 6;
+		constraints.gridx = 7;
 		constraints.gridy = 1;
 
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
+
 		add(ping, constraints);
+
+
+		Dimension size = getPreferredSize();
+
+		size.width += 10;
+		size.height += 10;
+
+		setMinimumSize(size);
+
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 
 	public void connectTo()
 	{
 		TrapGameClient client = getServerList().getJoinForm().getMenu().getClient();
 
+		if(useLan)
+		{
+			client.getConnection().connectTo(lanAddress, null, port, null, "Player");
+			return;
+		}
+
 		client.getConnection().connectTo(address, lanAddress, port, null, "Player");
 	}
+
+	public void ping()
+	{
+
+		try
+		{
+			ping(lanAddress);
+			useLan = true;
+		}
+		catch(Exception lanEx)
+		{
+			if(getServerList().getJoinForm().getMenu().getClient().getUserProperties().isDebugMode())
+				getServerList().getJoinForm().getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while pinging lan IP " + name, lanEx);
+
+			try
+			{
+				ping(address);
+			}
+			catch(Exception publicEx)
+			{
+				if(getServerList().getJoinForm().getMenu().getClient().getUserProperties().isDebugMode())
+					getServerList().getJoinForm().getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while pinging public IP " + name, publicEx);
+
+				ping.setText("Unreachable");
+				ping.setForeground(Color.RED);
+			}
+		}
+	}
+
+	private void ping(InetAddress address) throws IOException
+	{
+		long timestamp = System.nanoTime();
+		DatagramSocket socket = new DatagramSocket();
+		socket.setSoTimeout(10_000);
+
+		ByteArrayOutputStream writer = new ByteArrayOutputStream();
+		new DataOutputStream(writer).writeUTF("KeepAlive");
+
+		socket.send(new DatagramPacket(writer.toByteArray(), writer.size(), address, port));
+		byte[] inputBuffer = new byte[256];
+
+		DatagramPacket packet = new DatagramPacket(inputBuffer, inputBuffer.length);
+
+		socket.receive(packet);
+
+		ByteArrayInputStream reader = new ByteArrayInputStream(packet.getData());
+
+		if(!new DataInputStream(reader).readUTF().equals("KeepAlive"))
+			throw new IOException("Invalid reponse");
+
+		int time = (int)((System.nanoTime() - timestamp) / 1_000_000);
+		ping.setText(time + "ms");
+
+		if(time < 10)
+			ping.setForeground(Color.GREEN.darker());
+		else if(time < 50)
+			ping.setForeground(Color.GREEN);
+		else if(time < 100)
+			ping.setForeground(Color.YELLOW.darker());
+		else
+			ping.setForeground(Color.ORANGE.darker());
+
+	}
+
 
 	public ServerList getServerList()
 	{

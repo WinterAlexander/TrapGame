@@ -11,10 +11,18 @@ import java.util.ArrayList;
  */
 public class SimpleLayout implements LayoutManager
 {
-	private List<ComponentGuide> guides;
+	private Component relative;
+	protected List<ComponentGuide> guides;
 
 	public SimpleLayout()
 	{
+		this.relative = null;
+		this.guides = new ArrayList<>();
+	}
+
+	public SimpleLayout(Component relative)
+	{
+		this.relative = relative;
 		this.guides = new ArrayList<>();
 	}
 
@@ -33,6 +41,9 @@ public class SimpleLayout implements LayoutManager
 	@Override
 	public Dimension preferredLayoutSize(Container parent)
 	{
+		if(relative != null)
+			return relative.getSize();
+
 		return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
 	}
 
@@ -47,12 +58,17 @@ public class SimpleLayout implements LayoutManager
 	{
 		synchronized(parent.getTreeLock())
 		{
+			Component relative = this.relative;
+
+			if(relative == null)
+				relative = parent;
+
 			for(ComponentGuide guide : guides)
 			{
-				int x = (int)(guide.getX() * parent.getWidth());
-				int y = (int)(guide.getY() * parent.getHeight());
-				int width = (int)(guide.getWidth() * parent.getWidth());
-				int height = (int)(guide.getHeight() * parent.getHeight());
+				int x = (int)(guide.getX() * relative.getWidth());
+				int y = (int)(guide.getY() * relative.getHeight());
+				int width = (int)(guide.getWidth() * relative.getWidth());
+				int height = (int)(guide.getHeight() * relative.getHeight());
 
 				guide.getComponent().setSize(width, height);
 				guide.getComponent().setBounds(x, y, width, height);
@@ -90,7 +106,7 @@ public class SimpleLayout implements LayoutManager
 		return constraints(100, 100, x, y, width, height);
 	}
 
-	private static class ComponentGuide
+	protected static class ComponentGuide
 	{
 		private Component component;
 		private double x, y, width, height;

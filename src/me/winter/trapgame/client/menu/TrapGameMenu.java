@@ -3,6 +3,7 @@ package me.winter.trapgame.client.menu;
 import me.winter.trapgame.client.ImagePanel;
 import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.client.TrapGameClient;
+import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,11 @@ import java.util.Random;
 public class TrapGameMenu extends JPanel
 {
 	private TrapGameClient client;
+
+	private DemoPlayBoard demo;
+	private TutorialPane tutorial;
+	private JoinForm join;
+	private HostForm host;
 
 	public TrapGameMenu(TrapGameClient client)
 	{
@@ -50,10 +56,12 @@ public class TrapGameMenu extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				setRightPane(new DemoPlayBoard(TrapGameMenu.this, 6 + new Random().nextInt(3)));
+				setRightPane(demo);
+				demo.reset();
 			}
 		});
 		logo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		logo.setBackground(ColorTransformer.TRANSPARENT);
 
 
 		String line2 = getClient().getLang().getLine("client_copyright_line2");
@@ -96,13 +104,16 @@ public class TrapGameMenu extends JPanel
 		});*/
 
 		JButton howtoplay = new MenuButton(this, "client_howto_button");
-		howtoplay.addActionListener(event -> setRightPane(new TutorialPane(this)));
+		howtoplay.addActionListener(event -> setRightPane(tutorial));
 
 		JButton joinGame = new MenuButton(this, "client_join_button");
-		joinGame.addActionListener(event -> setRightPane(new JoinForm(this)));
+		joinGame.addActionListener(event -> {
+			setRightPane(join);
+			join.getList().update();
+		});
 
 		JButton hostGame = new MenuButton(this, "client_host_button");
-		hostGame.addActionListener(event -> setRightPane(new HostForm(this)));
+		hostGame.addActionListener(event -> setRightPane(host));
 
 		JButton leave = new MenuButton(this, "client_leave_button");
 		leave.addActionListener(event -> getClient().stop());
@@ -135,7 +146,13 @@ public class TrapGameMenu extends JPanel
 				1.1, 9 - 0.1 - 0.54, 0.9, 0.54));
 
 		add(buttonContainer);
-		add(new DemoPlayBoard(this, 6));
+
+		demo = new DemoPlayBoard(this, 6);
+		tutorial = new TutorialPane(this);
+		join = new JoinForm(this);
+		host = new HostForm(this);
+
+		add(demo);
 	}
 
 	public Component getRightPane()

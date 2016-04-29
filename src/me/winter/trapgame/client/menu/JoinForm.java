@@ -17,6 +17,8 @@ public class JoinForm extends JPanel
 {
 	private TrapGameMenu menu;
 
+	private ServerList list;
+
 	public JoinForm(TrapGameMenu menu)
 	{
 		this.menu = menu;
@@ -25,7 +27,9 @@ public class JoinForm extends JPanel
 
 		setLayout(new SimpleLayout());
 
-		add(new ServerList(this), SimpleLayout.constraints(10, 10, 1, 2, 8, 6));
+		list = new ServerList(this);
+
+		add(list, SimpleLayout.constraints(10, 10, 1, 2, 8, 6));
 	}
 
 	@Override
@@ -45,5 +49,15 @@ public class JoinForm extends JPanel
 	public TrapGameMenu getMenu()
 	{
 		return menu;
+	}
+
+	public ServerList getList()
+	{
+		return list;
+	}
+
+	public void setList(ServerList list)
+	{
+		this.list = list;
 	}
 }

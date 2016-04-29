@@ -9,9 +9,7 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -74,7 +72,8 @@ public class ServerConnection
 			if(packetName.equals("KeepAlive"))
 			{
 				keepAlive(bufPacket.getAddress(), bufPacket.getPort());
-				player.getConnection().keepAlive();
+				if(player != null)
+					player.getConnection().keepAlive();
 				continue;
 			}
 

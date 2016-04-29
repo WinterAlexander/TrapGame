@@ -34,7 +34,7 @@ public class WaitingState extends State
 	{
 		if(getServer().getPlayers().size() < getServer().getMinPlayers())
 		{
-			getServer().getScheduler().cancel(task);
+			getServer().getScheduler().cancelTask(task);
 			getServer().setState(new StandbyState(getServer()));
 			getServer().getState().start();
 		}
@@ -50,7 +50,7 @@ public class WaitingState extends State
 	@Override
 	public void skip()
 	{
-		getServer().getScheduler().cancel(task);
+		getServer().getScheduler().cancelTask(task);
 		getServer().setState(new GameState(getServer()));
 		getServer().getState().start();
 	}

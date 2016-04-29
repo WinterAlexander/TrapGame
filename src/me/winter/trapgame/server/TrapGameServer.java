@@ -1,5 +1,6 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.server.state.GameState;
 import me.winter.trapgame.server.state.StandbyState;
 import me.winter.trapgame.server.state.State;
 import me.winter.trapgame.shared.PlayerInfo;
@@ -441,6 +442,9 @@ public class TrapGameServer
 		this.boardHeight = boardHeight > 0 ? boardHeight : 1;
 
 		getConnection().sendToAll(new PacketOutBoardSize(this.boardWidth, this.boardHeight));
+
+		if(getState() instanceof GameState)
+			((GameState)getState()).resize();
 	}
 
 	public int getBoardHeight()

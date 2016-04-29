@@ -55,7 +55,7 @@ public class Task implements Runnable
 	public void register(Scheduler scheduler)
 	{
 		if(this.scheduler != null)
-			this.scheduler.cancel(this);
+			this.scheduler.cancelTask(this);
 
 		this.scheduler = scheduler;
 	}

@@ -1,5 +1,6 @@
 package me.winter.trapgame.client.menu;
 
+import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.server.WebServerListUpdater;
 
 import javax.swing.*;
@@ -22,21 +23,52 @@ public class ServerList extends JPanel
 {
 	private JoinForm joinForm;
 
-	private JScrollPane scroller;
+	private JPanel content;
+	private List<ServerPanel> servers;
 
 	public ServerList(JoinForm joinForm)
 	{
 		this.joinForm = joinForm;
 
+		servers = new ArrayList<>();
+
 		setLayout(new BorderLayout());
 
-		scroller = new JScrollPane();
-		scroller.setViewport(new JViewport());
-		scroller.getViewport().setLayout(new BoxLayout(scroller.getViewport(), BoxLayout.Y_AXIS));
+		JScrollPane scroller = new JScrollPane();
+
+		content = new JPanel();
+		content.setBackground(getBackground().darker());
+		/*content.setLayout(new SimpleLayout()
+		{
+			@Override
+			public Dimension minimumLayoutSize(Container parent)
+			{
+				return preferredLayoutSize(parent);
+			}
+
+			@Override
+			public Dimension preferredLayoutSize(Container parent)
+			{
+				double height = 0;
+
+				for(ComponentGuide guide : guides)
+				{
+					if(guide.getY() + getHeight() > height)
+						height = guide.getY() + getHeight();
+				}
+
+				return new Dimension(ServerList.this.getWidth(), (int)(height * ServerList.this.getHeight()));
+			}
+		});*/
+		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+
+		scroller.setViewportView(content);
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		add(scroller, BorderLayout.CENTER);
 
-		update();
+		//update();
 	}
 
 	public JoinForm getJoinForm()
@@ -46,9 +78,10 @@ public class ServerList extends JPanel
 
 	public void update()
 	{
-		scroller.getViewport().removeAll();
+		content.removeAll();
+		servers.clear();
 
-		List<ServerPanel> servers = new ArrayList<>();
+		content.add(Box.createRigidArea(new Dimension(0, 5)));
 
 		try
 		{
@@ -83,11 +116,38 @@ public class ServerList extends JPanel
 		{
 			joinForm.getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while receiving server's data from webserver", ex);
 		}
+		catch(IllegalArgumentException ex)
+		{
+			joinForm.getMenu().getClient().getLogger().log(Level.WARNING, "Webserver's data seem corrupted", ex);
+		}
+
+		//to test only
+//		try
+//		{
+//			servers.add(new ServerPanel(this, "Example1", 9, 16, InetAddress.getByName("google.com"), InetAddress.getLocalHost(), 1111));
+//			servers.add(new ServerPanel(this, "Example2", 7, 32, InetAddress.getByName("facebook.com"), InetAddress.getLocalHost(), 1112));
+//			servers.add(new ServerPanel(this, "Example45", 6, 1, InetAddress.getByName("messenger.com"), InetAddress.getLocalHost(), 1234));
+//			servers.add(new ServerPanel(this, "Example11", 0, 3, InetAddress.getByName("trapgame.ml"), InetAddress.getLocalHost(), 7777));
+//
+//		}
+//		catch(Exception ex)
+//		{
+//			ex.printStackTrace();
+//		}
 
 		servers.sort((a, b) -> b.getPlayers() - a.getPlayers());
 
-		servers.forEach(scroller.getViewport()::add);
+		servers.forEach(server -> {
+			content.add(server);
+			content.add(Box.createRigidArea(new Dimension(0, 5)));
+		});
 
+		content.setPreferredSize(content.getPreferredSize());
 		//this.getViewport().add(Box.createVerticalGlue());
+	}
+
+	public JPanel getContent()
+	{
+		return content;
 	}
 }

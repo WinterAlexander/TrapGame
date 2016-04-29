@@ -47,20 +47,20 @@ public class ClientConnection
 		keepAliveTask = new Task(4000, true, this::keepAlive);
 	}
 
-	public void connectTo(InetAddress address, InetAddress lan, int port, String password, String playerName)
+	public void connectTo(InetAddress first, InetAddress second, int port, String password, String playerName)
 	{
 		try
 		{
-			client.getConnection().connectTo(address, port, password, playerName, 3000);
+			client.getConnection().connectTo(first, port, password, playerName, 3000);
 		}
 		catch(Exception publicEx)
 		{
 			if(client.getUserProperties().isDebugMode())
-				client.getLogger().log(Level.INFO, "Couldn't connect to server with public IP", publicEx);
+				client.getLogger().log(Level.INFO, "Couldn't connect to server with first IP " + first, publicEx);
 
 			try
 			{
-				client.getConnection().connectTo(lan, port, password, playerName, 1000);
+				client.getConnection().connectTo(second, port, password, playerName, 1000);
 			}
 			catch(Exception lanEx)
 			{
@@ -70,7 +70,7 @@ public class ClientConnection
 						JOptionPane.ERROR_MESSAGE);
 
 				if(client.getUserProperties().isDebugMode())
-					client.getLogger().log(Level.INFO, "Couldn't connect to server with lan IP", lanEx);
+					client.getLogger().log(Level.INFO, "Couldn't connect to server with second IP " + second, lanEx);
 				else
 					client.getLogger().log(Level.INFO, "Couldn't connect to server");
 			}
@@ -93,6 +93,9 @@ public class ClientConnection
 
 	public synchronized void connectTo(InetAddress address, int port, String password, String playerName, int timeout) throws IOException, TimeoutException
 	{
+		if(address == null)
+			throw new IllegalArgumentException("Address cannot be null !");
+
 		if(!welcomed || isOpen())
 			return;
 

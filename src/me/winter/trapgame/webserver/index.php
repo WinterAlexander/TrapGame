@@ -21,15 +21,27 @@ if($_POST['action'] == 'update')
 	
 	foreach(preg_split("/(\n)/", $servers) as $line)
 	{
+		if(strlen($line) == 0) //line1\nline2\n{empty}
+			continue;		
+
+		if(count(preg_split("/&/", $line)) != 7) 
+		{
+			$servers = str_replace($line . "\n", "", $servers);
+			continue;
+		}
+
 		$ip = preg_split("/=/", preg_split("/&/", $line)[1])[1];
+		$lanip = preg_split("/=/", preg_split("/&/", $line)[4])[1];
 		
-		if(preg_match("/" . preg_quote($_SERVER['REMOTE_ADDR'], "/"). "/", $ip))
-			$servers = str_replace($line, "", $servers);
+		if(preg_match("/" . preg_quote($_SERVER['REMOTE_ADDR'], "/") . "/", $ip) 
+		&& preg_match("/" . preg_quote($_POST['lanip'], "/") . "/", $lanip))
+			$servers = str_replace($line . "\n", "", $servers);
 	}
 	
-	$servers = preg_replace("/(\n){2,}/", "\n", $servers);
+	//no longer required
+	//$servers = preg_replace("/(\n){2,}/", "\n", $servers);
 	
-	$servers .= $data;
+	$servers .= $data . "\n";
 	
 	file_put_contents("serverlist", $servers);
 }
@@ -42,13 +54,17 @@ else if($_POST['action'] == 'query')
 	
 	foreach(preg_split("/(\n)/", $servers) as $line)
 	{
+		if(strlen($line) == 0) //same as above
+			continue;
+
 		$time = preg_split("/=/", preg_split("/&/", $line)[0])[1];
 		
 		if(time() - $time > 10)
-			$servers = str_replace($line, "", $servers);
+			$servers = str_replace($line . "\n", "", $servers);
 	}
 	
-	$servers = preg_replace("/(\n){2,}/", "\n", $servers);
+	//useless since "\n"s are now correctly removed 
+	//$servers = preg_replace("/(\n){2,}/", "\n", $servers);
 	
 	file_put_contents("serverlist", $servers);
 	echo $servers;

@@ -65,6 +65,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		setBoardWidth(boardWidth);
 		setBoardHeight(boardHeight);
 		removeAll();
+		scores.clear();
 		setLayout(new GridLayout(boardWidth, boardHeight, 0, 0));
 	}
 

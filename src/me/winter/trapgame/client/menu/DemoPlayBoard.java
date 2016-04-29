@@ -27,10 +27,7 @@ public class DemoPlayBoard extends JPanel
 		board = new HashMap<>();
 		this.boardWidth = boardWidth;
 
-		for(int i = 0; i < 4; i++)
-		{
-			menu.getClient().getScheduler().addTask(new DemoPlay(this, TrapGameServer.COLORS[i]));
-		}
+		reset();
 	}
 
 	@Override
@@ -95,6 +92,18 @@ public class DemoPlayBoard extends JPanel
 		{
 			menu.getClient().getResourceManager().getSound("click").setFramePosition(0);
 			menu.getClient().getResourceManager().getSound("click").start();
+		}
+	}
+
+	public void reset()
+	{
+		board.clear();
+
+		menu.getClient().getScheduler().cancelTasks(DemoPlay.class);
+
+		for(int i = 0; i < 4; i++)
+		{
+			menu.getClient().getScheduler().addTask(new DemoPlay(this, TrapGameServer.COLORS[i]));
 		}
 	}
 

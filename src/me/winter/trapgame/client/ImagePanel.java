@@ -1,5 +1,7 @@
 package me.winter.trapgame.client;
 
+import me.winter.trapgame.util.ColorTransformer;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,8 +17,6 @@ public class ImagePanel extends JPanel
 	public ImagePanel(Image image)
 	{
 		this.image = image;
-		setBackground(new Color(0, 0, 0, 0));
-		setForeground(new Color(0, 0, 0, 0));
 	}
 
 	@Override
@@ -28,9 +28,18 @@ public class ImagePanel extends JPanel
 		g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
+		Color background = getBackground();
+
+		g2draw.setColor(background);
+		g2draw.fillRect(0, 0, getWidth(), getHeight());
+
 		g2draw.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
+		setBackground(ColorTransformer.TRANSPARENT);
+
 		super.paintComponent(graphics);
+
+		setBackground(background);
 	}
 
 	public Image getImage()
