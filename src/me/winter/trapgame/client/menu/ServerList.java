@@ -12,6 +12,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 /**
@@ -26,11 +28,14 @@ public class ServerList extends JPanel
 	private JPanel content;
 	private List<ServerPanel> servers;
 
+	private boolean updating;
+
 	public ServerList(JoinForm joinForm)
 	{
 		this.joinForm = joinForm;
 
 		servers = new ArrayList<>();
+		updating = false;
 
 		setLayout(new BorderLayout());
 
@@ -38,28 +43,6 @@ public class ServerList extends JPanel
 
 		content = new JPanel();
 		content.setBackground(getBackground().darker());
-		/*content.setLayout(new SimpleLayout()
-		{
-			@Override
-			public Dimension minimumLayoutSize(Container parent)
-			{
-				return preferredLayoutSize(parent);
-			}
-
-			@Override
-			public Dimension preferredLayoutSize(Container parent)
-			{
-				double height = 0;
-
-				for(ComponentGuide guide : guides)
-				{
-					if(guide.getY() + getHeight() > height)
-						height = guide.getY() + getHeight();
-				}
-
-				return new Dimension(ServerList.this.getWidth(), (int)(height * ServerList.this.getHeight()));
-			}
-		});*/
 		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
 		scroller.setViewportView(content);
@@ -78,10 +61,16 @@ public class ServerList extends JPanel
 
 	public void update()
 	{
-		content.removeAll();
-		servers.clear();
+		if(updating)
+			return;
 
-		content.add(Box.createRigidArea(new Dimension(0, 5)));
+		new Thread(this::updateList).start();
+	}
+
+	private void updateList()
+	{
+		updating = true;
+		servers.clear();
 
 		try
 		{
@@ -122,20 +111,30 @@ public class ServerList extends JPanel
 		}
 
 		//to test only
-//		try
-//		{
-//			servers.add(new ServerPanel(this, "Example1", 9, 16, InetAddress.getByName("google.com"), InetAddress.getLocalHost(), 1111));
-//			servers.add(new ServerPanel(this, "Example2", 7, 32, InetAddress.getByName("facebook.com"), InetAddress.getLocalHost(), 1112));
-//			servers.add(new ServerPanel(this, "Example45", 6, 1, InetAddress.getByName("messenger.com"), InetAddress.getLocalHost(), 1234));
-//			servers.add(new ServerPanel(this, "Example11", 0, 3, InetAddress.getByName("trapgame.ml"), InetAddress.getLocalHost(), 7777));
-//
-//		}
-//		catch(Exception ex)
-//		{
-//			ex.printStackTrace();
-//		}
+		try
+		{
+				servers.add(new ServerPanel(this, "abc", 9, 16, InetAddress.getByName("google.com"), InetAddress.getLocalHost(), 1111));
+				servers.add(new ServerPanel(this, "zxw", 7, 32, InetAddress.getByName("facebook.com"), InetAddress.getLocalHost(), 1112));
+				servers.add(new ServerPanel(this, "hmmmm", 6, 1, InetAddress.getByName("messenger.com"), InetAddress.getLocalHost(), 1234));
+				servers.add(new ServerPanel(this, "Fun Server 2", 0, 3, InetAddress.getByName("trapgame.ml"), InetAddress.getLocalHost(), 7777));
 
-		servers.sort((a, b) -> b.getPlayers() - a.getPlayers());
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
+		SwingUtilities.invokeLater(this::placeServers);
+
+		updating = false;
+	}
+
+	public void placeServers()
+	{
+		content.removeAll();
+		content.add(Box.createRigidArea(new Dimension(0, 5)));
+
+		servers.sort(joinForm.getSortComparator());
 
 		servers.forEach(server -> {
 			content.add(server);
@@ -143,7 +142,9 @@ public class ServerList extends JPanel
 		});
 
 		content.setPreferredSize(content.getPreferredSize());
-		//this.getViewport().add(Box.createVerticalGlue());
+
+		content.revalidate();
+		content.repaint();
 	}
 
 	public JPanel getContent()

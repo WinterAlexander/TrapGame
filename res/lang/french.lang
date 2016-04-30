@@ -1,4 +1,4 @@
-client_loading=Chargement...
+client_loading=Chargement
 client_score=Score:
 client_stats=Stats:
 client_disconnect=Déconnexion
@@ -12,6 +12,13 @@ client_host_button=Héberger une partie
 client_leave_button=Quitter
 
 client_username=Votre nom:
+client_serverlist=Serveurs publics
+client_sort=Trier par
+
+client_sort_players=Nombre de joueurs
+client_sort_name=Nom de la partie (A à Z)
+client_sort_ping=Connexion
+
 client_address=Adresse du serveur:
 client_password=Mot de passe:
 client_connect_button=Connexion

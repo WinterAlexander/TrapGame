@@ -82,6 +82,7 @@ public class TrapGameClient extends JFrame
 	private GameTranslation lang;
 	private ResourceManager resourceManager;
 	private Logger logger;
+	private boolean loaded;
 
 	private TrapGameMenu menu;
 	private TrapGameBoard board;
@@ -150,11 +151,40 @@ public class TrapGameClient extends JFrame
 		loading.add(loadingText, BorderLayout.CENTER);
 		getContentPane().add(loading);
 
+		new Thread()
+		{
+			private int i = 0;
+			private String[] values = {".  ", ".. ", "..."};
+
+			@Override
+			public void run()
+			{
+				while(!loaded)
+				{
+					try
+					{
+						Thread.sleep(250);
+					}
+					catch(InterruptedException ex)
+					{
+						ex.printStackTrace(System.err);
+					}
+
+					loadingText.setText(loadingText.getText().substring(0, loadingText.getText().length() - 3) + values[i]);
+
+					i++;
+					i %= 3;
+				}
+			}
+		}.start();
+
+
 		setVisible(true);
 	}
 
 	public void load() throws IOException
 	{
+		loaded = false;
 		userProperties.loadIfPresent();
 
 		//if(userProperties.isDebugMode())
@@ -172,7 +202,7 @@ public class TrapGameClient extends JFrame
 		}
 
 
-		loadingText.setText(lang.getLine("client_loading"));
+		loadingText.setText(lang.getLine("client_loading") + "...");
 
 		resourceManager.scan("/index.properties");
 		resourceManager.load();
@@ -183,6 +213,7 @@ public class TrapGameClient extends JFrame
 		board = new TrapGameBoard(this);
 
 		goToMenu();
+		loaded = true;
 	}
 
 	public void reloadLang()

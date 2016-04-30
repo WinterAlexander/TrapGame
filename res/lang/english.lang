@@ -3,7 +3,7 @@
 #please copy this file, edit it and sent it to me
 #
 #My mail: a.w1nter@hotmail.com
-client_loading=Loading...
+client_loading=Loading
 client_score=Score:
 client_stats=Stats:
 client_disconnect=Disconnect
@@ -17,6 +17,13 @@ client_host_button=Host Game
 client_leave_button=Quit
 
 client_username=Your name:
+client_serverlist=Public server list
+client_sort=Order by
+
+client_sort_players=Amount of players
+client_sort_name=Game name (A to Z)
+client_sort_ping=Connection
+
 client_address=Server address:
 client_password=Server password:
 client_connect_button=Connect

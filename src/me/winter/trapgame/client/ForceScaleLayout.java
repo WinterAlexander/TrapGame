@@ -34,13 +34,19 @@ public class ForceScaleLayout implements LayoutManager
 	@Override
 	public Dimension preferredLayoutSize(Container parent)
 	{
-		return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
+		if(parent.getComponents().length == 0)
+			return new Dimension(0, 0);
+
+		return parent.getComponents()[0].getPreferredSize();
 	}
 
 	@Override
 	public Dimension minimumLayoutSize(Container parent)
 	{
-		return new Dimension(0, 0);
+		if(parent.getComponents().length == 0)
+			return new Dimension(0, 0);
+
+		return parent.getComponents()[0].getMinimumSize();
 	}
 
 	@Override

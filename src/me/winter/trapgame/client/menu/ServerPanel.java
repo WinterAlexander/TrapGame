@@ -1,6 +1,7 @@
 package me.winter.trapgame.client.menu;
 
 import me.winter.trapgame.client.ImagePanel;
+import me.winter.trapgame.client.TextAnimation;
 import me.winter.trapgame.client.TrapGameClient;
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.net.*;
+import java.util.Random;
 import java.util.logging.Level;
 
 /**
@@ -32,6 +34,7 @@ public class ServerPanel extends JPanel
 	private int port;
 
 	private boolean useLan;
+	private int pingLatency;
 
 	private JLabel ping;
 
@@ -40,6 +43,7 @@ public class ServerPanel extends JPanel
 		this.serverList = serverList;
 
 		this.useLan = false;
+		this.pingLatency = Integer.MAX_VALUE;
 
 		try
 		{
@@ -83,6 +87,8 @@ public class ServerPanel extends JPanel
 	public ServerPanel(ServerList serverList, String name, int players, int maxPlayers, InetAddress address, InetAddress lanAddress, int port)
 	{
 		this.serverList = serverList;
+
+		this.pingLatency = Integer.MAX_VALUE;
 
 		this.name = name;
 		this.players = players;
@@ -140,10 +146,8 @@ public class ServerPanel extends JPanel
 		slots.setFont(new Font("Arial", Font.PLAIN, 20));
 		slots.setPreferredSize(new Dimension(100, (int)slots.getPreferredSize().getHeight()));
 
-		ping = new JLabel("Pinging...", JLabel.RIGHT);
+		ping = new JLabel("   ", JLabel.RIGHT);
 		ping.setFont(new Font("Arial", Font.PLAIN, 20));
-
-		getServerList().getJoinForm().getMenu().getClient().getScheduler().addTask(() -> new Thread(this::ping).start(), 100);
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -199,54 +203,75 @@ public class ServerPanel extends JPanel
 
 		setPreferredSize(size);
 		setMaximumSize(size);
+
+		getServerList().getJoinForm().getMenu().getClient().getScheduler().addTask(this::ping, 500);
 	}
 
 	public void connectTo()
 	{
 		TrapGameClient client = getServerList().getJoinForm().getMenu().getClient();
 
+		String name = getServerList().getJoinForm().getPlayerName().getText();
+
+		if(name.length() < 3)
+			name = "Guest" + new Random().nextInt(10000);
+
+		if(name.length() > 20)
+			name = name.substring(0, 20);
+
 		if(useLan)
 		{
-			client.getConnection().connectTo(lanAddress, null, port, null, "Player");
+			client.getConnection().connectTo(lanAddress, null, port, null, name);
 			return;
 		}
 
-		client.getConnection().connectTo(address, lanAddress, port, null, "Player");
+		client.getConnection().connectTo(address, lanAddress, port, null, name);
 	}
 
 	public void ping()
 	{
+		final TextAnimation pinging = new TextAnimation(ping, new String[]{".  ", ".. ", "..."});
+		getServerList().getJoinForm().getMenu().getClient().getScheduler().addTask(pinging);
 
-		try
-		{
-			ping(lanAddress);
-			useLan = true;
-		}
-		catch(Exception lanEx)
-		{
-			if(getServerList().getJoinForm().getMenu().getClient().getUserProperties().isDebugMode())
-				getServerList().getJoinForm().getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while pinging lan IP " + name, lanEx);
+		new Thread(() -> {
+
+			ping.setText("...");
 
 			try
 			{
-				ping(address);
+				ping(lanAddress);
+				useLan = true;
 			}
-			catch(Exception publicEx)
+			catch(Exception lanEx)
 			{
 				if(getServerList().getJoinForm().getMenu().getClient().getUserProperties().isDebugMode())
-					getServerList().getJoinForm().getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while pinging public IP " + name, publicEx);
+					getServerList().getJoinForm().getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while pinging lan IP " + name, lanEx);
 
-				ping.setText("Unreachable");
-				ping.setForeground(Color.RED);
+				try
+				{
+					ping(address);
+				}
+				catch(Exception publicEx)
+				{
+					if(getServerList().getJoinForm().getMenu().getClient().getUserProperties().isDebugMode())
+						getServerList().getJoinForm().getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while pinging public IP " + name, publicEx);
+
+					ping.setText("X");
+					ping.setForeground(Color.RED);
+				}
 			}
-		}
+			finally
+			{
+				pinging.cancel();
+			}
+		}).start();
 	}
 
 	private void ping(InetAddress address) throws IOException
 	{
 		long timestamp = System.nanoTime();
 		DatagramSocket socket = new DatagramSocket();
-		socket.setSoTimeout(10_000);
+		socket.setSoTimeout(5_000);
 
 		ByteArrayOutputStream writer = new ByteArrayOutputStream();
 		new DataOutputStream(writer).writeUTF("KeepAlive");
@@ -261,16 +286,16 @@ public class ServerPanel extends JPanel
 		ByteArrayInputStream reader = new ByteArrayInputStream(packet.getData());
 
 		if(!new DataInputStream(reader).readUTF().equals("KeepAlive"))
-			throw new IOException("Invalid reponse");
+			throw new IOException("Invalid response");
 
-		int time = (int)((System.nanoTime() - timestamp) / 1_000_000);
-		ping.setText(time + "ms");
+		pingLatency = (int)((System.nanoTime() - timestamp) / 1_000_000);
+		ping.setText(pingLatency + "ms");
 
-		if(time < 10)
+		if(pingLatency < 10)
 			ping.setForeground(Color.GREEN.darker());
-		else if(time < 50)
+		else if(pingLatency < 50)
 			ping.setForeground(Color.GREEN);
-		else if(time < 100)
+		else if(pingLatency < 100)
 			ping.setForeground(Color.YELLOW.darker());
 		else
 			ping.setForeground(Color.ORANGE.darker());
@@ -301,6 +326,11 @@ public class ServerPanel extends JPanel
 	public void setPlayers(int players)
 	{
 		this.players = players;
+	}
+
+	public int getPing()
+	{
+		return pingLatency;
 	}
 
 	public int getMaxPlayers()
