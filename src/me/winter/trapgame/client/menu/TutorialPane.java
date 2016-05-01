@@ -29,7 +29,7 @@ public class TutorialPane extends JPanel
 
 		textPane = new JTextPane();
 		setBackground(ColorTransformer.TRANSPARENT);
-		textPane.setBackground(new Color(220, 220, 220));
+		textPane.setBackground(new Color(240, 240, 240));
 
 		textPane.setContentType("text/html");
 		textPane.setEditable(false);
@@ -50,8 +50,34 @@ public class TutorialPane extends JPanel
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setBorder(new EmptyBorder(0, 0, 0, 0));
 
+		//dark
 
-		add(scroll, SimpleLayout.constraints(8, 9, 0.25, 0.75, 7.5, 7.5));
+		JPanel dark = new JPanel()
+		{
+			@Override
+			protected void paintComponent(Graphics graphics)
+			{
+				Graphics2D g2draw = (Graphics2D) graphics;
+
+				g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+				g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+				g2draw.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+
+				g2draw.setColor(new Color(0, 0, 0, 50));
+				g2draw.fillRoundRect(0, 0, getWidth(), getHeight(), 5, 5);
+			}
+		};
+
+		//border
+
+		JPanel border = new JPanel();
+		border.setBackground(new Color(80, 80, 80));
+
+
+		add(scroll, SimpleLayout.constraints(100, 100, 5, 15, 90, 70));
+		add(border, SimpleLayout.constraints(100, 100, 4.85, 14.85, 90.3, 70.3));
+		add(dark, SimpleLayout.constraints(100, 100, 6.5, 16.5, 90, 70));
 
 		insertIcons();
 		//menu.getClient().getScheduler().addTask(new Task(2000, false, this::insertIcons));

@@ -13,9 +13,11 @@ import java.util.logging.Level;
 
 /**
  *  The menu used to connect to a server (and eventually to do more things)
+ *  Kept as an archive, no longer used
  *
  * Created by Alexander Winter on 2016-03-27.
  */
+@Deprecated
 public class OldJoinForm extends JPanel
 {
 	private TrapGameClient container;

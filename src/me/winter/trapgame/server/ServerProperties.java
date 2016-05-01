@@ -130,7 +130,7 @@ public class ServerProperties extends Properties
 		}
 		catch(NumberFormatException ex)
 		{
-			return 8;
+			return 12;
 		}
 	}
 
@@ -147,7 +147,7 @@ public class ServerProperties extends Properties
 		}
 		catch(NumberFormatException ex)
 		{
-			return 8;
+			return 9;
 		}
 	}
 
@@ -164,7 +164,7 @@ public class ServerProperties extends Properties
 		}
 		catch(NumberFormatException ex)
 		{
-			return 8;
+			return 9;
 		}
 	}
 

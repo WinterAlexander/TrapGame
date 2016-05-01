@@ -17,17 +17,17 @@ client_host_button=Host Game
 client_leave_button=Quit
 
 client_username=Your name:
-client_serverlist=Public server list
+client_serverlist=Public game list
 client_sort=Order by
 
 client_sort_players=Amount of players
 client_sort_name=Game name (A to Z)
 client_sort_ping=Connection
 
-client_address=Server address:
-client_password=Server password:
-client_connect_button=Connect
-client_remember=Remember me
+client_privateserver=Private game
+client_privateserver_address=Address:
+client_privateserver_password=Password:
+client_privateserver_connect=Connect
 
 client_connection_failed_title=Connection failed
 client_connection_failed_message=The connection to this server failed.

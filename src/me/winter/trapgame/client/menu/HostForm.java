@@ -37,6 +37,10 @@ public class HostForm extends JPanel
 		this.menu = menu;
 		setBackground(ColorTransformer.TRANSPARENT);
 
+		add(new JLabel("Currently working on it... If you want to host a TrapGame server, download the TrapGameServer.jar program"));
+		if(true)
+			return;
+
 		setLayout(new GridBagLayout());
 
 		JLabel title = new JLabel("Host");

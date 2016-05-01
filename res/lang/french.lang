@@ -12,17 +12,17 @@ client_host_button=Héberger une partie
 client_leave_button=Quitter
 
 client_username=Votre nom:
-client_serverlist=Serveurs publics
+client_serverlist=Parties publiques
 client_sort=Trier par
 
 client_sort_players=Nombre de joueurs
 client_sort_name=Nom de la partie (A à Z)
 client_sort_ping=Connexion
 
-client_address=Adresse du serveur:
-client_password=Mot de passe:
-client_connect_button=Connexion
-client_remember=Se rappeler
+client_privateserver=Partie privée
+client_privateserver_address=Adresse:
+client_privateserver_password=Mot de passe:
+client_privateserver_connect=Connexion
 
 client_connection_failed_title=Connexion impossible
-client_connection_failed_message=La connexion au serveur a Échouée.
+client_connection_failed_message=La connexion au serveur a échouée.

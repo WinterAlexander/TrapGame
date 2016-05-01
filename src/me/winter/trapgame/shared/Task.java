@@ -12,7 +12,7 @@ public class Task implements Runnable
 	public Task(long delay, boolean repeating)
 	{
 		this.delay = delay;
-		this.lastWork = System.nanoTime() / 1_000_000;
+		this.lastWork = -1;
 		this.repeating = repeating;
 		this.scheduler = null;
 		this.runnable = null;
@@ -21,7 +21,7 @@ public class Task implements Runnable
 	public Task(long delay, boolean repeating, Runnable runnable)
 	{
 		this.delay = delay;
-		this.lastWork = System.nanoTime() / 1_000_000;
+		this.lastWork = -1;
 		this.repeating = repeating;
 		this.scheduler = null;
 		this.runnable = runnable;
@@ -58,6 +58,11 @@ public class Task implements Runnable
 			this.scheduler.cancelTask(this);
 
 		this.scheduler = scheduler;
+
+		if(scheduler != null)
+			setLastWork(scheduler.getTimeMillis());
+		else
+			setLastWork(-1);
 	}
 
 	public Scheduler getScheduler()
@@ -73,7 +78,8 @@ public class Task implements Runnable
 	@Override
 	public void run()
 	{
-		runnable.run();
+		if(runnable != null)
+			runnable.run();
 	}
 
 	@Override

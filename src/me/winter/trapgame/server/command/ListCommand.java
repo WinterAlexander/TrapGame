@@ -58,7 +58,7 @@ public class ListCommand implements Command
 
 		sender.sendMessage("There's " + cmds.size() + " commands on this server:");
 		for(Command cmd : cmds)
-			sender.sendMessage(cmd.getName() + " : " + cmd.getUsage());
+			sender.sendMessage(cmd.getName() + " : " + cmd.getDescription());
 	}
 
 	@Override

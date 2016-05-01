@@ -64,20 +64,21 @@ public class SimpleResourceManager implements ResourceManager
 			switch(paths.getProperty(name).split(":")[0].toLowerCase())
 			{
 				case "image":
-					resources.put(name, ImageIO.read(FileUtil.resourceAsStream(path)));
+					resources.put(name, ImageIO.read(new BufferedInputStream(FileUtil.resourceAsStream(path))));
 					logger.info("Image " + name + " has been loaded properly.");
 					break;
 
 				case "sound":
 					Clip clip = AudioSystem.getClip();
-					clip.open(AudioSystem.getAudioInputStream(FileUtil.resourceAsStream(path)));
+					clip.open(AudioSystem.getAudioInputStream(new BufferedInputStream(FileUtil.resourceAsStream(path))));
 					resources.put(name, clip);
 					logger.info("Sound " + name + " has been loaded properly.");
 					break;
 
 				case "text":
 				default:
-					BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtil.resourceAsStream(path)));
+					BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtil.resourceAsStream(path), "UTF-8"));
+
 					StringBuilder builder = new StringBuilder();
 					String line;
 					while((line = reader.readLine()) != null)

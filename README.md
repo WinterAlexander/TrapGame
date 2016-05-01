@@ -10,10 +10,12 @@ with the more territory.
 
 Screenshots:
 <img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot1.png" width="128px" /> 
-<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot2.png" width="128px" /> 
+<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot2.png" width="128px" />
+<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot3.png" width="128px" />
 
 Project in development. Downloads:
 
+  - Version 0.9 Client: http://bit.ly/1Z116YU Server: http://bit.ly/21omiK4
   - Version 0.8 Client: http://bit.ly/1TndwsE Server: http://bit.ly/1ppvFLE
   - Version 0.7 Client: http://bit.ly/23zZj3M Server: http://bit.ly/23zZmfY
   - Version 0.6 Client: http://bit.ly/1YbKEor Server: http://bit.ly/1TwHpbI

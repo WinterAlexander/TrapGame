@@ -1,6 +1,7 @@
 package me.winter.trapgame.client.menu;
 
 import me.winter.trapgame.server.TrapGameServer;
+import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
@@ -103,7 +104,9 @@ public class DemoPlayBoard extends JPanel
 
 		for(int i = 0; i < 4; i++)
 		{
-			menu.getClient().getScheduler().addTask(new DemoPlay(this, TrapGameServer.COLORS[i]));
+			Task task = new DemoPlay(this, TrapGameServer.COLORS[i]);
+			menu.getClient().getScheduler().addTask(task);
+			task.setLastWork(menu.getClient().getScheduler().getTimeMillis() - task.getDelay() + 50);
 		}
 	}
 

@@ -28,9 +28,9 @@ public class Scheduler
 		this.logger = Optional.ofNullable(logger);
 		this.tasks = new ArrayList<>();
 		this.pause = true;
-		this.lastPause = System.nanoTime() / 1_000_000;
-		this.lastPauseTime = 0;
 		this.pauseTime = 0;
+		this.lastPause = getTimeMillis();
+		this.lastPauseTime = 0;
 	}
 
 	public void addTask(Runnable runnable, int delay)
@@ -102,7 +102,7 @@ public class Scheduler
 					continue;
 				}
 
-				int turns = (int) (((System.nanoTime() / 1_000_000 - this.pauseTime) - task.getLastWork()) / task.getDelay());
+				int turns = (int) ((getTimeMillis() - task.getLastWork()) / task.getDelay());
 				if(!task.isRepeating() && turns >= 1)
 				{
 					task.run();

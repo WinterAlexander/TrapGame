@@ -30,7 +30,7 @@ public class PropTemplateCommand implements Command
 	@Override
 	public String getDescription()
 	{
-		return "Creates a template file at the jar location for a TrapGame server admin to configure it";
+		return "Creates a template file at the jar location for a TrapGame server admin to configure it. (STANDALONE SERVERS ONLY)";
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import oracle.jrockit.jfr.JFR;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -125,25 +126,24 @@ public class TrapGameClient extends JFrame
 			}
 		});
 
-		addKeyListener(new KeyAdapter()
-		{
-			@Override
-			public void keyPressed(KeyEvent e)
-			{
-				if(e.getKeyCode() == KeyEvent.VK_F11)
+		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F11"), "Fullscreen");
+		this.getRootPane().getActionMap().put("Fullscreen", new AbstractAction()
 				{
-					GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-
-					if(device.getFullScreenWindow() != null)
+					@Override
+					public void actionPerformed(ActionEvent e)
 					{
-						device.setFullScreenWindow(null);
-						return;
-					}
+						GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
-					device.setFullScreenWindow(TrapGameClient.this);
-				}
-			}
-		});
+						if(device.getFullScreenWindow() != null)
+						{
+							device.setFullScreenWindow(null);
+							return;
+						}
+
+						device.setFullScreenWindow(TrapGameClient.this);
+					}
+				});
+		this.getRootPane().setFocusable(true);
 
 		JPanel loading = new JPanel();
 		loading.setLayout(new BorderLayout());
