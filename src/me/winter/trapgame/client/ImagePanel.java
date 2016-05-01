@@ -17,6 +17,8 @@ public class ImagePanel extends JPanel
 	public ImagePanel(Image image)
 	{
 		this.image = image;
+		setOpaque(false);
+		setForeground(ColorTransformer.TRANSPARENT);
 	}
 
 	@Override
@@ -28,18 +30,16 @@ public class ImagePanel extends JPanel
 		g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		Color background = getBackground();
 
-		g2draw.setColor(background);
+		g2draw.setColor(getBackground());
 		g2draw.fillRect(0, 0, getWidth(), getHeight());
 
 		g2draw.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
-		setBackground(ColorTransformer.TRANSPARENT);
+		g2draw.setColor(getForeground());
+		g2draw.fillRect(0, 0, getWidth(), getHeight());
 
 		super.paintComponent(graphics);
-
-		setBackground(background);
 	}
 
 	public Image getImage()

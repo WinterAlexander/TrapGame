@@ -8,6 +8,8 @@ import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -20,7 +22,7 @@ import java.util.Map;
  *
  * Created by Alexander Winter on 2016-03-28.
  */
-public class PlayBoard extends JPanel implements MouseMotionListener, MouseListener
+public class PlayBoard extends JPanel implements MouseMotionListener, MouseListener, KeyListener
 {
 	private TrapGameBoard container;
 
@@ -40,6 +42,9 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 		addMouseMotionListener(this);
 		addMouseListener(this);
+		addKeyListener(this);
+
+		setFocusable(true);
 
 		setBackground(new Color(0, 0, 0, 0));
 
@@ -289,6 +294,8 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		if(isBoardLocked())
 			return;
 
+		this.requestFocusInWindow();
+
 		Point point = new Point(e.getX() * getBoardWidth() / getWidth(), e.getY() * getBoardHeight() / getHeight());
 
 		if(getScores().containsKey(point))
@@ -317,6 +324,34 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		mouseIn = false;
 		revalidate();
 		repaint();
+	}
+
+	@Override
+	public void keyTyped(KeyEvent event)
+	{
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent event)
+	{
+		if(event.getKeyCode() == KeyEvent.VK_SPACE
+		|| event.getKeyCode() == KeyEvent.VK_W
+		|| event.getKeyCode() == KeyEvent.VK_E)
+		{
+			Point point = new Point((int)(container.getClient().getCursorX() * getBoardWidth()), (int)(container.getClient().getCursorY() * getBoardHeight()));
+
+			if(getScores().containsKey(point))
+				return;
+
+			container.getContainer().getConnection().sendPacketLater(new PacketInClick(point));
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e)
+	{
+
 	}
 
 	public void playClickSound()

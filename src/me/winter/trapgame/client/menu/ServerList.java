@@ -42,7 +42,7 @@ public class ServerList extends JPanel
 		JScrollPane scroller = new JScrollPane();
 
 		content = new JPanel();
-		content.setBackground(getBackground().darker());
+		content.setBackground(new Color(110, 110, 110));
 		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
 		scroller.setViewportView(content);

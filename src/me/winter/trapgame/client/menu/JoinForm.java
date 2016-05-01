@@ -35,6 +35,7 @@ public class JoinForm extends JPanel
 		list = new ServerList(this);
 
 		JPanel top = new JPanel();
+		top.setBackground(new Color(230, 230, 230));
 		top.setLayout(new GridBagLayout());
 		top.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -47,6 +48,8 @@ public class JoinForm extends JPanel
 		playerName = new JTextField();
 		playerName.setPreferredSize(new Dimension(150, 25));
 		playerName.setMinimumSize(playerName.getPreferredSize());
+		playerName.setText(getMenu().getClient().getUserProperties().getLastName());
+		//playerName.setBackground(new Color(230, 230, 230));
 
 		JLabel sortLabel = new JLabel(getMenu().getLangLine("client_sort") + " ");
 		sortLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -60,6 +63,7 @@ public class JoinForm extends JPanel
 		sorter.setMinimumSize(sorter.getPreferredSize());
 
 		sorter.addActionListener(event -> getList().placeServers());
+		//sorter.setBackground(new Color(230, 230, 230));
 
 		RefreshButton refresh = new RefreshButton(this);
 

@@ -82,6 +82,7 @@ public class TrapGameBoard extends JPanel
 	{
 		reset();
 		playBoard.setBoardLocked(false);
+		playBoard.requestFocusInWindow();
 	}
 
 	public void stop()

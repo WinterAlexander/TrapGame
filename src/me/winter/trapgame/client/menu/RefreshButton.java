@@ -23,6 +23,8 @@ public class RefreshButton extends JButton
 		setPreferredSize(new Dimension(80, 80));
 		setMaximumSize(new Dimension(128, 128));
 		setBorder(new EmptyBorder(0, 0, 0, 0));
+		setBackground(new Color(230, 230, 230));
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
 		addActionListener(event -> joinForm.getList().update());
 		addMouseListener(new MouseAdapter()
 		{

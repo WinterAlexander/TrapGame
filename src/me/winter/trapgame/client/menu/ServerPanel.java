@@ -3,11 +3,14 @@ package me.winter.trapgame.client.menu;
 import me.winter.trapgame.client.ImagePanel;
 import me.winter.trapgame.client.TextAnimation;
 import me.winter.trapgame.client.TrapGameClient;
+import me.winter.trapgame.client.UserProperties;
+import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -37,6 +40,7 @@ public class ServerPanel extends JPanel
 	private int pingLatency;
 
 	private JLabel ping;
+	private ImagePanel joinButton;
 
 	public ServerPanel(ServerList serverList, String data) throws IllegalArgumentException
 	{
@@ -105,17 +109,24 @@ public class ServerPanel extends JPanel
 	private void build()
 	{
 		setLayout(new GridBagLayout());
+		setBackground(ColorTransformer.TRANSPARENT);
 
-		ImagePanel joinButton = new ImagePanel(serverList.getJoinForm().getMenu().getClient().getResourceManager().getImage("join-button"));
+		joinButton = new ImagePanel(serverList.getJoinForm().getMenu().getClient().getResourceManager().getImage("join-button"));
 
 		joinButton.setPreferredSize(new Dimension(75, 75));
+		joinButton.setBackground(new Color(230, 230, 230));
 
 		joinButton.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
-				connectTo();
+				joinButton.setForeground(new Color(0, 0, 0, joinButton.getForeground().getAlpha() + 30));
+				UserProperties properties = getServerList().getJoinForm().getMenu().getClient().getUserProperties();
+				properties.setLastName(getServerList().getJoinForm().getPlayerName().getText());
+				properties.save();
+
+				new Thread(ServerPanel.this::connectTo).start();
 			}
 		});
 		joinButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -125,13 +136,13 @@ public class ServerPanel extends JPanel
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-				joinButton.setForeground(new Color(0, 0, 0, 50));
+				joinButton.setForeground(new Color(0, 0, 0, joinButton.getForeground().getAlpha() + 20));
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e)
 			{
-				joinButton.setForeground(new Color(0, 0, 0, 0));
+				joinButton.setForeground(new Color(0, 0, 0, Math.max(joinButton.getForeground().getAlpha() - 20, 0)));
 			}
 		});
 
@@ -220,12 +231,11 @@ public class ServerPanel extends JPanel
 			name = name.substring(0, 20);
 
 		if(useLan)
-		{
 			client.getConnection().connectTo(lanAddress, null, port, null, name);
-			return;
-		}
+		else
+			client.getConnection().connectTo(address, lanAddress, port, null, name);
 
-		client.getConnection().connectTo(address, lanAddress, port, null, name);
+		joinButton.setForeground(new Color(0, 0, 0, joinButton.getForeground().getAlpha() - 30));
 	}
 
 	public void ping()
@@ -263,6 +273,7 @@ public class ServerPanel extends JPanel
 			finally
 			{
 				pinging.cancel();
+				getServerList().placeServers();
 			}
 		}).start();
 	}
@@ -302,6 +313,24 @@ public class ServerPanel extends JPanel
 
 	}
 
+	@Override
+	protected void paintComponent(Graphics graphics)
+	{
+		Graphics2D g2draw = (Graphics2D)graphics;
+
+		g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+
+		g2draw.setColor(new Color(110, 110, 110));
+		g2draw.fillRect(0, 0, getWidth(), getHeight());
+
+		g2draw.setColor(new Color(230, 230, 230));
+		g2draw.fillRoundRect(0, 0, getWidth(), getHeight(), 5, 5);
+
+		super.paintComponent(graphics);
+	}
 
 	public ServerList getServerList()
 	{

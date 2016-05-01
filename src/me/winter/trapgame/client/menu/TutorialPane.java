@@ -7,6 +7,7 @@ import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.regex.Matcher;
@@ -26,28 +27,9 @@ public class TutorialPane extends JPanel
 	{
 		this.menu = menu;
 
-		textPane = new JTextPane()
-		{
-			@Override
-			public void paintComponent(Graphics graphics)
-			{
-				Graphics2D g2draw = (Graphics2D)graphics;
-
-				g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-				g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-
-				g2draw.drawImage(menu.getClient().getResourceManager().getImage("background"), -TutorialPane.this.getX() - getX(), -TutorialPane.this.getY() - getY(), menu.getWidth(), menu.getHeight(), null);
-
-				g2draw.setColor(new Color(0, 0, 0, 20));
-				g2draw.fillRoundRect(0, 0, getWidth(), getHeight(), getWidth() / 8, getHeight() / 8);
-
-				super.paintComponent(graphics);
-			}
-		};
-
+		textPane = new JTextPane();
 		setBackground(ColorTransformer.TRANSPARENT);
-		textPane.setBackground(ColorTransformer.TRANSPARENT);
+		textPane.setBackground(new Color(220, 220, 220));
 
 		textPane.setContentType("text/html");
 		textPane.setEditable(false);
@@ -60,12 +42,21 @@ public class TutorialPane extends JPanel
 		textPane.setText(page);
 
 		setLayout(new SimpleLayout());
-		add(textPane, SimpleLayout.constraints(8, 9, 0.25, 0.75, 7.5, 7.5));
-		revalidate();
-		repaint();
+
+		JScrollPane scroll = new JScrollPane();
+
+		scroll.setViewportView(textPane);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.setBorder(new EmptyBorder(0, 0, 0, 0));
+
+
+		add(scroll, SimpleLayout.constraints(8, 9, 0.25, 0.75, 7.5, 7.5));
 
 		insertIcons();
 		//menu.getClient().getScheduler().addTask(new Task(2000, false, this::insertIcons));
+		revalidate();
+
 	}
 
 	@Override
@@ -114,21 +105,35 @@ public class TutorialPane extends JPanel
 					break;
 			}
 
+			int width = 40;
+
 			BufferedImage button = (BufferedImage)menu.getClient().getResourceManager().getImage("game-button");
-			Image image = new BufferedImage(button.getWidth(), button.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Image image = new BufferedImage(width, width, BufferedImage.TYPE_INT_ARGB);
+
+
 
 			Graphics2D g2draw = ((BufferedImage)image).createGraphics();
 
 			g2draw.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2draw.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 			g2draw.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+			g2draw.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 
 			g2draw.setColor(Color.WHITE);
-			g2draw.fillRoundRect(0, 0, button.getWidth(), button.getHeight(), button.getWidth() / 4, button.getHeight() / 4);
+			g2draw.fillRoundRect(   3 * width / 256,
+									3 * width / 256,
+									width - 3 * width / 128,
+									width - 3 * width / 128,
+									width / 6, width / 6);
 
 			g2draw.setColor(new ColorTransformer(TrapGameServer.COLORS[0], colorAlpha));
-			g2draw.fillRoundRect(0, 0, button.getWidth(), button.getHeight(), button.getWidth() / 4, button.getHeight() / 4);
-			g2draw.drawImage(button, 0, 0, button.getWidth(), button.getHeight(), null);
+			g2draw.fillRoundRect(   3 * width / 256,
+									3 * width / 256,
+									width - 3 * width / 128,
+									width - 3 * width / 128,
+									width / 6, width / 6);
+			g2draw.drawImage(button, 0, 0, width, width, null);
+
 
 			g2draw.dispose();
 
@@ -146,8 +151,5 @@ public class TutorialPane extends JPanel
 			textPane.setCaretPosition(caret);
 			textPane.insertComponent(icon);
 		}
-
-		revalidate();
-		repaint();
 	}
 }
