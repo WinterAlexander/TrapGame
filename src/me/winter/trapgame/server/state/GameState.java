@@ -75,10 +75,10 @@ public class GameState extends State
 			return false;
 
 		if(boardContent.values().contains(player)
-				&& boardContent.get(new Point(point.x + 1, point.y)) != player
-				&& boardContent.get(new Point(point.x - 1, point.y)) != player
-				&& boardContent.get(new Point(point.x, point.y + 1)) != player
-				&& boardContent.get(new Point(point.x, point.y - 1)) != player)
+		&& boardContent.get(new Point(point.x + 1, point.y)) != player
+		&& boardContent.get(new Point(point.x - 1, point.y)) != player
+		&& boardContent.get(new Point(point.x, point.y + 1)) != player
+		&& boardContent.get(new Point(point.x, point.y - 1)) != player)
 			return false;
 
 		boardContent.put(point, player);
@@ -87,6 +87,11 @@ public class GameState extends State
 			getServer().getScheduler().addTask(new Task(0, false, this::skip));
 
 		return true;
+	}
+
+	public Player getOwner(Point location)
+	{
+		return boardContent.get(location);
 	}
 
 	public void tryFilling(Player player, Point point)

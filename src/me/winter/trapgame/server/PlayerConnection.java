@@ -72,6 +72,10 @@ public class PlayerConnection
 				getPlayer().getServer().getConnection().sendToAllLater(new PacketOutPlace(getPlayer().getId(), location));
 				((GameState)state).tryFilling(getPlayer(), location);
 			}
+			else
+			{
+				getPlayer().getConnection().sendPacketLater(new PacketOutPlace(((GameState)state).getOwner(location).getId(), location));
+			}
 
 
 			return;

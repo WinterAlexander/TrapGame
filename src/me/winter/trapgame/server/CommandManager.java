@@ -30,6 +30,7 @@ public class CommandManager
 		commands.add(new ListCommand(this));
 		commands.add(new SuperUserCommand());
 		commands.add(new KickCommand());
+		commands.add(new DebugCommand()); //TODO remove debug command
 	}
 
 	public void execute(CommandSender sender, String input)
