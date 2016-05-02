@@ -6,7 +6,12 @@ import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.packet.*;
 
 import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.util.*;
 
 /**
  *
@@ -20,23 +25,93 @@ public class PlayerConnection
 	private int port;
 
 	private long lastPacketReceived;
+	private java.util.List<DatagramPacket> toSend;
 
 	public PlayerConnection(Player player, InetAddress address, int port)
 	{
+		toSend = new ArrayList<>();
+
 		this.player = player;
 		this.address = address;
 		this.port = port;
 		keepAlive();
+
+		new Thread(this::sendOutput).start();
+	}
+
+	private void sendOutput()
+	{
+		while(getPlayer().getServer().getConnection().isOpen())
+		{
+			for(DatagramPacket packet : new ArrayList<>(toSend))
+			{
+				try
+				{
+					if(packet != null)
+						getPlayer().getServer().getConnection().getUdpSocket().send(packet);
+					toSend.remove(packet);
+				}
+				catch(IOException ex)
+				{
+					ex.printStackTrace(System.err);
+				}
+			}
+
+			synchronized(this)
+			{
+				try
+				{
+					wait();
+				}
+				catch(InterruptedException ex)
+				{
+					ex.printStackTrace(System.err);
+				}
+			}
+		}
 	}
 
 	public void sendPacketLater(Packet packet)
 	{
-		getPlayer().getServer().getConnection().sendPacketLater(packet, address, port);
+		try
+		{
+
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
+			packet.writeTo(byteStream);
+
+			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+			synchronized(this)
+			{
+				toSend.add(data);
+				notify();
+			}
+		}
+		catch(Exception ex)
+		{
+			if(getPlayer().getServer().isDebugMode())
+				ex.printStackTrace(System.err);
+		}
 	}
 
 	public void sendPacket(Packet packet)
 	{
-		getPlayer().getServer().getConnection().sendPacket(packet, address, port);
+		try
+		{
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
+			packet.writeTo(byteStream);
+
+			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+			getPlayer().getServer().getConnection().getUdpSocket().send(data);
+		}
+		catch(Exception ex)
+		{
+			if(getPlayer().getServer().isDebugMode())
+				ex.printStackTrace(System.err);
+		}
 	}
 
 	public void receivePacketLater(Packet packet)

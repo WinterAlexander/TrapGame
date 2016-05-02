@@ -11,7 +11,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -24,7 +23,6 @@ public class ServerConnection
 {
 	private TrapGameServer server;
 
-	private List<DatagramPacket> toSend;
 	private DatagramSocket udpSocket;
 	private byte[] inputBuffer;
 	private boolean acceptNewClients;
@@ -35,7 +33,6 @@ public class ServerConnection
 		{
 			this.server = server;
 
-			toSend = new ArrayList<>();
 			inputBuffer = new byte[8 * 1024];
 			if(port > 0)
 				udpSocket = new DatagramSocket(port);
@@ -43,8 +40,8 @@ public class ServerConnection
 				udpSocket = new DatagramSocket();
 
 			new Thread(this::acceptInput).start();
-			new Thread(this::sendOutput).start();
-			new Thread(this::lookForAlive).start();
+
+			server.getScheduler().addTask(this::lookForAlive, 5000, true);
 
 			acceptNewClients = true;
 			server.getLogger().info("The server is listening on " + udpSocket.getLocalPort());
@@ -95,7 +92,7 @@ public class ServerConnection
 
 			if(server.getPassword() != null && server.getPassword().length() > 0 && !server.getPassword().equals(((PacketInJoin)packet).getPassword()))
 			{
-				sendPacket(new PacketOutKick("Invalid password."), bufPacket.getAddress(), bufPacket.getPort());
+				sendPacketToGuest(new PacketOutKick("Invalid password."), bufPacket.getAddress(), bufPacket.getPort());
 				continue;
 			}
 
@@ -104,7 +101,7 @@ public class ServerConnection
 			String invalidReason = getInvalidNameReason(name);
 			if(invalidReason != null)
 			{
-				sendPacket(new PacketOutKick(invalidReason), bufPacket.getAddress(), bufPacket.getPort());
+				sendPacketToGuest(new PacketOutKick(invalidReason), bufPacket.getAddress(), bufPacket.getPort());
 				continue;
 			}
 
@@ -128,59 +125,15 @@ public class ServerConnection
 		}
 	}
 
-	private void sendOutput()
-	{
-		while(isOpen())
-		{
-			for(DatagramPacket packet : new ArrayList<>(toSend))
-			{
-				try
-				{
-					if(packet != null)
-						udpSocket.send(packet);
-					toSend.remove(packet);
-				}
-				catch(IOException ex)
-				{
-					ex.printStackTrace(System.err);
-				}
-			}
-
-			synchronized(this)
-			{
-				try
-				{
-					wait();
-				}
-				catch(InterruptedException ex)
-				{
-					ex.printStackTrace(System.err);
-				}
-			}
-		}
-	}
-
 	private void lookForAlive()
 	{
-		while(isOpen())
+		for(Player player : new ArrayList<>(server.getPlayers()))
 		{
-			for(Player player : new ArrayList<>(server.getPlayers()))
-			{
-				if(!server.getPlayers().contains(player))
-					continue;
+			if(!server.getPlayers().contains(player))
+				continue;
 
-				if(System.currentTimeMillis() - player.getConnection().getLastPacketReceived() > 30_000)
-					player.timeOut();
-			}
-
-			try
-			{
-				Thread.sleep(5000);
-			}
-			catch(InterruptedException ex)
-			{
-				ex.printStackTrace(System.err);
-			}
+			if(System.currentTimeMillis() - player.getConnection().getLastPacketReceived() > 30_000)
+				player.timeOut();
 		}
 	}
 
@@ -193,44 +146,26 @@ public class ServerConnection
 
 			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
 
-			synchronized(this)
-			{
-				toSend.add(data);
-				notify();
-			}
+			new Thread(() -> {
+				try
+				{
+					getUdpSocket().send(data);
+				}
+				catch(Exception ex)
+				{
+					if(server.isDebugMode())
+						server.getLogger().log(Level.WARNING, "An exception occurred while sending data to keep alive a player", ex);
+				}
+			}).start();
 		}
 		catch(Exception ex)
 		{
 			if(server.isDebugMode())
-				ex.printStackTrace(System.err);
+				server.getLogger().log(Level.WARNING, "An exception occurred while trying to keep alive a player", ex);
 		}
 	}
 
-	public void sendPacketLater(Packet packet, InetAddress address, int port)
-	{
-		try
-		{
-
-			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-			new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
-			packet.writeTo(byteStream);
-
-			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
-
-			synchronized(this)
-			{
-				toSend.add(data);
-				notify();
-			}
-		}
-		catch(Exception ex)
-		{
-			if(server.isDebugMode())
-				ex.printStackTrace(System.err);
-		}
-	}
-
-	public void sendPacket(Packet packet, InetAddress address, int port)
+	public void sendPacketToGuest(Packet packet, InetAddress address, int port)
 	{
 		try
 		{
@@ -240,12 +175,22 @@ public class ServerConnection
 
 			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
 
-			udpSocket.send(data);
+			new Thread(() -> {
+				try
+				{
+					getUdpSocket().send(data);
+				}
+				catch(Exception ex)
+				{
+					if(server.isDebugMode())
+						server.getLogger().log(Level.WARNING, "An exception occurred while sending data to guest", ex);
+				}
+			}).start();
 		}
 		catch(Exception ex)
 		{
 			if(server.isDebugMode())
-				ex.printStackTrace(System.err);
+				server.getLogger().log(Level.WARNING, "An exception occurred while packing data to guest", ex);
 		}
 	}
 

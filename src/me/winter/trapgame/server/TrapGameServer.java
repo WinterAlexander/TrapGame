@@ -262,7 +262,7 @@ public class TrapGameServer
 		getPlayers().remove(player);
 		broadcast(player.getFormattedName() + " has left the game.");
 		getState().leave(player);
-		getConnection().sendToAll(new PacketOutLeave(player.getId()));
+		getConnection().sendToAllLater(new PacketOutLeave(player.getId()));
 	}
 
 	public void stop()
@@ -329,14 +329,16 @@ public class TrapGameServer
 
 	public void broadcast(String message)
 	{
-		getConsole().getConsoleSender().sendMessage(message);
+		if(getConsole() != null && getConsole().getConsoleSender() != null)
+			getConsole().getConsoleSender().sendMessage(message);
 
 		getPlayers().forEach(player -> player.sendMessage(message));
 	}
 
 	public void broadcast(Color color, String message)
 	{
-		getConsole().getConsoleSender().sendMessage(message);
+		if(getConsole() != null && getConsole().getConsoleSender() != null)
+			getConsole().getConsoleSender().sendMessage(message);
 
 		getPlayers().forEach(player -> player.sendMessage(color, message));
 	}

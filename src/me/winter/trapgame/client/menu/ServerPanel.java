@@ -119,14 +119,25 @@ public class ServerPanel extends JPanel
 		joinButton.addMouseListener(new MouseAdapter()
 		{
 			@Override
-			public void mousePressed(MouseEvent e)
+			public void mouseClicked(MouseEvent e)
 			{
-				joinButton.setForeground(new Color(0, 0, 0, joinButton.getForeground().getAlpha() + 30));
 				UserProperties properties = getServerList().getJoinForm().getMenu().getClient().getUserProperties();
 				properties.setLastName(getServerList().getJoinForm().getPlayerName().getText());
 				properties.save();
 
 				new Thread(ServerPanel.this::connectTo).start();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				joinButton.setForeground(new Color(0, 0, 0, joinButton.getForeground().getAlpha() + 30));
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+				joinButton.setForeground(new Color(0, 0, 0, Math.max(joinButton.getForeground().getAlpha() - 30, 0)));
 			}
 		});
 		joinButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -235,7 +246,7 @@ public class ServerPanel extends JPanel
 		else
 			client.getConnection().connectTo(address, lanAddress, port, null, name);
 
-		joinButton.setForeground(new Color(0, 0, 0, joinButton.getForeground().getAlpha() - 30));
+		joinButton.setForeground(new Color(0, 0, 0, 0));
 	}
 
 	public void ping()

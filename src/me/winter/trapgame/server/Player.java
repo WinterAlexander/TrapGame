@@ -60,7 +60,7 @@ public class Player implements CommandSender
 	@Override
 	public void sendMessage(String message)
 	{
-		getConnection().sendPacket(new PacketOutChat(message));
+		getConnection().sendPacketLater(new PacketOutChat(message));
 	}
 
 	@Override

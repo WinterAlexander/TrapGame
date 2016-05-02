@@ -178,7 +178,7 @@ public class ClientConnection
 		catch(Exception ex)
 		{
 			if(client.getUserProperties().isDebugMode())
-				ex.printStackTrace(System.err);
+				client.getLogger().log(Level.WARNING, "An exception occurred when trying to send packet", ex);
 		}
 	}
 

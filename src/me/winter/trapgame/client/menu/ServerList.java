@@ -116,18 +116,6 @@ public class ServerList extends JPanel
 			joinForm.getMenu().getClient().getLogger().log(Level.WARNING, "Webserver's data seem corrupted", ex);
 		}
 
-		//to test only
-		try
-		{
-			servers.add(new ServerPanel(this, "abc", 9, 16, InetAddress.getByName("google.com"), InetAddress.getLocalHost(), 1111));
-			servers.add(new ServerPanel(this, "zxw", 7, 32, InetAddress.getByName("facebook.com"), InetAddress.getLocalHost(), 1112));
-			servers.add(new ServerPanel(this, "hmmmm", 6, 1, InetAddress.getByName("messenger.com"), InetAddress.getLocalHost(), 1234));
-			servers.add(new ServerPanel(this, "My server", 0, 3, InetAddress.getByName("trapgame.ml"), InetAddress.getLocalHost(), 7777));
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
 
 		SwingUtilities.invokeLater(this::placeServers);
 

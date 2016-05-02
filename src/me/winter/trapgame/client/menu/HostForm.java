@@ -1,17 +1,13 @@
 package me.winter.trapgame.client.menu;
 
-import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.server.ServerProperties;
 import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.shared.TrapGameLogFormatter;
-import me.winter.trapgame.util.BetterRandom;
 import me.winter.trapgame.util.ColorTransformer;
-import me.winter.trapgame.util.LayoutUtil;
 import me.winter.trapgame.util.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -26,6 +22,7 @@ public class HostForm extends JPanel
 {
 	private TrapGameMenu menu;
 
+	private JTextField ownerName;
 	private JTextField password;
 	private JTextField boardSize;
 	private JTextField port;
@@ -37,75 +34,143 @@ public class HostForm extends JPanel
 		this.menu = menu;
 		setBackground(ColorTransformer.TRANSPARENT);
 
-		add(new JLabel("Currently working on it... If you want to host a TrapGame server, download the TrapGameServer.jar program"));
-		if(true)
-			return;
-
 		setLayout(new GridBagLayout());
 
-		JLabel title = new JLabel("Host");
-		JLabel warning = new JLabel("Warning, blablabla blablablabla blabla help help help help lalalalalala 123453131232 okaaaaaaaaaaaaay...... BOOM", JLabel.CENTER);
+		JLabel title = new JLabel("Host", JLabel.CENTER);
+		title.setFont(new Font("Arial", Font.BOLD, 34));
+
+		JTextPane warning = new JTextPane();
+		warning.setFont(new Font("Arial", Font.BOLD, 16));
+		warning.setEditable(false);
+		warning.setText("Warning, plusieurs variations de Lorem Ipsum peuvent être trouvées ici ou là, mais la majeure partie d'entre elles a été altérée par l'addition d'humour ou de mots aléatoires qui ne ressemblent pas une seconde à du texte standard.");
+
+		JLabel ownerNameLabel = new JLabel("Your name:", JLabel.RIGHT);
+		ownerNameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
 		JLabel passwordLabel = new JLabel("Passsword:", JLabel.RIGHT);
+		passwordLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
 		JLabel boardSizeLabel = new JLabel("Board width:", JLabel.RIGHT);
+		boardSizeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
 		JLabel portLabel = new JLabel("Port (optional):", JLabel.RIGHT);
-		JLabel publicLabel = new JLabel("Public:", JLabel.RIGHT);
+		portLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
 		JLabel maxPlayersLabel = new JLabel("Max players:", JLabel.RIGHT);
+		maxPlayersLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+		ownerName = new JTextField();
+		ownerName.setPreferredSize(new Dimension(200, 25));
+		ownerName.setMinimumSize(ownerName.getPreferredSize());
 
 		password = new JTextField();
+		password.setPreferredSize(new Dimension(200, 25));
+		password.setMinimumSize(password.getPreferredSize());
 
 		boardSize = new JTextField();
+		boardSize.setPreferredSize(new Dimension(200, 25));
+		boardSize.setMinimumSize(boardSize.getPreferredSize());
+		boardSize.setText("11");
 
 		port = new JTextField();
+		port.setPreferredSize(new Dimension(200, 25));
+		port.setMinimumSize(port.getPreferredSize());
+		port.setText("1254");
 
-		publicServer = new JCheckBox();
+		publicServer = new JCheckBox("Public");
 		publicServer.setSelected(true);
+		publicServer.setPreferredSize(new Dimension(200, 25));
+		publicServer.setMinimumSize(publicServer.getPreferredSize());
 
 		maxPlayers = new JTextField();
+		maxPlayers.setPreferredSize(new Dimension(200, 25));
+		maxPlayers.setMinimumSize(maxPlayers.getPreferredSize());
+		maxPlayers.setText("12");
 
 		JButton submit = new JButton("Host game");
 		submit.addActionListener(event -> host());
 
-
 		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridwidth = 4;
-		constraints.gridheight = 2;
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
 		add(title, constraints);
 
-		LayoutUtil.newLine(constraints, 8, 1);
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
 		add(warning, constraints);
 
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(passwordLabel, constraints);
 
-		LayoutUtil.newLine(constraints, 2, 1);
-		add(passwordLabel);
+		constraints.gridx = 1;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(password, constraints);
 
-		LayoutUtil.nextTo(constraints, 2, 1);
-		add(password);
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(boardSizeLabel, constraints);
 
-		LayoutUtil.nextTo(constraints, 2, 1);
-		add(boardSizeLabel);
+		constraints.gridx = 1;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(boardSize, constraints);
 
-		LayoutUtil.nextTo(constraints, 2, 1);
-		add(boardSize);
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(portLabel, constraints);
 
+		constraints.gridx = 1;
+		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(port, constraints);
 
-		LayoutUtil.newLine(constraints, 2, 1);
-		add(portLabel);
+		constraints.gridx = 0;
+		constraints.gridy = 5;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(ownerNameLabel, constraints);
 
-		LayoutUtil.nextTo(constraints, 2, 1);
-		add(port);
+		constraints.gridx = 1;
+		constraints.gridy = 5;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(ownerName, constraints);
 
-		LayoutUtil.nextTo(constraints, 2, 1);
-		add(publicLabel);
+		constraints.gridx = 1;
+		constraints.gridy = 6;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(publicServer, constraints);
 
-		LayoutUtil.nextTo(constraints, 2, 1);
-		add(publicServer);
+		constraints.gridx = 0;
+		constraints.gridy = 7;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(maxPlayersLabel, constraints);
 
-
-		LayoutUtil.newLine(constraints, 2, 1);
-		add(maxPlayersLabel);
-
-		LayoutUtil.nextTo(constraints, 2, 1);
-		add(maxPlayers);
+		constraints.gridx = 1;
+		constraints.gridy = 7;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(maxPlayers, constraints);
 
 		//LayoutUtil.nextTo(constraints, 2, 1);
 		//add(???);
@@ -114,9 +179,11 @@ public class HostForm extends JPanel
 		//add(???);
 
 
-		LayoutUtil.newLine(constraints, 2, 1);
-		constraints.gridx = 3;
-		add(submit);
+		constraints.gridx = 1;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		add(submit, constraints);
 
 	}
 
@@ -130,7 +197,7 @@ public class HostForm extends JPanel
 		else
 			port = -1;
 
-		if(StringUtil.isInt(this.maxPlayers.getText()))
+		if(StringUtil.isInt(this.port.getText()))
 			maxPlayers = Integer.parseInt(this.port.getText());
 		else
 			maxPlayers = 16;
@@ -161,6 +228,7 @@ public class HostForm extends JPanel
 				serverLogger.addHandler(consoleHandler);
 
 				ServerProperties properties = new ServerProperties(serverLogger, null);
+				properties.setServerName(ownerName.getText() + "'s game");
 				properties.setPort(port);
 				properties.setLogToDisk(false);
 				properties.setDebugMode(false);
@@ -169,12 +237,12 @@ public class HostForm extends JPanel
 				properties.setBoardWidth(boardSize);
 				properties.setBoardHeight(boardSize);
 				properties.setPassword(password.getText());
-				properties.setSuperPassword(null);
+				properties.setSuperPassword("");
 				properties.setEnableConsole(false);
 				properties.setPublic(publicServer);
 
 				new TrapGameServer(properties, serverLogger).start();
-				serverLogger.info("Thanks for playing TrapGame ! :)");
+
 			}
 			catch(Throwable ex)
 			{
@@ -189,6 +257,8 @@ public class HostForm extends JPanel
 		});
 
 		serverThread.start();
+
+		//menu.getClient().getConnection().connectTo();
 	}
 
 	@Override
