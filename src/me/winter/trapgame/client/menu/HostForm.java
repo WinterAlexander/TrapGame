@@ -238,6 +238,13 @@ public class HostForm extends JPanel
 		};
 
 		int serverPort = StringUtil.isInt(this.port.getText()) ? Integer.parseInt(this.port.getText()) : 1254;
+		int boardSize = StringUtil.isInt(this.boardSize.getText()) ? Integer.parseInt(this.boardSize.getText()) : 11;
+		int maxPlayers = StringUtil.isInt(this.maxPlayers.getText()) ? Integer.parseInt(this.maxPlayers.getText()) : 16;
+
+		if(maxPlayers < 2)
+			maxPlayers = 2;
+
+		boardSize %= 100;
 
 		consoleHandler.setFormatter(new TrapGameLogFormatter());
 		serverLogger.addHandler(consoleHandler);
@@ -248,9 +255,9 @@ public class HostForm extends JPanel
 		properties.setLogToDisk(false);
 		properties.setDebugMode(false);
 		properties.setMinPlayers(2);
-		properties.setMaxPlayers(StringUtil.isInt(this.maxPlayers.getText()) ? Integer.parseInt(this.maxPlayers.getText()) : 16);
-		properties.setBoardWidth(StringUtil.isInt(this.boardSize.getText()) ? Integer.parseInt(this.boardSize.getText()) : 11);
-		properties.setBoardHeight(properties.getBoardWidth());
+		properties.setMaxPlayers(maxPlayers);
+		properties.setBoardWidth(boardSize);
+		properties.setBoardHeight(boardSize);
 		properties.setPassword(new String(password.getPassword()));
 		properties.setSuperPassword("");
 		properties.setEnableConsole(false);
