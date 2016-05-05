@@ -152,6 +152,9 @@ public class Scheduler
 
 		for(Task task : new ArrayList<>(getTasks()))
 		{
+			if(task == null)
+				continue;
+
 			long delay = task.getLastWork() + task.getDelay() - getTimeMillis();
 			if(delay < minDelay)
 				minDelay = delay;
