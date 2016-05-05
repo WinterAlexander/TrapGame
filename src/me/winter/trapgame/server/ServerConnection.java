@@ -60,6 +60,9 @@ public class ServerConnection
 
 			udpSocket.receive(bufPacket);
 
+			if(!isOpen())
+				break;
+
 			Player player = getPlayer(bufPacket.getAddress(), bufPacket.getPort());
 
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(inputBuffer);

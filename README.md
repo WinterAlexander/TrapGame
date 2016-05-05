@@ -1,5 +1,7 @@
 # TrapGame
 A multi-player form-based desktop game about strategy and spam-clicking.
+Development is done ! I won't be adding features to this project unless a
+miracle attention is given to it. Please send me bug reports if found any.
 
 How to play:
 There's a board with a defined size and each player has his own color.
@@ -13,7 +15,11 @@ Screenshots:
 <img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot2.png" width="128px" />
 <img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot3.png" width="128px" />
 
-Project in development. Downloads:
+Official builds:
+
+  - Version 1.0 Client: http://ow.ly/4nswIg Server: http://ow.ly/4nswPH
+
+Development builds:
 
   - Version 0.9 Client: http://bit.ly/1Z116YU Server: http://bit.ly/21omiK4
   - Version 0.8 Client: http://bit.ly/1TndwsE Server: http://bit.ly/1ppvFLE
@@ -25,6 +31,8 @@ Project in development. Downloads:
   - Version 0.3 Client: http://bit.ly/1RO7GNp Server: http://bit.ly/235SR0w
   - Version 0.2 Client: http://bit.ly/1VWgMO2 Server: http://bit.ly/1VcelpS
   - Version 0.1 Client: http://bit.ly/1UXf0wJ Server: http://bit.ly/1MX7qKG
+
+From version 1.0, the client can also host a server game.
 
 If any of theses shortcuts are broken, download might be available on
 https://dl.dropboxusercontent.com/u/65019675/TrapGame/versionX.X/TrapGame[Server].jar

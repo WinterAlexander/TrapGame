@@ -184,6 +184,10 @@ public class ClientConnection
 
 	public void receivePacket(Packet packet)
 	{
+		if(!isOpen())
+			return;
+
+
 		if(packet instanceof PacketOutWelcome)
 		{
 			PacketOutWelcome packetWelcome = (PacketOutWelcome)packet;
@@ -275,6 +279,11 @@ public class ClientConnection
 		if(packet instanceof PacketOutKick)
 		{
 			welcomed = true;
+			if(client.inBoard())
+			{
+				client.getBoard().dispose();
+				client.getBoard().getContainer().goToMenu();
+			}
 			close();
 			JOptionPane.showMessageDialog(client, "You have been kicked out of the server, reason: \n" + ((PacketOutKick)packet).getMessage(), "You have been kicked !", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -287,7 +296,6 @@ public class ClientConnection
 	{
 		while(isOpen()) try
 		{
-
 			DatagramPacket bufPacket = new DatagramPacket(inputBuffer, inputBuffer.length);
 
 			udpSocket.receive(bufPacket);
@@ -305,7 +313,7 @@ public class ClientConnection
 			//if(client.getUserProperties().isDebugMode()) ab00se
 			//	System.out.println("Received " + packet.getClass().getSimpleName() + " from " + bufPacket.getAddress().toString() + " port: " + bufPacket.getPort());
 
-			client.getScheduler().addTask(new Task(0, false, () -> receivePacket(packet)));
+			client.getScheduler().addTask(() -> receivePacket(packet), 0);
 		}
 		catch(SocketTimeoutException ex)
 		{
@@ -350,18 +358,14 @@ public class ClientConnection
 
 	public boolean isOpen()
 	{
-		return udpSocket != null;
+		return udpSocket != null && !udpSocket.isClosed();
 	}
 
-	public synchronized void close()
+	public void close()
 	{
-		keepAliveTask.cancel();
 
-		if(client.inBoard())
-		{
-			client.getBoard().dispose();
-			client.goToMenu();
-		}
+		if(keepAliveTask.isRunning())
+			keepAliveTask.cancel();
 
 		if(udpSocket == null)
 			return;
@@ -373,7 +377,10 @@ public class ClientConnection
 		}
 		udpSocket = null;
 
-		notify();
+		synchronized(this)
+		{
+			notify();
+		}
 	}
 
 }

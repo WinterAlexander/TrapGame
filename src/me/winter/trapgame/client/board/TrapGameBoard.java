@@ -1,6 +1,7 @@
 package me.winter.trapgame.client.board;
 
 import me.winter.trapgame.client.TrapGameClient;
+import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.PlayerStats;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 public class TrapGameBoard extends JPanel
 {
 	private TrapGameClient container;
+	private TrapGameServer server;
 
 	private PlayBoard playBoard;
 	private Scoreboard scoreboard;
@@ -38,6 +40,7 @@ public class TrapGameBoard extends JPanel
 		chat = new Chat(this);
 		scoreboard = new Scoreboard(this);
 		playBoard = null;
+		server = null;
 
 		setLayout(new BoardLayout());
 
@@ -46,6 +49,11 @@ public class TrapGameBoard extends JPanel
 
 		getLayout().addLayoutComponent(BoardLayout.DOWN, chat);
 		getLayout().addLayoutComponent(BoardLayout.UP, scoreboard);
+	}
+
+	public void setHostedServer(TrapGameServer server)
+	{
+		this.server = server;
 	}
 
 	public void init(int playerId, List<PlayerInfo> players, int width, int height)
@@ -103,6 +111,9 @@ public class TrapGameBoard extends JPanel
 
 	public void dispose()
 	{
+		if(server != null)
+			server.getScheduler().addTask(server::stop, 0);
+
 		if(playBoard != null)
 			remove(playBoard);
 		playBoard = null;

@@ -227,11 +227,10 @@ public class JoinForm extends JPanel
 		UserProperties settings = getMenu().getClient().getUserProperties();
 		settings.setLastName(getPlayerName().getText());
 		settings.setLastServer(address.getText());
-		settings.setLastPassword(password.getText());
+		settings.setLastPassword(new String(password.getPassword()));
 		settings.save();
 
-		new Thread(() ->
-		{
+		new Thread(() -> {
 			try
 			{
 				getMenu().getClient().getConnection().connectTo(address.getText(), new String(password.getPassword()), playerName.getText());

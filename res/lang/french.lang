@@ -1,14 +1,14 @@
 client_loading=Chargement
 client_score=Score:
 client_stats=Stats:
-client_disconnect=D�connexion
+client_disconnect=Déconnexion
 
 client_copyright_line1=Jeu libre et gratuit
 client_copyright_line2=par Alexander Winter
 
 client_howto_button=Comment jouer
 client_join_button=Rejoindre une partie
-client_host_button=H�berger une partie
+client_host_button=Héberger une partie
 client_leave_button=Quitter
 
 client_username=Votre nom:
@@ -16,13 +16,22 @@ client_serverlist=Parties publiques
 client_sort=Trier par
 
 client_sort_players=Nombre de joueurs
-client_sort_name=Nom de la partie (A � Z)
+client_sort_name=Nom de la partie (A à Z)
 client_sort_ping=Connexion
 
-client_privateserver=Partie priv�e
+client_privateserver=Partie privée
 client_privateserver_address=Adresse:
 client_privateserver_password=Mot de passe:
 client_privateserver_connect=Connexion
 
+client_host_title=Créer une partie
+client_host_warning=Attention, pour rendre votre partie publique, vous devez ouvrir le port spécifier dans la configuration de votre routeur. Ceci peut être très compliqué pour des gens moins à l'aise en informatique ou en réseautique. Par contre, vous pouvez toujours jouer en local (LAN) avec votre port fermé ou vous pouvez utiliser Hamachi pour contourner votre routeur. Merci de ne pas sélectionner l'option "Partie publique" si vous désirer jouer en local ou avec Hamachi pour éviter que des gens tentent de se connecter à votre ordinateur.
+client_host_boardsize=Taille de jeu:
+client_host_port=Port:
+client_host_public=Partie publique
+client_host_maxplayers=Maximum de joueurs:
+client_host_validate=Valider
+client_host_gamename=Partie de {$PLAYER}
+
 client_connection_failed_title=Connexion impossible
-client_connection_failed_message=La connexion au serveur a �chou�e.
+client_connection_failed_message=La connexion au serveur a échouée.

@@ -8,18 +8,14 @@ import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.shared.TrapGameLogFormatter;
 import me.winter.trapgame.util.FileUtil;
 import me.winter.trapgame.util.StringUtil;
-import oracle.jrockit.jfr.JFR;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -41,6 +37,8 @@ public class TrapGameClient extends JFrame
 	 */
 	public static void main(String[] args)
 	{
+		int exitCode = 2;
+
 		try
 		{
 			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -62,6 +60,10 @@ public class TrapGameClient extends JFrame
 			TrapGameClient client = new TrapGameClient(trapGameLogger);
 			client.load();
 			client.start();
+
+			if(client.getUserProperties().isDebugMode())
+				trapGameLogger.log(Level.FINE, "TrapGame stopped correctly.");
+			exitCode = 0;
 		}
 		catch(Throwable throwable)//catch copied from NewX
 		{
@@ -69,14 +71,13 @@ public class TrapGameClient extends JFrame
 			JFrame frame = new JFrame();
 			JOptionPane.showMessageDialog(frame, "We are sorry, an internal error occurred during your game session: \n\n" + StringUtil.getStackTrace(throwable) + "\nPlease report this error to me at a.w1nter@hotmail.com", "TrapGame has crashed :(", JOptionPane.ERROR_MESSAGE);
 			frame.dispose();
-			System.exit(-1);
+			exitCode = 1;
 		}
-		finally
-		{
-			for(Handler handler : trapGameLogger.getHandlers())
-				handler.close();
-			trapGameLogger = null;
-		}
+
+		for(Handler handler : trapGameLogger.getHandlers())
+			handler.close();
+		trapGameLogger = null;
+		System.exit(exitCode);
 	}
 
 	private Scheduler scheduler;
@@ -264,6 +265,8 @@ public class TrapGameClient extends JFrame
 				}
 				getScheduler().update();
 			}
+
+			//
 			getConnection().close();
 			dispose();
 		}

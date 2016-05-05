@@ -3,19 +3,20 @@ package me.winter.trapgame.shared;
 
 public class Task implements Runnable
 {
-	private long delay;
-	private long lastWork;
-	private boolean repeating;
 	private Scheduler scheduler;
+
+	private long delay, lastWork;
+	private boolean repeating;
 	private Runnable runnable;
+
+	public Task(long delay)
+	{
+		this(delay, false);
+	}
 
 	public Task(long delay, boolean repeating)
 	{
-		this.delay = delay;
-		this.lastWork = -1;
-		this.repeating = repeating;
-		this.scheduler = null;
-		this.runnable = null;
+		this(delay, repeating, null);
 	}
 
 	public Task(long delay, boolean repeating, Runnable runnable)
@@ -25,26 +26,6 @@ public class Task implements Runnable
 		this.repeating = repeating;
 		this.scheduler = null;
 		this.runnable = runnable;
-	}
-	
-	public long getDelay() 
-	{
-		return this.delay;
-	}
-	
-	public long getLastWork() 
-	{
-		return lastWork;
-	}
-	
-	public void setLastWork(long lastWork) 
-	{
-		this.lastWork = lastWork;
-	}
-
-	public boolean isRepeating()
-	{
-		return repeating;
 	}
 
 	public void cancel()
@@ -65,14 +46,14 @@ public class Task implements Runnable
 			setLastWork(-1);
 	}
 
-	public Scheduler getScheduler()
-	{
-		return scheduler;
-	}
-
 	public boolean isRunning()
 	{
-		return scheduler != null && scheduler.getTasks().contains(this) && !scheduler.isPause();
+		return scheduler != null && scheduler.getTasks().contains(this) && scheduler.isRunning();
+	}
+
+	public boolean isRegistered()
+	{
+		return scheduler != null;
 	}
 
 	@Override
@@ -86,5 +67,30 @@ public class Task implements Runnable
 	public boolean equals(Object that)
 	{
 		return super.equals(that) || (runnable != null && runnable.equals(that));
+	}
+
+	public Scheduler getScheduler()
+	{
+		return scheduler;
+	}
+
+	public long getDelay()
+	{
+		return this.delay;
+	}
+
+	public long getLastWork()
+	{
+		return lastWork;
+	}
+
+	public void setLastWork(long lastWork)
+	{
+		this.lastWork = lastWork;
+	}
+
+	public boolean isRepeating()
+	{
+		return repeating;
 	}
 }

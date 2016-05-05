@@ -4,82 +4,103 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Represents a scheduler executing tasks at a defined time
+ *
+ * @see Task
+ */
 public class Scheduler 
 {
 	private Optional<Logger> logger;
 
 	private List<Task> tasks;
-	private long pauseTime;
-	private long lastPause;
-	private long lastPauseTime;
-	private boolean pause;
+	private long pauseLength, lastPause, lastPauseLength;
+	private boolean stop, updating;
 
+	/**
+	 * Creating a new scheduler stopped by default without logging
+	 *
+	 */
 	public Scheduler()
 	{
 		this(null);
 	}
 
+	/**
+	 * Creating a new scheduler stopped by default with a logger
+	 *
+	 */
 	public Scheduler(Logger logger)
 	{
 		this.logger = Optional.ofNullable(logger);
 		this.tasks = new ArrayList<>();
-		this.pause = true;
-		this.pauseTime = 0;
+		this.stop = true;
+		this.lastPauseLength = System.nanoTime() / 1_000_000;
+		this.pauseLength = lastPauseLength;
 		this.lastPause = getTimeMillis();
-		this.lastPauseTime = 0;
 	}
 
-	public void addTask(Runnable runnable, int delay)
+	/**
+	 * Mark the scheduler as started. You need to execute the update method
+	 * in a loop or call the loop method to actually execute the tasks.
+	 * Update won't work if the scheduler isn't started
+	 */
+	public void start()
 	{
-		addTask(runnable, delay, false);
+		stop = false;
+		lastPauseLength = System.nanoTime() / 1_000_000 - lastPause;
+		pauseLength += lastPauseLength;
 	}
 
-	public void addTask(Runnable runnable, int delay, boolean repeat)
+	/**
+	 * Stops the scheduler
+	 */
+	public void stop()
 	{
-		addTask(new Task(delay, repeat, runnable));
-	}
-	
-	public synchronized void addTask(Task task)
-	{
-		this.tasks.add(task);
-		task.register(this);
-		notify();
-	}
-	
-	public void addTasks(Collection<Task> tasks)
-	{
-		for(Task task : tasks)
-			this.addTask(task);
-	}
-	
-	public void cancelTask(Task task)
-	{
-		this.tasks.remove(task);
+		if(!stop)
+		{
+			stop = true;
+			lastPause = System.nanoTime() / 1_000_000;
+		}
 	}
 
-	public void cancelTasks(Class<? extends Task> type)
+	public void loop(BooleanSupplier condition)
 	{
-		cancelIf(type::isInstance);
+		if(!isRunning())
+			start();
+
+		while(condition.getAsBoolean())
+		{
+			long toWait = getWaitingDelay();
+			if(toWait > 0)
+			{
+				try
+				{
+					if(toWait == Long.MAX_VALUE)
+						wait(0);
+					else
+						wait(toWait);
+				}
+				catch(InterruptedException ex)
+				{
+					ex.printStackTrace(System.err);
+				}
+			}
+			update();
+		}
 	}
 
-	public void cancelIf(Predicate<Task> filter)
+	public synchronized void update()
 	{
-		this.tasks.removeIf(filter);
-	}
-
-	public void cancelAll()
-	{
-		this.tasks.clear();
-	}
-	
-	public void update()
-	{
-		if(this.pause)
+		if(stop)
 			return;
+
+		updating = true;
 
 		for(Task task : new ArrayList<>(this.tasks))
 		{
@@ -90,7 +111,7 @@ public class Scheduler
 
 				if(task.getScheduler() != this)
 				{
-					this.tasks.remove(task);
+					tasks.remove(task);
 					continue;
 				}
 
@@ -122,47 +143,7 @@ public class Scheduler
 			}
 		}
 
-	}
-
-	public List<Task> getTasks()
-	{
-		return tasks;
-	}
-	
-	public void pause()
-	{
-		if(!this.pause)
-		{
-			this.pause = true;
-			this.lastPause = System.nanoTime() / 1_000_000;
-		}
-	}
-	
-	public void start()
-	{
-		this.pause = false;
-		this.pauseTime += System.nanoTime() / 1_000_000 - this.lastPause;
-		this.lastPauseTime = System.nanoTime() / 1_000_000 - this.lastPause;
-	}
-
-	public boolean isPause()
-	{
-		return this.pause;
-	}
-
-	public long getLastPauseTime()
-	{
-		return lastPauseTime;
-	}
-	
-	public long getLastPause()
-	{
-		return lastPause;
-	}
-	
-	public long getTimeMillis()
-	{
-		return System.nanoTime() / 1_000_000 - this.pauseTime;
+		updating = false;
 	}
 
 	public long getWaitingDelay()
@@ -177,5 +158,83 @@ public class Scheduler
 		}
 
 		return minDelay;
+	}
+
+	public long getTimeMillis()
+	{
+		return System.nanoTime() / 1_000_000 - this.pauseLength;
+	}
+
+	public void addTask(Runnable runnable, int delay)
+	{
+		addTask(runnable, delay, false);
+	}
+
+	public void addTask(Runnable runnable, int delay, boolean repeat)
+	{
+		addTask(new Task(delay, repeat, runnable));
+	}
+
+	public void addTask(Task task)
+	{
+		task.register(this);
+		tasks.add(task);
+
+		if(!updating)
+			synchronized(this)
+			{
+				notify();
+			}
+	}
+
+	public void addTasks(Collection<Task> tasks)
+	{
+		for(Task task : tasks)
+			addTask(task);
+	}
+
+	public void cancelTask(Task task)
+	{
+		tasks.remove(task);
+	}
+
+	public void cancelTasks(Class<? extends Task> type)
+	{
+		cancelIf(type::isInstance);
+	}
+
+	public void cancelIf(Predicate<Task> filter)
+	{
+		tasks.removeIf(filter);
+	}
+
+	public void cancelAll()
+	{
+		tasks.clear();
+	}
+
+	public List<Task> getTasks()
+	{
+		return tasks;
+	}
+
+	public boolean isRunning()
+	{
+		return !stop;
+	}
+
+	public boolean isUpdating()
+	{
+		return updating;
+	}
+
+	public long getLastPauseLength()
+	{
+		return lastPauseLength;
+	}
+	
+	public long getLastPause()
+	{
+		return lastPause;
 	}
 }

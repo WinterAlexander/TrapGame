@@ -38,6 +38,8 @@ public class TrapGameServer
 	 */
 	public static void main(String[] args)
 	{
+		int exitCode = 2;
+
 		try
 		{
 			/*int port = 1254;
@@ -84,18 +86,18 @@ public class TrapGameServer
 
 			new TrapGameServer(properties, trapGameLogger).start();
 			trapGameLogger.info("Thanks for playing TrapGame ! :)");
+			exitCode = 0;
 		}
 		catch(Throwable ex)
 		{
 			trapGameLogger.log(Level.SEVERE, "A fatal error occurred and stopped the server.", ex);
-			System.exit(-1);
+			exitCode = 1;
 		}
-		finally
-		{
-			for(Handler handler : trapGameLogger.getHandlers())
-				handler.close();
-			trapGameLogger = null;
-		}
+
+		for(Handler handler : trapGameLogger.getHandlers())
+			handler.close();
+		trapGameLogger = null;
+		System.exit(exitCode);
 	}
 
 	public static final Color[] COLORS = new Color[]{

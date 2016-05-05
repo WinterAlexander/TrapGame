@@ -6,6 +6,7 @@ import me.winter.trapgame.util.FileUtil;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -30,7 +31,7 @@ public class GameTranslation extends Properties
 		if(stream == null)
 			throw new FileNotFoundException("Lang file " + name + " couldn't be found");
 
-		this.load(stream);
+		this.load(new InputStreamReader(stream, "UTF-8"));
 	}
 
 	public String getLine(@NotNull String id)
