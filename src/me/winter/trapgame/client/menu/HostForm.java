@@ -255,6 +255,7 @@ public class HostForm extends JPanel
 		properties.setLogToDisk(false);
 		properties.setDebugMode(false);
 		properties.setMinPlayers(2);
+		properties.setTimer(10);
 		properties.setMaxPlayers(maxPlayers);
 		properties.setBoardWidth(boardSize);
 		properties.setBoardHeight(boardSize);
@@ -262,6 +263,7 @@ public class HostForm extends JPanel
 		properties.setSuperPassword("");
 		properties.setEnableConsole(false);
 		properties.setPublic(this.publicServer.isSelected());
+		properties.setSavingStats(false);
 
 		TrapGameServer server = new TrapGameServer(properties, serverLogger);
 

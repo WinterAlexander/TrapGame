@@ -233,6 +233,16 @@ public class ServerProperties extends Properties
 		setProperty("enable-console", enableConsole + "");
 	}
 
+	public boolean isSavingStats()
+	{
+		return Boolean.parseBoolean(getProperty("save-stats"));
+	}
+
+	public void setSavingStats(boolean saveStats)
+	{
+		setProperty("save-stats", saveStats + "");
+	}
+
 	public boolean isPublic()
 	{
 		if(getProperty("public", "").equalsIgnoreCase("false"))

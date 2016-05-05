@@ -185,7 +185,7 @@ public class TrapGameServer
 		state = new StandbyState(this);
 		players = new ArrayList<>();
 		connection = new ServerConnection(this, properties.getPort());
-		statsManager = new StatsManager(this, new File("stats"), false);
+		statsManager = new StatsManager(this, new File("stats"), properties.isSavingStats());
 		commandManager = new CommandManager(this);
 
 		if(properties.enableConsole())
