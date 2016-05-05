@@ -10,7 +10,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 
 /**

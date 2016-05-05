@@ -1,7 +1,6 @@
 package me.winter.trapgame.server.command;
 
 import me.winter.trapgame.server.CommandSender;
-import me.winter.trapgame.server.Player;
 import me.winter.trapgame.util.StringUtil;
 
 import java.util.Arrays;

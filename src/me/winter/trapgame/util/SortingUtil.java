@@ -1,7 +1,5 @@
 package me.winter.trapgame.util;
 
-import java.util.HashMap;
-
 /**
  *
  * Created by Alexander Winter on 2016-01-19.

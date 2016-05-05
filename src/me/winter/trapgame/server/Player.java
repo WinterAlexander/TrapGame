@@ -7,7 +7,6 @@ import me.winter.trapgame.util.StringUtil;
 
 import java.awt.*;
 import java.net.InetAddress;
-import java.net.Socket;
 
 /**
  * Represents a player connected to the server

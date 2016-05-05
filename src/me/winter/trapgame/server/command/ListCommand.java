@@ -3,7 +3,6 @@ package me.winter.trapgame.server.command;
 import me.winter.trapgame.server.CommandManager;
 import me.winter.trapgame.server.CommandSender;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

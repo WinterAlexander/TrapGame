@@ -2,19 +2,15 @@ package me.winter.trapgame.client.board;
 
 import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.shared.packet.PacketInChat;
-import me.winter.trapgame.util.FileUtil;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.io.*;
-import java.util.List;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A client side chat used to display received messages and to send new ones

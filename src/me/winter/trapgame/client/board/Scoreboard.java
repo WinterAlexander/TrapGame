@@ -5,10 +5,9 @@ import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
-import java.util.List;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a board menu displayed at the left and at the top of the board

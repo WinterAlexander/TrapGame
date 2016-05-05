@@ -1,8 +1,8 @@
 package me.winter.trapgame.client;
 
-import java.util.List;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A layout that uses proportions to set bounds of it's elements

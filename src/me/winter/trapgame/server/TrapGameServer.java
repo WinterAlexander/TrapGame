@@ -7,9 +7,9 @@ import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.Scheduler;
 import me.winter.trapgame.shared.TrapGameLogFormatter;
 import me.winter.trapgame.shared.packet.PacketOutBoardSize;
-import me.winter.trapgame.shared.packet.PacketOutWelcome;
 import me.winter.trapgame.shared.packet.PacketOutJoin;
 import me.winter.trapgame.shared.packet.PacketOutLeave;
+import me.winter.trapgame.shared.packet.PacketOutWelcome;
 import me.winter.trapgame.util.FileUtil;
 
 import java.awt.*;

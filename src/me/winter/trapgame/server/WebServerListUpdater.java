@@ -2,7 +2,9 @@ package me.winter.trapgame.server;
 
 import me.winter.trapgame.shared.Task;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;

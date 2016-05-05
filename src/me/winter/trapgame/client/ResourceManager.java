@@ -2,7 +2,6 @@ package me.winter.trapgame.client;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
 

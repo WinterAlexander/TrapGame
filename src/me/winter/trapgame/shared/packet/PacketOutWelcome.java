@@ -2,10 +2,8 @@ package me.winter.trapgame.shared.packet;
 
 import me.winter.trapgame.shared.PlayerInfo;
 
-import java.awt.*;
 import java.io.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Packet sent from server to client

@@ -5,10 +5,8 @@ import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.PlayerStats;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
 import java.util.List;
 import java.util.Map;
 

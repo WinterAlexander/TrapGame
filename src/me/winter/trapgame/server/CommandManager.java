@@ -31,8 +31,6 @@ public class CommandManager
 		commands.add(new SuperUserCommand());
 		commands.add(new KickCommand());
 		commands.add(new IpCommand());
-
-		commands.add(new DebugCommand()); //TODO remove debug command
 	}
 
 	public void execute(CommandSender sender, String input)

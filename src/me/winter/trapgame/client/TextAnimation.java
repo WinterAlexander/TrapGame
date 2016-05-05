@@ -3,7 +3,6 @@ package me.winter.trapgame.client;
 import me.winter.trapgame.shared.Task;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * A simple text animation used in trapgame to animate loading dots ...

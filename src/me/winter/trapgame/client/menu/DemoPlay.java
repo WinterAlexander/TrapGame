@@ -4,7 +4,10 @@ import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.util.BetterRandom;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * <p>Undocumented :(</p>
