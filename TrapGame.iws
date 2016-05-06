@@ -8,11 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fee9220-2597-4e37-adc9-761efedba5d3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dev/header.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dev/header.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dev/screenshot4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dev/screenshot5.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/gfx/header.png" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/gfx/header.png" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TrapGame.iws" afterPath="$PROJECT_DIR$/TrapGame.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/menu/TrapGameMenu.java" />
     </list>
@@ -906,12 +902,6 @@
       <option name="number" value="Default" />
       <updated>1459041082376</updated>
     </task>
-    <task id="LOCAL-00027" summary="Added version 0.5 to the readme">
-      <created>1459641326192</created>
-      <option name="number" value="00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1459641326192</updated>
-    </task>
     <task id="LOCAL-00028" summary="Found out I'm using TCP instead of UDP ...&#10;Just committing some small changes to make sure having a secure version before screwing everything up with UDP">
       <created>1459709830638</created>
       <option name="number" value="00028" />
@@ -1200,7 +1190,13 @@
       <option name="project" value="LOCAL" />
       <updated>1462550974233</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="Added header for sites">
+      <created>1462553877459</created>
+      <option name="number" value="00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1462553877459</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1253,7 +1249,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Complete new logging system ! Server can now log to file is enabled in server.properties." />
     <MESSAGE value="Added multilang system to client. It justs needs a menu to change the language." />
     <MESSAGE value="Started to redesign the menu from scratch." />
     <MESSAGE value="Started the How To Play panel with HTML format and css style." />
@@ -1278,7 +1273,8 @@
     <MESSAGE value="Built version 1.0.1 and added restrictions to host game form" />
     <MESSAGE value="Added an option to enable/disable stats saving" />
     <MESSAGE value="Fixed a bug with connect/disconnect spam and some passive internal errors. Edited readme, now redirecting on gamejolt" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed a bug with connect/disconnect spam and some passive internal errors. Edited readme, now redirecting on gamejolt" />
+    <MESSAGE value="Added header for sites" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added header for sites" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
