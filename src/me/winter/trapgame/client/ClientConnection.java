@@ -182,6 +182,7 @@ public class ClientConnection
 		}
 	}
 
+
 	public void receivePacket(Packet packet)
 	{
 		if(!isOpen())
@@ -245,6 +246,10 @@ public class ClientConnection
 			PacketOutCursorMove movePacket = (PacketOutCursorMove)packet;
 
 			PlayerInfo player = client.getBoard().getPlayer(movePacket.getPlayerId());
+
+			if(player == null)
+				return;
+
 			player.setCursorX(movePacket.getCursorX());
 			player.setCursorY(movePacket.getCursorY());
 			client.getBoard().getPlayBoard().revalidate();

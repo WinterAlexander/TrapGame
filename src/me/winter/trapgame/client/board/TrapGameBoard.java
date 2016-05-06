@@ -1,6 +1,7 @@
 package me.winter.trapgame.client.board;
 
 import me.winter.trapgame.client.TrapGameClient;
+import me.winter.trapgame.server.Player;
 import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.shared.PlayerInfo;
 import me.winter.trapgame.shared.PlayerStats;
@@ -71,8 +72,13 @@ public class TrapGameBoard extends JPanel
 
 	public void updateStats(Map<Integer, PlayerStats> stats)
 	{
-		for(int index : stats.keySet())
-			getPlayer(index).setStats(stats.get(index));
+		for(int id : stats.keySet())
+		{
+			getPlayers().forEach(player -> {
+				if(player.getPlayerId() == id)
+					player.setStats(stats.get(id));
+			});
+		}
 
 		scoreboard.build();
 	}
@@ -133,15 +139,8 @@ public class TrapGameBoard extends JPanel
 		return null;
 	}
 
-	public boolean inGame()
-	{
-		return players != null && playBoard != null && playerId >= 0;
-	}
-
 	public void join(PlayerInfo info)
 	{
-		if(!inGame())
-			throw new IllegalStateException("Game board not initialized");
 		players.add(info);
 		scoreboard.build();
 	}
@@ -151,7 +150,7 @@ public class TrapGameBoard extends JPanel
 		if(this.playerId == playerId)
 			return;
 
-		players.removeIf(player -> player.getPlayerId() == playerId);
+		players.remove(getPlayer(playerId));
 		scoreboard.build();
 	}
 

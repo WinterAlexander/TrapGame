@@ -18,6 +18,8 @@ import java.util.Map;
  *
  * Created by Alexander Winter on 2016-03-28.
  */
+
+
 public class PlayBoard extends JPanel implements MouseMotionListener, MouseListener, KeyListener
 {
 	private TrapGameBoard container;
@@ -237,6 +239,9 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 		PlayerInfo player = container.getPlayer(playerId);
 
+		if(player == null)
+			return;
+
 		if(point.getX() < 0 || point.getY() < 0
 				|| point.getX() >= getBoardWidth()
 				|| point.getY() >= getBoardHeight()
@@ -256,6 +261,9 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 	public void fill(int playerId, Point point)
 	{
+		if(container.getPlayer(playerId) == null)
+			return;
+
 		BoardFiller.tryFill(point, container.getPlayer(playerId), scores, getBoardWidth(), getBoardHeight());
 		revalidate();
 		repaint();

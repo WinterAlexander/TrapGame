@@ -81,10 +81,13 @@ public class Scheduler
 			{
 				try
 				{
-					if(toWait == Long.MAX_VALUE)
-						wait(0);
-					else
-						wait(toWait);
+					synchronized(this)
+					{
+						if(toWait == Long.MAX_VALUE)
+							wait(0);
+						else
+							wait(toWait);
+					}
 				}
 				catch(InterruptedException ex)
 				{
@@ -165,7 +168,9 @@ public class Scheduler
 
 	public long getTimeMillis()
 	{
-		return System.nanoTime() / 1_000_000 - this.pauseLength;
+		if(!isRunning())
+			return lastPause - pauseLength;
+		return System.nanoTime() / 1_000_000 - pauseLength;
 	}
 
 	public void addTask(Runnable runnable, int delay)

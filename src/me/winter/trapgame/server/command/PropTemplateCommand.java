@@ -48,9 +48,9 @@ public class PropTemplateCommand implements Command
 		properties.setPassword("");
 		properties.setMinPlayers(2);
 		properties.setMaxPlayers(8);
-		properties.setBoardWidth(10);
-		properties.setBoardHeight(10);
-		properties.setTimer(30);
+		properties.setBoardWidth(11);
+		properties.setBoardHeight(11);
+		properties.setTimer(10);
 		properties.setPublic(true);
 		properties.setLogToDisk(true);
 		properties.setEnableConsole(true);

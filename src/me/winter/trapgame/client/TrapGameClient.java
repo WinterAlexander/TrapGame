@@ -242,34 +242,9 @@ public class TrapGameClient extends JFrame
 
 	public void start()
 	{
-		synchronized(getScheduler())
-		{
-			getScheduler().start();
-
-			while(isVisible())
-			{
-				long toWait = getScheduler().getWaitingDelay();
-				if(toWait > 0)
-				{
-					try
-					{
-						if(toWait == Long.MAX_VALUE)
-							getScheduler().wait(0);
-						else
-							getScheduler().wait(toWait);
-					}
-					catch(InterruptedException ex)
-					{
-						ex.printStackTrace(System.err);
-					}
-				}
-				getScheduler().update();
-			}
-
-			//
-			getConnection().close();
-			dispose();
-		}
+		getScheduler().loop(this::isVisible);
+		getConnection().close();
+		dispose();
 	}
 
 	public void stop()

@@ -17,8 +17,7 @@ Screenshots:
 
 Official builds:
 
-  - Version 1.0.1 Client: http://bit.ly/1VLwNHI Server: http://bit.ly/21AW4nW
-  - Version 1.0 Client: http://ow.ly/4nswIg Server: http://ow.ly/4nswPH
+  - Please download on GameJolt: http://gamejolt.com/games/trapgame/145922
 
 Development builds:
 

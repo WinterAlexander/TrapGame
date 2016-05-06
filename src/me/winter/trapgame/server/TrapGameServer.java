@@ -216,30 +216,7 @@ public class TrapGameServer
 		getLogger().info("TrapGame server should now be operational.");
 		startTimestamp = System.currentTimeMillis();
 
-		synchronized(getScheduler())
-		{
-			getScheduler().start();
-
-			while(!stop)
-			{
-				long toWait = getScheduler().getWaitingDelay();
-				if(toWait > 0)
-				{
-					try
-					{
-						if(toWait == Long.MAX_VALUE)
-							getScheduler().wait(0);
-						else
-							getScheduler().wait(toWait);
-					}
-					catch(InterruptedException ex)
-					{
-						ex.printStackTrace(System.err);
-					}
-				}
-				getScheduler().update();
-			}
-		}
+		getScheduler().loop(() -> !stop);
 	}
 
 	public void join(Player player)
@@ -388,6 +365,11 @@ public class TrapGameServer
 	public Logger getLogger()
 	{
 		return logger;
+	}
+
+	public WebServerListUpdater getListUpdater()
+	{
+		return listUpdater;
 	}
 
 	public String getName()
