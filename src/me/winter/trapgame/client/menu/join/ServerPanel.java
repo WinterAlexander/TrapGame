@@ -1,4 +1,4 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client.menu.join;
 
 import me.winter.trapgame.client.ImagePanel;
 import me.winter.trapgame.client.TextAnimation;

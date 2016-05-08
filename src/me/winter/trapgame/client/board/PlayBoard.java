@@ -234,29 +234,26 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 	public void place(int playerId, Point point)
 	{
-		if(boardLocked && !spectator)
-			return;
-
 		PlayerInfo player = container.getPlayer(playerId);
 
-		if(player == null)
+		if(player == null && playerId > 0)
 			return;
 
 		if(point.getX() < 0 || point.getY() < 0
 				|| point.getX() >= getBoardWidth()
-				|| point.getY() >= getBoardHeight()
-				|| scores.containsKey(point))
+				|| point.getY() >= getBoardHeight())
 			return;
 
-		scores.put(point, player);
+		if(player == null)
+			scores.remove(point);
+		else
+			scores.put(point, player);
 
-		if(playerId == container.getClient().getPlayerId())
-			playClickSound();
-
-		revalidate();
-		repaint();
-
-		SwingUtilities.invokeLater(() -> container.getScoreboard().build());
+		SwingUtilities.invokeLater(() -> {
+			revalidate();
+			repaint();
+			container.getScoreboard().build();
+		});
 	}
 
 	public void fill(int playerId, Point point)
@@ -269,6 +266,34 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		repaint();
 
 		SwingUtilities.invokeLater(() -> container.getScoreboard().build());
+	}
+
+	private void click(Point point)
+	{
+		if(isBoardLocked())
+			return;
+
+		this.requestFocusInWindow();
+
+		if(getScores().containsKey(point))
+			return;
+
+		if(scores.values().contains(container.getClient())
+		&& scores.get(new Point(point.x + 1, point.y)) != container.getClient()
+		&& scores.get(new Point(point.x - 1, point.y)) != container.getClient()
+		&& scores.get(new Point(point.x, point.y + 1)) != container.getClient()
+		&& scores.get(new Point(point.x, point.y - 1)) != container.getClient())
+			return;
+
+		container.getContainer().getConnection().sendPacketLater(new PacketInClick(point));
+		scores.put(point, container.getClient());
+		playClickSound();
+
+		SwingUtilities.invokeLater(() -> {
+			revalidate();
+			repaint();
+			container.getScoreboard().build();
+		});
 	}
 
 	@Override
@@ -295,17 +320,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		if(isBoardLocked())
-			return;
-
-		this.requestFocusInWindow();
-
-		Point point = new Point(e.getX() * getBoardWidth() / getWidth(), e.getY() * getBoardHeight() / getHeight());
-
-		if(getScores().containsKey(point))
-			return;
-
-		container.getContainer().getConnection().sendPacketLater(new PacketInClick(point));
+		click(new Point(e.getX() * getBoardWidth() / getWidth(), e.getY() * getBoardHeight() / getHeight()));
 	}
 
 	@Override
@@ -343,12 +358,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		|| event.getKeyCode() == KeyEvent.VK_W
 		|| event.getKeyCode() == KeyEvent.VK_E)
 		{
-			Point point = new Point((int)(container.getClient().getCursorX() * getBoardWidth()), (int)(container.getClient().getCursorY() * getBoardHeight()));
-
-			if(getScores().containsKey(point))
-				return;
-
-			container.getContainer().getConnection().sendPacketLater(new PacketInClick(point));
+			click(new Point((int)(container.getClient().getCursorX() * getBoardWidth()), (int)(container.getClient().getCursorY() * getBoardHeight())));
 		}
 	}
 

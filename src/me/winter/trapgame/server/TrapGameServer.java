@@ -180,6 +180,7 @@ public class TrapGameServer
 				logger.log(Level.SEVERE, "An internal error occurred while trying to add an handler file to logging.", ex);
 			}
 		}
+		setDebugMode(properties.isDebugMode());
 
 		scheduler = new Scheduler(logger);
 		state = new StandbyState(this);
@@ -207,7 +208,6 @@ public class TrapGameServer
 		setMaxPlayers(properties.getMaxPlayers());
 		setMinPlayers(properties.getMinPlayers());
 		setBoardSize(properties.getBoardWidth(), properties.getBoardHeight());
-		setDebugMode(properties.isDebugMode());
 		this.waitingTimer = properties.getTimer();
 	}
 

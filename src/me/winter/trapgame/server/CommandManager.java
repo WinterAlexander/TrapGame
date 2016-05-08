@@ -31,6 +31,9 @@ public class CommandManager
 		commands.add(new SuperUserCommand());
 		commands.add(new KickCommand());
 		commands.add(new IpCommand());
+
+		if(server.isDebugMode())
+			commands.add(new DebugCommand());
 	}
 
 	public void execute(CommandSender sender, String input)

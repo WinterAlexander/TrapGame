@@ -1,4 +1,4 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client.menu.join;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

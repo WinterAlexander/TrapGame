@@ -1,5 +1,6 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client.menu.demo;
 
+import me.winter.trapgame.client.menu.TrapGameMenu;
 import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.util.ColorTransformer;

@@ -48,15 +48,15 @@ public class FileUtil
 
 	public static String getAppData()
 	{
-		String OS = System.getProperty("os.name").toUpperCase();
-		if (OS.contains("WIN"))
+		String osName = System.getProperty("os.name").toUpperCase();
+		if(osName.contains("WIN"))
 			return System.getenv("APPDATA");
 
-		else if (OS.contains("MAC"))
+		else if(osName.contains("MAC"))
 			return System.getProperty("user.home") + "/Library/Application Support";
 
-		else if (OS.contains("NUX"))
-			return System.getProperty("user.home");
+		else if(osName.contains("NUX"))
+			return System.getProperty("user.home") + "/.config";
 
 		return System.getProperty("user.dir");
 	}

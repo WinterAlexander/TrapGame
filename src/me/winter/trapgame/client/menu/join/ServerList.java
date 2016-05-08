@@ -1,6 +1,5 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client.menu.join;
 
-import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.server.WebServerListUpdater;
 
 import javax.swing.*;
@@ -8,13 +7,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 
 /**

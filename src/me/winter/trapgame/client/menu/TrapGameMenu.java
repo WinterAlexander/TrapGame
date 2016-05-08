@@ -3,6 +3,10 @@ package me.winter.trapgame.client.menu;
 import me.winter.trapgame.client.ImagePanel;
 import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.client.TrapGameClient;
+import me.winter.trapgame.client.menu.demo.DemoPlayBoard;
+import me.winter.trapgame.client.menu.host.HostForm;
+import me.winter.trapgame.client.menu.join.JoinForm;
+import me.winter.trapgame.client.menu.tutorial.TutorialPane;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;

@@ -55,7 +55,15 @@ public class DebugCommand implements Command
 
 			((GameState)sender.getServer().getState()).place((Player)sender, new Point(Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2])));
 			sender.sendMessage("Success");
+			return;
 
+		}
+
+		if(arguments[0].equalsIgnoreCase("breakpoint"))
+		{
+			System.out.println("breakpoint");
+			//insert breakpoint above
+			return;
 		}
 	}
 

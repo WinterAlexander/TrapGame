@@ -119,7 +119,7 @@ public class ClientConnection
 		}
 		catch(InterruptedException ex)
 		{
-			//Means it connected so nothing to do
+			client.getLogger().log(Level.WARNING, "An exception occurred while waiting for server's response", ex);
 		}
 
 		if(!welcomed)

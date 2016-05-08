@@ -1,4 +1,4 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client.menu.demo;
 
 import me.winter.trapgame.shared.Task;
 import me.winter.trapgame.util.BetterRandom;

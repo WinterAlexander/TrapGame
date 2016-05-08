@@ -1,7 +1,8 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client.menu.join;
 
 import me.winter.trapgame.client.SimpleLayout;
 import me.winter.trapgame.client.UserProperties;
+import me.winter.trapgame.client.menu.TrapGameMenu;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;

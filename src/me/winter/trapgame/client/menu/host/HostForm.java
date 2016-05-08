@@ -1,5 +1,6 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client.menu.host;
 
+import me.winter.trapgame.client.menu.TrapGameMenu;
 import me.winter.trapgame.server.ServerProperties;
 import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.shared.TrapGameLogFormatter;
@@ -253,7 +254,7 @@ public class HostForm extends JPanel
 		properties.setServerName(menu.getLangLine("client_host_gamename").replace("{$PLAYER}", owner));
 		properties.setPort(serverPort);
 		properties.setLogToDisk(false);
-		properties.setDebugMode(false);
+		properties.setDebugMode(menu.getClient().getUserProperties().isDebugMode());
 		properties.setMinPlayers(2);
 		properties.setTimer(10);
 		properties.setMaxPlayers(maxPlayers);

@@ -1,8 +1,9 @@
-package me.winter.trapgame.client.menu;
+package me.winter.trapgame.client.menu.tutorial;
 
 import me.winter.trapgame.client.ImagePanel;
 import me.winter.trapgame.client.ResourceManager;
 import me.winter.trapgame.client.SimpleLayout;
+import me.winter.trapgame.client.menu.TrapGameMenu;
 import me.winter.trapgame.server.TrapGameServer;
 import me.winter.trapgame.util.ColorTransformer;
 
