@@ -1,6 +1,7 @@
 package me.winter.trapgame.client.menu.join;
 
 import me.winter.trapgame.server.WebServerListUpdater;
+import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -24,6 +25,7 @@ public class ServerList extends JPanel
 
 	private JPanel content;
 	private List<ServerPanel> servers;
+	private List<String> webServers;
 
 	private boolean updating;
 
@@ -45,6 +47,10 @@ public class ServerList extends JPanel
 		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 		content.setBorder(new EmptyBorder(0, 0, 0, 0));
 
+		webServers = new ArrayList<>();
+		webServers.add("http://trapgame.ml/"); //TODO Load from file
+		webServers.add("http://127.0.0.1/");
+
 		scroller.setViewportView(content);
 		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -53,12 +59,8 @@ public class ServerList extends JPanel
 
 		add(scroller, BorderLayout.CENTER);
 
+		placeServers();
 		//update();
-	}
-
-	public JoinForm getJoinForm()
-	{
-		return joinForm;
 	}
 
 	public void update()
@@ -74,61 +76,78 @@ public class ServerList extends JPanel
 		updating = true;
 		servers.clear();
 
-		try
+
+		for(String address : webServers)
 		{
-			URL url = new URL(WebServerListUpdater.WEB_SERVER_ADDR);
+			try
+			{
 
-			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-			connection.setRequestMethod("POST");
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
+				URL url = new URL(address);
 
-			OutputStreamWriter writer = new OutputStreamWriter(new BufferedOutputStream(connection.getOutputStream()));
+				HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+				connection.setRequestMethod("POST");
+				connection.setDoOutput(true);
+				connection.setDoInput(true);
 
-			writer.write("action=query");
-			writer.flush();
+				OutputStreamWriter writer = new OutputStreamWriter(new BufferedOutputStream(connection.getOutputStream()));
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				writer.write("action=query");
+				writer.flush();
 
-			String line;
+				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-			while((line = reader.readLine()) != null)
-				servers.add(new ServerPanel(this, line));
+				String line;
 
-			writer.close();
-			reader.close();
+				while((line = reader.readLine()) != null)
+					servers.add(new ServerPanel(this, line));
 
+				writer.close();
+				reader.close();
+			}
+			catch(MalformedURLException ex)
+			{
+				joinForm.getMenu().getClient().getLogger().log(Level.SEVERE, "It seem format of urls changed since 2016 !", ex);
+			}
+			catch(IOException ex)
+			{
+				joinForm.getMenu().getClient().getLogger().log(Level.INFO, "Couldn't reach serverlist " + address);
+			}
+			catch(IllegalArgumentException ex)
+			{
+				joinForm.getMenu().getClient().getLogger().log(Level.WARNING, "Serverlist " + address + " data's seem corrupted", ex);
+			}
 		}
-		catch(MalformedURLException ex)
-		{
-			joinForm.getMenu().getClient().getLogger().log(Level.SEVERE, "It seem format of urls changed since 2016 !", ex);
-		}
-		catch(IOException ex)
-		{
-			joinForm.getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while receiving server's data from webserver", ex);
-		}
-		catch(IllegalArgumentException ex)
-		{
-			joinForm.getMenu().getClient().getLogger().log(Level.WARNING, "Webserver's data seem corrupted", ex);
-		}
-
 
 		SwingUtilities.invokeLater(this::placeServers);
 
 		updating = false;
 	}
 
-	public synchronized void placeServers()
+	public synchronized void placeServers() //TODO understand why this is synchronized
 	{
 		content.removeAll();
 		content.add(Box.createRigidArea(new Dimension(0, 5)));
 
-		servers.sort(joinForm.getSortComparator());
+		if(servers.size() == 0)
+		{
+			JPanel panel = new JPanel();
+			panel.setLayout(new BorderLayout());
+			panel.setBackground(ColorTransformer.TRANSPARENT);
+			panel.add(new JLabel(joinForm.getMenu().getLangLine("client_join_emptylist"), JLabel.CENTER), BorderLayout.CENTER);
 
-		servers.forEach(server -> {
-			content.add(server);
-			content.add(Box.createRigidArea(new Dimension(0, 5)));
-		});
+
+			content.add(panel);
+		}
+		else
+		{
+			servers.sort(joinForm.getSortComparator());
+
+			servers.forEach(server -> {
+				content.add(server);
+				content.add(Box.createRigidArea(new Dimension(0, 5)));
+			});
+		}
+
 
 		content.setPreferredSize(content.getPreferredSize());
 
@@ -139,5 +158,10 @@ public class ServerList extends JPanel
 	public JPanel getContent()
 	{
 		return content;
+	}
+
+	public JoinForm getJoinForm()
+	{
+		return joinForm;
 	}
 }

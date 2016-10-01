@@ -19,6 +19,7 @@ client_leave_button=Quit
 client_username=Your name:
 client_serverlist=Public game list
 client_sort=Order by
+client_join_emptylist=Looking for games...
 
 client_sort_players=Amount of players
 client_sort_name=Game name (A to Z)

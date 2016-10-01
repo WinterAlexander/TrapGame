@@ -14,6 +14,7 @@ client_leave_button=Quitter
 client_username=Votre nom:
 client_serverlist=Parties publiques
 client_sort=Trier par
+client_join_emptylist=Recherche de parties...
 
 client_sort_players=Nombre de joueurs
 client_sort_name=Nom de la partie (A à Z)

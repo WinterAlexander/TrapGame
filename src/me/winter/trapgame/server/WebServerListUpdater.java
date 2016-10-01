@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -18,28 +20,31 @@ import java.util.logging.Level;
  */
 public class WebServerListUpdater extends Task
 {
-	public static final String WEB_SERVER_ADDR = "http://trapgame.ml/";
-
+	private List<String> addressList;
 	private TrapGameServer server;
 
 	public WebServerListUpdater(TrapGameServer server)
 	{
 		super(2000, true);
 		this.server = server;
+		this.addressList = new ArrayList<>(); //TODO load them from file
+		addressList.add("http://trapgame.ml/");
+		addressList.add("http://127.0.0.1/");
+
 		server.getScheduler().addTask(this);
 	}
 
 	@Override
 	public void run()
 	{
-		new Thread(this::update).start();
+		addressList.forEach(x -> new Thread(() -> update(x)).start());
 	}
 
-	private void update()
+	private void update(String serverAddr)
 	{
 		try
 		{
-			URL url = new URL(WEB_SERVER_ADDR);
+			URL url = new URL(serverAddr);
 
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setRequestMethod("POST");
@@ -64,11 +69,11 @@ public class WebServerListUpdater extends Task
 		catch(MalformedURLException ex)
 		{
 			server.getLogger().log(Level.SEVERE, "It seem format of urls changed since 2016 !", ex);
-			cancel();
+			addressList.remove(serverAddr);
 		}
 		catch(IOException ex)
 		{
-			server.getLogger().log(Level.WARNING, "An exception occurred while sending server's data to webserver", ex);
+			server.getLogger().log(Level.INFO, "Server " + serverAddr + " couldn't be reached.");
 		}
 	}
 }
