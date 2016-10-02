@@ -113,11 +113,9 @@ public class ServerPanel extends JPanel
 		joinButton.setPreferredSize(new Dimension(75, 75));
 		joinButton.setBackground(new Color(230, 230, 230));
 
-		joinButton.addMouseListener(new MouseAdapter()
-		{
+		joinButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e)
-			{
+			public void mouseClicked(MouseEvent e) {
 				UserProperties properties = getServerList().getJoinForm().getMenu().getClient().getUserProperties();
 				properties.setLastName(getServerList().getJoinForm().getPlayerName().getText());
 				properties.save();
@@ -126,30 +124,25 @@ public class ServerPanel extends JPanel
 			}
 
 			@Override
-			public void mousePressed(MouseEvent e)
-			{
+			public void mousePressed(MouseEvent e) {
 				joinButton.setForeground(new Color(0, 0, 0, joinButton.getForeground().getAlpha() + 30));
 			}
 
 			@Override
-			public void mouseReleased(MouseEvent e)
-			{
+			public void mouseReleased(MouseEvent e) {
 				joinButton.setForeground(new Color(0, 0, 0, Math.max(joinButton.getForeground().getAlpha() - 30, 0)));
 			}
 		});
 		joinButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-		joinButton.addMouseListener(new MouseAdapter()
-		{
+		joinButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseEntered(MouseEvent e)
-			{
+			public void mouseEntered(MouseEvent e) {
 				joinButton.setForeground(new Color(0, 0, 0, joinButton.getForeground().getAlpha() + 20));
 			}
 
 			@Override
-			public void mouseExited(MouseEvent e)
-			{
+			public void mouseExited(MouseEvent e) {
 				joinButton.setForeground(new Color(0, 0, 0, Math.max(joinButton.getForeground().getAlpha() - 20, 0)));
 			}
 		});

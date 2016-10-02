@@ -1,9 +1,12 @@
 package me.winter.trapgame.server;
 
 import me.winter.trapgame.shared.PlayerInfo;
+import me.winter.trapgame.shared.TrapGameVersion;
 import me.winter.trapgame.shared.packet.Packet;
 import me.winter.trapgame.shared.packet.PacketInJoin;
+import me.winter.trapgame.shared.packet.PacketInPing;
 import me.winter.trapgame.shared.packet.PacketOutKick;
+import me.winter.trapgame.shared.packet.PacketOutPong;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -54,8 +57,11 @@ public class ServerConnection
 
 	private void acceptInput()
 	{
+		String packetName = null;
+
 		while(isOpen()) try
 		{
+			packetName = null;
 			DatagramPacket bufPacket = new DatagramPacket(inputBuffer, inputBuffer.length);
 
 			udpSocket.receive(bufPacket);
@@ -67,7 +73,7 @@ public class ServerConnection
 
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(inputBuffer);
 
-			String packetName = new DataInputStream(byteStream).readUTF();
+			packetName = new DataInputStream(byteStream).readUTF();
 
 			if(packetName.equals("KeepAlive"))
 			{
@@ -87,6 +93,12 @@ public class ServerConnection
 			if(player != null)
 			{
 				player.getConnection().receivePacketLater(packet);
+				continue;
+			}
+
+			if(packet instanceof PacketInPing)
+			{
+				sendPacketToGuest(getPong(), bufPacket.getAddress(), bufPacket.getPort());
 				continue;
 			}
 
@@ -121,6 +133,10 @@ public class ServerConnection
 		catch(SocketException ex)
 		{
 
+		}
+		catch(ClassNotFoundException ex)
+		{
+			server.getLogger().log(Level.INFO, "Received packet with invalid name: " + packetName);
 		}
 		catch(Exception ex)
 		{
@@ -215,6 +231,15 @@ public class ServerConnection
 				return player;
 
 		return null;
+	}
+
+	/**
+	 * Creates a pong packet with infos about the server for client display
+	 * @return pong packet
+	 */
+	public PacketOutPong getPong()
+	{
+		return new PacketOutPong(TrapGameVersion.GAME_VERSION, server.getPlayers().size(), server.getMaxPlayers(), server.getWelcomeMessage());
 	}
 
 	public boolean isOpen()

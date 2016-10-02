@@ -1,5 +1,6 @@
 package me.winter.trapgame.server;
 
+import me.winter.trapgame.client.TrapGameClient;
 import me.winter.trapgame.server.state.GameState;
 import me.winter.trapgame.server.state.StandbyState;
 import me.winter.trapgame.server.state.State;
