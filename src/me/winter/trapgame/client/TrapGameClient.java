@@ -16,6 +16,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -44,7 +48,6 @@ public class TrapGameClient extends JFrame
 			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 			trapGameLogger = Logger.getLogger("Client");
-
 			trapGameLogger.setUseParentHandlers(false);
 
 			ConsoleHandler consoleHandler = new ConsoleHandler()

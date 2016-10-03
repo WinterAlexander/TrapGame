@@ -157,23 +157,27 @@ public class ClientConnection
 			pong.readFrom(receiveStream);
 			return pong;
 		}
-		catch(Exception ex)
-		{
-			client.getLogger().log(Level.WARNING, "An exception occurred while pinging server", ex);
-			return null;
-		}
 		finally
 		{
 			pingSocket.close();
 		}
 	}
 
-	public List<PacketOutPong> broadcast(InetAddress broadcastAddress, int port, int timeout) throws IOException, TimeoutException
+	/**
+	 *
+	 * @param address
+	 * @param port
+	 * @param timeout
+	 * @return
+	 * @throws IOException
+	 * @throws TimeoutException
+	 */
+	public List<BroadcastResponse> broadcast(InetAddress address, int port, int timeout) throws IOException, TimeoutException
 	{
 		if(address == null)
 			throw new IllegalArgumentException("Address cannot be null !");
 
-		List<PacketOutPong> pongs = new ArrayList<>();
+		List<BroadcastResponse> pongs = new ArrayList<>();
 
 		DatagramSocket pingSocket = new DatagramSocket();
 		pingSocket.setSoTimeout(timeout);
@@ -192,7 +196,7 @@ public class ClientConnection
 
 		try
 		{
-			while(timeout > 0)
+			while(true) //while you don't get a timeout exception
 			{
 				DatagramPacket bufPacket = new DatagramPacket(inputBuffer, inputBuffer.length);
 
@@ -207,15 +211,11 @@ public class ClientConnection
 
 				PacketOutPong pong = new PacketOutPong();
 				pong.readFrom(receiveStream);
-				pongs.add(pong);
-
-				timeout -= (System.nanoTime() - start) / 1_000_000_000;
+				pongs.add(new BroadcastResponse(bufPacket.getAddress(), bufPacket.getPort(), pong, (int)((System.nanoTime() - start) / 1_000_000)));
 			}
-			return pongs;
 		}
-		catch(Exception ex)
+		catch(SocketTimeoutException ex)
 		{
-			client.getLogger().log(Level.WARNING, "An exception occurred while pinging server", ex);
 			return pongs;
 		}
 		finally

@@ -112,7 +112,7 @@ public class TrapGameMenu extends JPanel
 		JButton joinGame = new MenuButton(this, "client_join_button");
 		joinGame.addActionListener(event -> {
 			setRightPane(join);
-			join.getList().update();
+			getClient().getScheduler().addTask(join.getList()::update, 500);
 		});
 
 		JButton hostGame = new MenuButton(this, "client_host_button");

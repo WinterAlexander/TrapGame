@@ -1,5 +1,6 @@
 package me.winter.trapgame.client.menu.join;
 
+import me.winter.trapgame.client.BroadcastResponse;
 import me.winter.trapgame.client.TextAnimation;
 import me.winter.trapgame.client.TrapGameClient;
 import me.winter.trapgame.shared.packet.PacketOutPong;
@@ -60,22 +61,21 @@ public class RemoteServer
 	}
 
 	/**
-	 * Instanciates a remote server from an already pinged server (broadcast ?)
-	 * @param serverList instance of serverlist
-	 * @param pong already received response
-	 * @param address address of the server
-	 * @param port port of the server
+	 * Instanciates a remote server from an already pinged server (broadcast)
+	 * @param serverList instance of the serverlist
+	 * @param broadcast broadcastResponse with server infos
 	 */
-	public RemoteServer(ServerList serverList, PacketOutPong pong, InetAddress address, int port)
+	public RemoteServer(ServerList serverList, BroadcastResponse broadcast)
 	{
 		this.serverList = serverList;
-		this.response = pong;
+		this.response = broadcast.getPong();
+		this.address = broadcast.getAddress();
+		this.port = broadcast.getPort();
+		this.ping = broadcast.getPingDelay();
 		this.connectionString = address.getHostAddress() + ":" + port;
-		this.address = address;
-		this.port = port;
+
 
 		this.display = new ServerPanel(this, connectionString);
-		ping = Integer.MAX_VALUE;
 		display.setPing(ping);
 		display.setName(response.getName());
 		display.setPlayers(response.getPlayers(), response.getSlots());
@@ -117,7 +117,7 @@ public class RemoteServer
 				display.setPlayers(response.getPlayers(), response.getSlots());
 				callBack.call(true);
 			}
-			catch(Exception publicEx)
+			catch(Exception ex)
 			{
 				display.setPing("X");
 				display.getPingLabel().setForeground(Color.RED);

@@ -1,16 +1,23 @@
 package me.winter.trapgame.client.menu.join;
 
 import me.winter.trapgame.util.ColorTransformer;
+import me.winter.trapgame.util.NetUtil;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 
 /**
@@ -25,14 +32,11 @@ public class ServerList extends JPanel
 	private JPanel content;
 	private List<RemoteServer> servers;
 
-	private boolean updating;
-
 	public ServerList(JoinForm joinForm)
 	{
 		this.joinForm = joinForm;
 
 		servers = new ArrayList<>();
-		updating = false;
 
 		setBorder(new EmptyBorder(0, 0, 0, 0));
 
@@ -56,27 +60,31 @@ public class ServerList extends JPanel
 
 		servers.add(new RemoteServer(this, "127.0.0.1:1254"));
 
+
+		//joinForm.getMenu().getClient().getConnection().broadcast(, 1254, 10)
+
 		//updateDisplay();
 		//update();
 	}
 
 	public void update()
 	{
-		if(updating)
-			return;
-
-		new Thread(this::updateList).start();
-	}
-
-	private void updateList()
-	{
-		updating = true;
-
 		servers.forEach(RemoteServer::ping);
+		NetUtil.getBroadcastAddresses().forEach(x -> {
+			new Thread(() -> {
+				try
+				{
+					joinForm.getMenu().getClient().getConnection().broadcast(x, 1254, 100).forEach(server -> addServer(new RemoteServer(this, server)));
+					SwingUtilities.invokeLater(this::updateDisplay);
+				}
+				catch(Exception ex)
+				{
 
-		SwingUtilities.invokeLater(this::updateDisplay);
+				}
+			}).start();
+		});
 
-		updating = false;
+		updateDisplay();
 	}
 
 	/**
@@ -112,6 +120,17 @@ public class ServerList extends JPanel
 
 		content.revalidate();
 		content.repaint();
+	}
+
+	private void addServer(RemoteServer server)
+	{
+		if(NetUtil.isLocal(server.getAddress()) && !server.getAddress().isLoopbackAddress())
+			return;
+
+		for(RemoteServer current : servers)
+			if(current.getPort() == server.getPort() && current.getAddress().equals(server.getAddress()))
+				return; //don't add
+		servers.add(server);
 	}
 
 	public JPanel getContent()
