@@ -27,9 +27,7 @@ public class HostForm extends JPanel
 	private JTextField ownerName;
 	private JPasswordField password;
 	private JTextField boardSize;
-	private JTextField port;
 	private JTextField maxPlayers;
-	private JCheckBox publicServer;
 
 	public HostForm(TrapGameMenu menu)
 	{
@@ -58,9 +56,6 @@ public class HostForm extends JPanel
 		JLabel boardSizeLabel = new JLabel(menu.getLangLine("client_host_boardsize"), JLabel.RIGHT);
 		boardSizeLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
-		JLabel portLabel = new JLabel(menu.getLangLine("client_host_port"), JLabel.RIGHT);
-		portLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
 		JLabel maxPlayersLabel = new JLabel(menu.getLangLine("client_host_maxplayers"), JLabel.RIGHT);
 		maxPlayersLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
@@ -77,16 +72,6 @@ public class HostForm extends JPanel
 		boardSize.setPreferredSize(new Dimension(200, 25));
 		boardSize.setMinimumSize(boardSize.getPreferredSize());
 		boardSize.setText("11");
-
-		port = new JTextField();
-		port.setPreferredSize(new Dimension(200, 25));
-		port.setMinimumSize(port.getPreferredSize());
-		port.setText("1254");
-
-		publicServer = new JCheckBox(menu.getLangLine("client_host_public"));
-		publicServer.setSelected(false);
-		publicServer.setPreferredSize(new Dimension(200, 25));
-		publicServer.setMinimumSize(publicServer.getPreferredSize());
 
 		maxPlayers = new JTextField();
 		maxPlayers.setPreferredSize(new Dimension(200, 25));
@@ -166,28 +151,6 @@ public class HostForm extends JPanel
 		add(boardSize, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 5;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.LINE_END;
-		add(portLabel, constraints);
-
-		constraints.gridx = 1;
-		constraints.gridy = 5;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.anchor = GridBagConstraints.LINE_START;
-		add(port, constraints);
-
-		constraints.gridx = 1;
-		constraints.gridy = 6;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		add(publicServer, constraints);
-
-		constraints.gridx = 0;
 		constraints.gridy = 7;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -238,7 +201,6 @@ public class HostForm extends JPanel
 			}
 		};
 
-		int serverPort = StringUtil.isInt(this.port.getText()) ? Integer.parseInt(this.port.getText()) : 1254;
 		int boardSize = StringUtil.isInt(this.boardSize.getText()) ? Integer.parseInt(this.boardSize.getText()) : 11;
 		int maxPlayers = StringUtil.isInt(this.maxPlayers.getText()) ? Integer.parseInt(this.maxPlayers.getText()) : 16;
 
@@ -252,7 +214,7 @@ public class HostForm extends JPanel
 
 		ServerProperties properties = new ServerProperties(serverLogger, null);
 		properties.setServerName(menu.getLangLine("client_host_gamename").replace("{$PLAYER}", owner));
-		properties.setPort(serverPort);
+		properties.setPort(1254);
 		properties.setLogToDisk(false);
 		properties.setDebugMode(menu.getClient().getUserProperties().isDebugMode());
 		properties.setMinPlayers(2);
@@ -263,10 +225,23 @@ public class HostForm extends JPanel
 		properties.setPassword(new String(password.getPassword()));
 		properties.setSuperPassword("");
 		properties.setEnableConsole(false);
-		properties.setPublic(this.publicServer.isSelected());
 		properties.setSavingStats(false);
 
-		TrapGameServer server = new TrapGameServer(properties, serverLogger);
+		TrapGameServer server;
+		try
+		{
+			server = new TrapGameServer(properties, serverLogger);
+		}
+		catch(Exception ex)
+		{
+			JOptionPane.showMessageDialog(menu.getClient(),
+					menu.getClient().getLang().getLine("client_host_failed"),
+					menu.getClient().getLang().getLine("client_host_failed_title"),
+					JOptionPane.ERROR_MESSAGE);
+
+			menu.getClient().getLogger().log(Level.WARNING, "Couldn't host server", ex);
+			return;
+		}
 
 		menu.getClient().getBoard().setHostedServer(server);
 
@@ -275,7 +250,7 @@ public class HostForm extends JPanel
 		new Thread(() -> {
 			try
 			{
-				menu.getClient().getConnection().connectTo("localhost:" + serverPort, new String(password.getPassword()), name);
+				menu.getClient().getConnection().connectTo("localhost:1254", new String(password.getPassword()), name);
 				server.getPlayer(name).setSuperUser(true);
 			}
 			catch(TimeoutException | IOException ex)
@@ -285,10 +260,7 @@ public class HostForm extends JPanel
 						menu.getClient().getLang().getLine("client_connection_failed_title"),
 						JOptionPane.ERROR_MESSAGE);
 
-				if(menu.getClient().getUserProperties().isDebugMode())
-					menu.getClient().getLogger().log(Level.INFO, "Couldn't connect to server", ex);
-				else
-					menu.getClient().getLogger().log(Level.INFO, "Couldn't connect to server");
+				menu.getClient().getLogger().log(Level.INFO, "Couldn't connect to local server", ex);
 			}
 		}).start();
 	}

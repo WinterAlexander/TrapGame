@@ -30,29 +30,22 @@ public class ServerConnection
 	private byte[] inputBuffer;
 	private boolean acceptNewClients;
 
-	public ServerConnection(TrapGameServer server, int port)
+	public ServerConnection(TrapGameServer server, int port) throws Exception
 	{
-		try
-		{
-			this.server = server;
+		this.server = server;
 
-			inputBuffer = new byte[8 * 1024];
-			if(port > 0)
-				udpSocket = new DatagramSocket(port);
-			else
-				udpSocket = new DatagramSocket();
+		inputBuffer = new byte[8 * 1024];
+		if(port > 0)
+			udpSocket = new DatagramSocket(port);
+		else
+			udpSocket = new DatagramSocket();
 
-			new Thread(this::acceptInput).start();
+		new Thread(this::acceptInput).start();
 
-			server.getScheduler().addTask(this::lookForAlive, 5000, true);
+		server.getScheduler().addTask(this::lookForAlive, 5000, true);
 
-			acceptNewClients = true;
-			server.getLogger().info("The server is listening on " + udpSocket.getLocalPort());
-		}
-		catch(IOException exception)
-		{
-			throw new ExceptionInInitializerError(exception);
-		}
+		acceptNewClients = true;
+		server.getLogger().info("The server is listening on " + udpSocket.getLocalPort());
 	}
 
 	private void acceptInput()
@@ -239,7 +232,7 @@ public class ServerConnection
 	 */
 	public PacketOutPong getPong()
 	{
-		return new PacketOutPong(TrapGameVersion.GAME_VERSION, server.getPlayers().size(), server.getMaxPlayers(), server.getWelcomeMessage());
+		return new PacketOutPong(TrapGameVersion.GAME_VERSION, server.getName(), server.getPlayers().size(), server.getMaxPlayers());
 	}
 
 	public boolean isOpen()

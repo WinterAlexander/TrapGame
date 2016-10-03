@@ -16,7 +16,7 @@ public class TextAnimation extends Task
 
 	private int i;
 
-	public TextAnimation(JLabel component, String[] values)
+	public TextAnimation(JLabel component, String... values)
 	{
 		super(500, true);
 		this.component = component;

@@ -47,7 +47,7 @@ public class ClientConnection
 		keepAliveTask = new Task(4000, true, this::keepAlive);
 	}
 
-	public void connectTo(InetAddress first, InetAddress second, int port, String password, String playerName)
+	public void connectTo(InetAddress first, int port, String playerName, String password)
 	{
 		try
 		{
@@ -55,25 +55,13 @@ public class ClientConnection
 		}
 		catch(Exception publicEx)
 		{
-			if(client.getUserProperties().isDebugMode())
-				client.getLogger().log(Level.INFO, "Couldn't connect to server with first IP " + first, publicEx);
+			client.getLogger().log(Level.INFO, "Couldn't connect to server");
 
-			try
-			{
-				client.getConnection().connectTo(second, port, password, playerName, 1000);
-			}
-			catch(Exception lanEx)
-			{
-				JOptionPane.showMessageDialog(client,
-						client.getLang().getLine("client_connection_failed_message"),
-						client.getLang().getLine("client_connection_failed_title"),
-						JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(client,
+					client.getLang().getLine("client_connection_failed_message"),
+					client.getLang().getLine("client_connection_failed_title"),
+					JOptionPane.ERROR_MESSAGE);
 
-				if(client.getUserProperties().isDebugMode())
-					client.getLogger().log(Level.INFO, "Couldn't connect to server with second IP " + second, lanEx);
-				else
-					client.getLogger().log(Level.INFO, "Couldn't connect to server");
-			}
 		}
 	}
 
@@ -127,6 +115,112 @@ public class ClientConnection
 			welcomed = true;
 			close();
 			throw new TimeoutException("No answer after " + timeout + " milliseconds.");
+		}
+	}
+
+	/**
+	 * Pings a TrapGame server by sending the PacketInPing and waits for response
+	 */
+	public PacketOutPong ping(InetAddress address, int port, int timeout) throws IOException, TimeoutException
+	{
+		if(address == null)
+			throw new IllegalArgumentException("Address cannot be null !");
+
+		DatagramSocket pingSocket = new DatagramSocket();
+		pingSocket.setSoTimeout(timeout);
+
+		Packet packet = new PacketInPing();
+
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
+		packet.writeTo(byteStream); //ping parameters (may be empty)
+
+		DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+		pingSocket.send(data);
+
+
+		try
+		{
+			DatagramPacket bufPacket = new DatagramPacket(inputBuffer, inputBuffer.length);
+
+			pingSocket.receive(bufPacket);
+
+			ByteArrayInputStream receiveStream = new ByteArrayInputStream(inputBuffer);
+
+			String packetName = new DataInputStream(receiveStream).readUTF();
+
+			if(!packetName.equals("PacketOutPong"))
+				return null;
+
+			PacketOutPong pong = new PacketOutPong();
+			pong.readFrom(receiveStream);
+			return pong;
+		}
+		catch(Exception ex)
+		{
+			client.getLogger().log(Level.WARNING, "An exception occurred while pinging server", ex);
+			return null;
+		}
+		finally
+		{
+			pingSocket.close();
+		}
+	}
+
+	public List<PacketOutPong> broadcast(InetAddress broadcastAddress, int port, int timeout) throws IOException, TimeoutException
+	{
+		if(address == null)
+			throw new IllegalArgumentException("Address cannot be null !");
+
+		List<PacketOutPong> pongs = new ArrayList<>();
+
+		DatagramSocket pingSocket = new DatagramSocket();
+		pingSocket.setSoTimeout(timeout);
+
+		Packet packet = new PacketInPing();
+
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
+		packet.writeTo(byteStream); //ping parameters (may be empty)
+
+		DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+
+		pingSocket.send(data);
+
+		long start = System.nanoTime();
+
+		try
+		{
+			while(timeout > 0)
+			{
+				DatagramPacket bufPacket = new DatagramPacket(inputBuffer, inputBuffer.length);
+
+				pingSocket.receive(bufPacket);
+
+				ByteArrayInputStream receiveStream = new ByteArrayInputStream(inputBuffer);
+
+				String packetName = new DataInputStream(receiveStream).readUTF();
+
+				if(!packetName.equals("PacketOutPong"))
+					continue;
+
+				PacketOutPong pong = new PacketOutPong();
+				pong.readFrom(receiveStream);
+				pongs.add(pong);
+
+				timeout -= (System.nanoTime() - start) / 1_000_000_000;
+			}
+			return pongs;
+		}
+		catch(Exception ex)
+		{
+			client.getLogger().log(Level.WARNING, "An exception occurred while pinging server", ex);
+			return pongs;
+		}
+		finally
+		{
+			pingSocket.close();
 		}
 	}
 

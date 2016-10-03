@@ -51,7 +51,6 @@ public class PropTemplateCommand implements Command
 		properties.setBoardWidth(11);
 		properties.setBoardHeight(11);
 		properties.setTimer(10);
-		properties.setPublic(true);
 		properties.setLogToDisk(true);
 		properties.setEnableConsole(true);
 		properties.setDebugMode(false);

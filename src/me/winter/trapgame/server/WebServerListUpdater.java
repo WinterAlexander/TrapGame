@@ -18,7 +18,8 @@ import java.util.logging.Level;
  *
  * <p>Created by 1541869 on 2016-04-25.</p>
  */
-public class WebServerListUpdater extends Task
+@Deprecated
+public class WebServerListUpdater extends Task //no longer used
 {
 	private List<String> addressList;
 	private TrapGameServer server;
@@ -27,7 +28,7 @@ public class WebServerListUpdater extends Task
 	{
 		super(2000, true);
 		this.server = server;
-		this.addressList = new ArrayList<>(); //TODO load them from file
+		this.addressList = new ArrayList<>();
 		addressList.add("http://trapgame.ml/");
 		addressList.add("http://127.0.0.1/");
 

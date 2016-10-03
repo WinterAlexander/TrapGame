@@ -15,6 +15,7 @@ client_username=Votre nom:
 client_serverlist=Parties publiques
 client_sort=Trier par
 client_join_emptylist=Recherche de parties...
+client_join_invalidip=Adresse IP invalide
 
 client_sort_players=Nombre de joueurs
 client_sort_name=Nom de la partie (A à Z)
@@ -26,13 +27,15 @@ client_privateserver_password=Mot de passe:
 client_privateserver_connect=Connexion
 
 client_host_title=Créer une partie
-client_host_warning=Attention, pour rendre votre partie publique, vous devez ouvrir le port spécifier dans la configuration de votre routeur. Ceci peut être très compliqué pour des gens moins à l'aise en informatique ou en réseautique. Par contre, vous pouvez toujours jouer en local (LAN) avec votre port fermé ou vous pouvez utiliser Hamachi pour contourner votre routeur. Merci de ne pas sélectionner l'option "Partie publique" si vous désirer jouer en local ou avec Hamachi pour éviter que des gens tentent de se connecter à votre ordinateur.
+client_host_warning=Attention, pour rendre votre partie publique, vous devez ouvrir le port spécifier dans la configuration de votre routeur. Ceci peut être très compliqué pour des gens moins à l'aise en informatique. Par contre, vous pouvez toujours jouer en local (LAN) avec votre port fermé ou vous pouvez utiliser Hamachi pour contourner votre routeur.
 client_host_boardsize=Taille de jeu:
 client_host_port=Port:
 client_host_public=Partie publique
 client_host_maxplayers=Maximum de joueurs:
 client_host_validate=Valider
 client_host_gamename=Partie de {$PLAYER}
+client_host_failed=Une erreur s'est produite lors de la tentative de lancement du serveur TrapGame (Un serveur est-il déjà lancé ?)
+client_host_failed_title=Serveur ne répond pas
 
 client_connection_failed_title=Connexion impossible
 client_connection_failed_message=La connexion au serveur a échouée.

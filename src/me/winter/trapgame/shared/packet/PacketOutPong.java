@@ -15,20 +15,21 @@ import java.io.OutputStream;
 public class PacketOutPong extends Packet
 {
 	private String version;
+	private String name;
 	private int players, slots;
-	private String motd;
+
 
 	public PacketOutPong()
 	{
 
 	}
 
-	public PacketOutPong(String version, int players, int slots, String motd)
+	public PacketOutPong(String version, String name, int players, int slots)
 	{
 		this.version = version;
 		this.players = players;
 		this.slots = slots;
-		this.motd = motd;
+		this.name = name;
 	}
 
 	@Override
@@ -36,9 +37,9 @@ public class PacketOutPong extends Packet
 	{
 		DataInputStream dataStream = new DataInputStream(stream);
 		setVersion(dataStream.readUTF());
+		setName(dataStream.readUTF());
 		setPlayers(dataStream.readShort());
 		setSlots(dataStream.readShort());
-		setMotd(dataStream.readUTF());
 	}
 
 	@Override
@@ -46,9 +47,9 @@ public class PacketOutPong extends Packet
 	{
 		DataOutputStream dataStream = new DataOutputStream(stream);
 		dataStream.writeUTF(getVersion());
+		dataStream.writeUTF(getName());
 		dataStream.writeShort((short)getPlayers());
 		dataStream.writeShort((short)getSlots());
-		dataStream.writeUTF(getMotd());
 	}
 
 	public String getVersion()
@@ -59,6 +60,16 @@ public class PacketOutPong extends Packet
 	public void setVersion(String version)
 	{
 		this.version = version;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 
 	public int getPlayers()
@@ -79,15 +90,5 @@ public class PacketOutPong extends Packet
 	public void setSlots(int slots)
 	{
 		this.slots = slots;
-	}
-
-	public String getMotd()
-	{
-		return motd;
-	}
-
-	public void setMotd(String motd)
-	{
-		this.motd = motd;
 	}
 }

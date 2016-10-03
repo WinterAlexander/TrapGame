@@ -130,7 +130,6 @@ public class TrapGameServer
 	private StatsManager statsManager;
 	private CommandManager commandManager;
 	private ServerConsole console;
-	private WebServerListUpdater listUpdater;
 
 
 	private String name, welcomeMessage;
@@ -143,7 +142,7 @@ public class TrapGameServer
 
 	private boolean stop;
 
-	public TrapGameServer(ServerProperties properties, Logger logger)
+	public TrapGameServer(ServerProperties properties, Logger logger) throws Exception
 	{
 		this.logger = logger;
 
@@ -194,11 +193,6 @@ public class TrapGameServer
 			console = new ServerConsole(this);
 		else
 			console = null;
-
-		if(properties.isPublic())
-			listUpdater = new WebServerListUpdater(this);
-		else
-			listUpdater = null;
 
 		stop = false;
 
@@ -366,11 +360,6 @@ public class TrapGameServer
 	public Logger getLogger()
 	{
 		return logger;
-	}
-
-	public WebServerListUpdater getListUpdater()
-	{
-		return listUpdater;
 	}
 
 	public String getName()

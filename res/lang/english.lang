@@ -20,6 +20,7 @@ client_username=Your name:
 client_serverlist=Public game list
 client_sort=Order by
 client_join_emptylist=Looking for games...
+client_join_invalidip=Invalid IP Address
 
 client_sort_players=Amount of players
 client_sort_name=Game name (A to Z)
@@ -31,13 +32,15 @@ client_privateserver_password=Password:
 client_privateserver_connect=Connect
 
 client_host_title=Host your game
-client_host_warning=Warning, if you want to make a public game, you will need to open the server port from your router. This can be really complicated for people that aren't confortable with computers or networking. Although, you still can play in local (LAN) with your port closed or you can use hamachi to bypass your router. Please do not check the "public" box if you can't open your ports to prevent people from trying to connect on your machine.
+client_host_warning=Warning, if you want to make a public game, you will need to open the server port from your router. This can be really complicated for people that aren't confortable with computers or networking. Although, you still can play in local (LAN) with your port closed or you can use hamachi to bypass your router.
 client_host_boardsize=Board size:
 client_host_port=Port:
 client_host_public=Public
 client_host_maxplayers=Max players:
 client_host_validate=Host game
 client_host_gamename={$PLAYER}'s game
+client_host_failed=An error occurred while trying to host server. (Already one running?)
+client_host_failed_title=Server couldn't be hosted
 
 client_connection_failed_title=Connection failed
 client_connection_failed_message=The connection to this server failed.

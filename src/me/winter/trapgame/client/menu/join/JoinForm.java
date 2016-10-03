@@ -75,7 +75,7 @@ public class JoinForm extends JPanel
 		sorter.setPreferredSize(new Dimension(150, 25));
 		sorter.setMinimumSize(sorter.getPreferredSize());
 
-		sorter.addActionListener(event -> getList().placeServers());
+		sorter.addActionListener(event -> getList().updateDisplay());
 		//sorter.setBackground(new Color(230, 230, 230));
 
 		RefreshButton refresh = new RefreshButton(this);
@@ -265,7 +265,7 @@ public class JoinForm extends JPanel
 		super.paintComponent(graphics);
 	}
 
-	public Comparator<ServerPanel> getSortComparator()
+	public Comparator<RemoteServer> getSortComparator()
 	{
 		switch(getSorter().getSelectedIndex())
 		{

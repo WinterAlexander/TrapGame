@@ -4,6 +4,7 @@ import me.winter.trapgame.client.ImagePanel;
 import me.winter.trapgame.client.TextAnimation;
 import me.winter.trapgame.client.TrapGameClient;
 import me.winter.trapgame.client.UserProperties;
+import me.winter.trapgame.shared.packet.PacketOutPong;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
@@ -25,90 +26,19 @@ import java.util.logging.Level;
  */
 public class ServerPanel extends JPanel
 {
-	private ServerList serverList;
+	private RemoteServer server;
 
-	private String name;
-	private int players, maxPlayers;
-
-	private InetAddress address, lanAddress;
-	private int port;
-
-	private boolean useLan;
-	private int pingLatency;
-
-	private JLabel ping;
+	private JLabel nameLabel, ipLabel, slotsLabel, pingLabel;
 	private ImagePanel joinButton;
 
-	public ServerPanel(ServerList serverList, String data) throws IllegalArgumentException
+	public ServerPanel(RemoteServer server, String connectionString)
 	{
-		this.serverList = serverList;
+		this.server = server;
 
-		this.useLan = false;
-		this.pingLatency = Integer.MAX_VALUE;
-
-		try
-		{
-			String[] entries = data.split("&");
-
-			for(int i = 0; i < entries.length; i++)
-				entries[i] = entries[i].split("=")[1];
-
-			this.name = entries[2];
-			this.players = Integer.parseInt(entries[5]);
-			this.maxPlayers = Integer.parseInt(entries[6]);
-			this.address = InetAddress.getByName(entries[1]);
-			this.lanAddress = InetAddress.getByName(entries[4]);
-			this.port = Integer.parseInt(entries[3]);
-
-			if(this.name.length() < 3)
-				throw new IllegalArgumentException("Server's name too short");
-
-			if(this.maxPlayers < 0)
-				throw new IllegalArgumentException("Illegal player limit");
-
-			if(this.port < 0)
-				throw new IllegalArgumentException("Bad port");
-
-			build();
-		}
-		catch(NumberFormatException ex)
-		{
-			throw new IllegalArgumentException("A field supposed to be a number isn't", ex);
-		}
-		catch(UnknownHostException ex)
-		{
-			throw new IllegalArgumentException("Ip is invalid", ex);
-		}
-		catch(ArrayIndexOutOfBoundsException ex)
-		{
-			throw new IllegalArgumentException("Data supplied should have 7 entries (key value pair)", ex);
-		}
-	}
-
-	public ServerPanel(ServerList serverList, String name, int players, int maxPlayers, InetAddress address, InetAddress lanAddress, int port)
-	{
-		this.serverList = serverList;
-
-		this.pingLatency = Integer.MAX_VALUE;
-
-		this.name = name;
-		this.players = players;
-		this.maxPlayers = maxPlayers;
-		this.address = address;
-		this.lanAddress = lanAddress;
-		this.port = port;
-
-		this.useLan = false;
-
-		build();
-	}
-
-	private void build()
-	{
 		setLayout(new GridBagLayout());
 		setBackground(ColorTransformer.TRANSPARENT);
 
-		joinButton = new ImagePanel(serverList.getJoinForm().getMenu().getClient().getResourceManager().getImage("join-button"));
+		joinButton = new ImagePanel(server.getServerList().getJoinForm().getMenu().getClient().getResourceManager().getImage("join-button"));
 
 		joinButton.setPreferredSize(new Dimension(75, 75));
 		joinButton.setBackground(new Color(230, 230, 230));
@@ -120,7 +50,7 @@ public class ServerPanel extends JPanel
 				properties.setLastName(getServerList().getJoinForm().getPlayerName().getText());
 				properties.save();
 
-				new Thread(ServerPanel.this::connectTo).start();
+				new Thread(server::connectTo).start();
 			}
 
 			@Override
@@ -147,19 +77,17 @@ public class ServerPanel extends JPanel
 			}
 		});
 
-		JLabel nameLabel = new JLabel(name);
+		nameLabel = new JLabel("");
 		nameLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
-		JLabel ip = new JLabel(address.getHostAddress() + ":" + port);
-		ip.setFont(new Font("Arial", Font.PLAIN, 20));
-		ip.setPreferredSize(new Dimension(300, (int)ip.getPreferredSize().getHeight()));
+		ipLabel = new JLabel("");
+		ipLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 
-		JLabel slots = new JLabel(players + " / " + maxPlayers, JLabel.RIGHT);
-		slots.setFont(new Font("Arial", Font.PLAIN, 20));
-		slots.setPreferredSize(new Dimension(100, (int)slots.getPreferredSize().getHeight()));
+		slotsLabel = new JLabel("", JLabel.RIGHT);
+		slotsLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 
-		ping = new JLabel("   ", JLabel.RIGHT);
-		ping.setFont(new Font("Arial", Font.PLAIN, 20));
+		pingLabel = new JLabel("", JLabel.RIGHT);
+		pingLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -186,7 +114,7 @@ public class ServerPanel extends JPanel
 
 		constraints.gridy = 1;
 
-		add(ip, constraints);
+		add(ipLabel, constraints);
 
 		constraints.gridx = 7;
 		constraints.gridy = 0;
@@ -194,7 +122,7 @@ public class ServerPanel extends JPanel
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
-		add(slots, constraints);
+		add(slotsLabel, constraints);
 
 		constraints.gridx = 7;
 		constraints.gridy = 1;
@@ -203,9 +131,24 @@ public class ServerPanel extends JPanel
 		constraints.gridheight = 1;
 
 
-		add(ping, constraints);
+		add(pingLabel, constraints);
 
+		setName(connectionString);
+		setPing(-1);
+		slotsLabel.setText("?");
+		ipLabel.setText(connectionString);
+		scale();
+	}
 
+	public void scale()
+	{
+		ipLabel.setPreferredSize(null);
+		ipLabel.setPreferredSize(new Dimension(300, (int)ipLabel.getPreferredSize().getHeight()));
+
+		slotsLabel.setPreferredSize(null);
+		slotsLabel.setPreferredSize(new Dimension(100, (int)slotsLabel.getPreferredSize().getHeight()));
+
+		setPreferredSize(null);
 		Dimension size = getPreferredSize();
 
 		size.width += 10;
@@ -215,103 +158,6 @@ public class ServerPanel extends JPanel
 
 		setPreferredSize(size);
 		setMaximumSize(size);
-
-		getServerList().getJoinForm().getMenu().getClient().getScheduler().addTask(this::ping, 500);
-	}
-
-	public void connectTo()
-	{
-		TrapGameClient client = getServerList().getJoinForm().getMenu().getClient();
-
-		String name = getServerList().getJoinForm().getPlayerName().getText();
-
-		if(name.length() < 3)
-			name = "Guest" + new Random().nextInt(10000);
-
-		if(name.length() > 20)
-			name = name.substring(0, 20);
-
-		if(useLan)
-			client.getConnection().connectTo(lanAddress, null, port, null, name);
-		else
-			client.getConnection().connectTo(address, lanAddress, port, null, name);
-
-		joinButton.setForeground(new Color(0, 0, 0, 0));
-	}
-
-	public void ping()
-	{
-		final TextAnimation pinging = new TextAnimation(ping, new String[]{".  ", ".. ", "..."});
-		getServerList().getJoinForm().getMenu().getClient().getScheduler().addTask(pinging);
-
-		new Thread(() -> {
-
-			ping.setText("...");
-
-			try
-			{
-				ping(lanAddress);
-				useLan = true;
-			}
-			catch(Exception lanEx)
-			{
-				if(getServerList().getJoinForm().getMenu().getClient().getUserProperties().isDebugMode())
-					getServerList().getJoinForm().getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while pinging lan IP " + name, lanEx);
-
-				try
-				{
-					ping(address);
-				}
-				catch(Exception publicEx)
-				{
-					if(getServerList().getJoinForm().getMenu().getClient().getUserProperties().isDebugMode())
-						getServerList().getJoinForm().getMenu().getClient().getLogger().log(Level.WARNING, "An exception occurred while pinging public IP " + name, publicEx);
-
-					ping.setText("X");
-					ping.setForeground(Color.RED);
-				}
-			}
-			finally
-			{
-				pinging.cancel();
-				getServerList().placeServers();
-			}
-		}).start();
-	}
-
-	private void ping(InetAddress address) throws IOException
-	{
-		long timestamp = System.nanoTime();
-		DatagramSocket socket = new DatagramSocket();
-		socket.setSoTimeout(5_000);
-
-		ByteArrayOutputStream writer = new ByteArrayOutputStream();
-		new DataOutputStream(writer).writeUTF("KeepAlive");
-
-		socket.send(new DatagramPacket(writer.toByteArray(), writer.size(), address, port));
-		byte[] inputBuffer = new byte[256];
-
-		DatagramPacket packet = new DatagramPacket(inputBuffer, inputBuffer.length);
-
-		socket.receive(packet);
-
-		ByteArrayInputStream reader = new ByteArrayInputStream(packet.getData());
-
-		if(!new DataInputStream(reader).readUTF().equals("KeepAlive"))
-			throw new IOException("Invalid response");
-
-		pingLatency = (int)((System.nanoTime() - timestamp) / 1_000_000);
-		ping.setText(pingLatency + "ms");
-
-		if(pingLatency < 10)
-			ping.setForeground(Color.GREEN.darker());
-		else if(pingLatency < 50)
-			ping.setForeground(Color.GREEN);
-		else if(pingLatency < 100)
-			ping.setForeground(Color.YELLOW.darker());
-		else
-			ping.setForeground(Color.ORANGE.darker());
-
 	}
 
 	@Override
@@ -335,71 +181,64 @@ public class ServerPanel extends JPanel
 
 	public ServerList getServerList()
 	{
-		return serverList;
+		return server.getServerList();
 	}
 
-	public String getName()
+	public ImagePanel getJoinButton()
 	{
-		return name;
+		return joinButton;
 	}
 
 	public void setName(String name)
 	{
-		this.name = name;
+		nameLabel.setText(name);
+		scale();
 	}
 
-	public int getPlayers()
+	public void setIp(InetAddress address, int port)
 	{
-		return players;
+		ipLabel.setText(address.getHostAddress() + ":" + port);
+		scale();
 	}
 
-	public void setPlayers(int players)
+	public void setPing(String ping)
 	{
-		this.players = players;
+		pingLabel.setText(ping);
+		pingLabel.setForeground(new JLabel().getForeground());
+		scale();
 	}
 
-	public int getPing()
+	public void setPing(int ping)
 	{
-		return pingLatency;
+		if(ping != -1 && ping != Integer.MAX_VALUE)
+		{
+			pingLabel.setText(ping + "ms");
+
+			if(ping < 10)
+				pingLabel.setForeground(Color.GREEN.darker());
+			else if(ping < 50)
+				pingLabel.setForeground(Color.GREEN);
+			else if(ping < 100)
+				pingLabel.setForeground(Color.YELLOW.darker());
+			else
+				pingLabel.setForeground(Color.ORANGE.darker());
+		}
+		else
+		{
+			setPing("");
+		}
+		scale();
 	}
 
-	public int getMaxPlayers()
+	public JLabel getPingLabel()
 	{
-		return maxPlayers;
+		return pingLabel;
 	}
 
-	public void setMaxPlayers(int maxPlayers)
+	public void setPlayers(int players, int maxPlayers)
 	{
-		this.maxPlayers = maxPlayers;
-	}
-
-	public InetAddress getAddress()
-	{
-		return address;
-	}
-
-	public void setAddress(InetAddress address)
-	{
-		this.address = address;
-	}
-
-	public InetAddress getLanAddress()
-	{
-		return lanAddress;
-	}
-
-	public void setLanAddress(InetAddress lanAddress)
-	{
-		this.lanAddress = lanAddress;
-	}
-
-	public int getPort()
-	{
-		return port;
-	}
-
-	public void setPort(int port)
-	{
-		this.port = port;
+		slotsLabel.setText(players + " / " + maxPlayers);
+		scale();
 	}
 }
+

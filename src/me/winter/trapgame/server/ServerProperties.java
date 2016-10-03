@@ -242,17 +242,4 @@ public class ServerProperties extends Properties
 	{
 		setProperty("save-stats", saveStats + "");
 	}
-
-	public boolean isPublic()
-	{
-		if(getProperty("public", "").equalsIgnoreCase("false"))
-			return false;
-
-		return true;
-	}
-
-	public void setPublic(boolean publicServer)
-	{
-		setProperty("public", publicServer + "");
-	}
 }

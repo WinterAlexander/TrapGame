@@ -1,6 +1,5 @@
 package me.winter.trapgame.client.menu.join;
 
-import me.winter.trapgame.server.WebServerListUpdater;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
@@ -24,8 +23,7 @@ public class ServerList extends JPanel
 	private JoinForm joinForm;
 
 	private JPanel content;
-	private List<ServerPanel> servers;
-	private List<String> webServers;
+	private List<RemoteServer> servers;
 
 	private boolean updating;
 
@@ -47,10 +45,6 @@ public class ServerList extends JPanel
 		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 		content.setBorder(new EmptyBorder(0, 0, 0, 0));
 
-		webServers = new ArrayList<>();
-		webServers.add("http://trapgame.ml/"); //TODO Load from file
-		webServers.add("http://127.0.0.1/");
-
 		scroller.setViewportView(content);
 		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -59,7 +53,10 @@ public class ServerList extends JPanel
 
 		add(scroller, BorderLayout.CENTER);
 
-		placeServers();
+
+		servers.add(new RemoteServer(this, "127.0.0.1:1254"));
+
+		//updateDisplay();
 		//update();
 	}
 
@@ -74,56 +71,18 @@ public class ServerList extends JPanel
 	private void updateList()
 	{
 		updating = true;
-		servers.clear();
 
+		servers.forEach(RemoteServer::ping);
 
-		for(String address : webServers)
-		{
-			try
-			{
-
-				URL url = new URL(address);
-
-				HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-				connection.setRequestMethod("POST");
-				connection.setDoOutput(true);
-				connection.setDoInput(true);
-
-				OutputStreamWriter writer = new OutputStreamWriter(new BufferedOutputStream(connection.getOutputStream()));
-
-				writer.write("action=query");
-				writer.flush();
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-				String line;
-
-				while((line = reader.readLine()) != null)
-					servers.add(new ServerPanel(this, line));
-
-				writer.close();
-				reader.close();
-			}
-			catch(MalformedURLException ex)
-			{
-				joinForm.getMenu().getClient().getLogger().log(Level.SEVERE, "It seem format of urls changed since 2016 !", ex);
-			}
-			catch(IOException ex)
-			{
-				joinForm.getMenu().getClient().getLogger().log(Level.INFO, "Couldn't reach serverlist " + address);
-			}
-			catch(IllegalArgumentException ex)
-			{
-				joinForm.getMenu().getClient().getLogger().log(Level.WARNING, "Serverlist " + address + " data's seem corrupted", ex);
-			}
-		}
-
-		SwingUtilities.invokeLater(this::placeServers);
+		SwingUtilities.invokeLater(this::updateDisplay);
 
 		updating = false;
 	}
 
-	public synchronized void placeServers() //TODO understand why this is synchronized
+	/**
+	 * Clears the ServerPanels and readd them
+	 */
+	public void updateDisplay()
 	{
 		content.removeAll();
 		content.add(Box.createRigidArea(new Dimension(0, 5)));
@@ -143,7 +102,7 @@ public class ServerList extends JPanel
 			servers.sort(joinForm.getSortComparator());
 
 			servers.forEach(server -> {
-				content.add(server);
+				content.add(server.getDisplay());
 				content.add(Box.createRigidArea(new Dimension(0, 5)));
 			});
 		}
