@@ -12,7 +12,7 @@ client_host_button=Héberger une partie
 client_leave_button=Quitter
 
 client_username=Votre nom:
-client_serverlist=Parties publiques
+client_serverlist=Liste des parties
 client_sort=Trier par
 client_join_emptylist=Recherche de parties...
 client_join_invalidip=Adresse IP invalide
@@ -21,10 +21,12 @@ client_sort_players=Nombre de joueurs
 client_sort_name=Nom de la partie (A à Z)
 client_sort_ping=Connexion
 
-client_privateserver=Partie privée
+client_privateserver=Ajouter un serveur
 client_privateserver_address=Adresse:
-client_privateserver_password=Mot de passe:
-client_privateserver_connect=Connexion
+client_privateserver_connect=Ajouter
+
+client_invalidserver=L'adresse du serveur que vous avez entré est invalide. Vérifiez à ce que ce soit une adresse IP valide.
+client_invalidserver_title=Adresse invalide
 
 client_host_title=Créer une partie
 client_host_warning=Attention, pour rendre votre partie publique, vous devez ouvrir le port spécifier dans la configuration de votre routeur. Ceci peut être très compliqué pour des gens moins à l'aise en informatique. Par contre, vous pouvez toujours jouer en local (LAN) avec votre port fermé ou vous pouvez utiliser Hamachi pour contourner votre routeur.

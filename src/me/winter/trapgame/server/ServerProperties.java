@@ -95,16 +95,6 @@ public class ServerProperties extends Properties
 		setProperty("port", port + "");
 	}
 
-	public String getPassword()
-	{
-		return getProperty("password", null);
-	}
-
-	public void setPassword(String password)
-	{
-		setProperty("password", password);
-	}
-
 	public int getMinPlayers()
 	{
 		try
@@ -191,7 +181,7 @@ public class ServerProperties extends Properties
 		}
 		catch(NumberFormatException ex)
 		{
-			return 30;
+			return 15;
 		}
 	}
 

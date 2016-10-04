@@ -45,7 +45,6 @@ public class PropTemplateCommand implements Command
 		properties.setServerName("Fun server 2");
 		properties.setWelcomeMessage(properties.getWelcomeMessage());
 		properties.setPort(1254);
-		properties.setPassword("");
 		properties.setMinPlayers(2);
 		properties.setMaxPlayers(8);
 		properties.setBoardWidth(11);

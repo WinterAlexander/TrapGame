@@ -13,16 +13,15 @@ import java.io.*;
  */
 public class PacketInJoin extends Packet
 {
-	private String password, playerName;
+	private String playerName;
 
 	public PacketInJoin()
 	{
 
 	}
 
-	public PacketInJoin(String password, String playerName)
+	public PacketInJoin(String playerName)
 	{
-		setPassword(password);
 		this.playerName = playerName;
 	}
 
@@ -30,7 +29,6 @@ public class PacketInJoin extends Packet
 	public void readFrom(InputStream stream) throws IOException
 	{
 		DataInputStream dataStream = new DataInputStream(stream);
-		setPassword(dataStream.readUTF());
 		setPlayerName(dataStream.readUTF());
 	}
 
@@ -38,26 +36,7 @@ public class PacketInJoin extends Packet
 	public void writeTo(OutputStream stream) throws IOException
 	{
 		DataOutputStream dataStream = new DataOutputStream(stream);
-		dataStream.writeUTF(getPassword());
 		dataStream.writeUTF(getPlayerName());
-	}
-
-
-
-	public String getPassword()
-	{
-		return password;
-	}
-
-	public void setPassword(String password)
-	{
-		if(password == null)
-		{
-			this.password = "";
-			return;
-		}
-
-		this.password = password;
 	}
 
 	public String getPlayerName()

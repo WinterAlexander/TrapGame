@@ -25,7 +25,6 @@ public class HostForm extends JPanel
 	private TrapGameMenu menu;
 
 	private JTextField ownerName;
-	private JPasswordField password;
 	private JTextField boardSize;
 	private JTextField maxPlayers;
 
@@ -50,9 +49,6 @@ public class HostForm extends JPanel
 		ownerNameLabel.setFont(new Font("Arial", Font.BOLD, 16));
 		//ownerNameLabel.setPreferredSize(new Dimension(200, 25));
 
-		JLabel passwordLabel = new JLabel(menu.getLangLine("client_privateserver_password"), JLabel.RIGHT);
-		passwordLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
 		JLabel boardSizeLabel = new JLabel(menu.getLangLine("client_host_boardsize"), JLabel.RIGHT);
 		boardSizeLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
@@ -63,10 +59,6 @@ public class HostForm extends JPanel
 		ownerName.setPreferredSize(new Dimension(200, 25));
 		ownerName.setMinimumSize(ownerName.getPreferredSize());
 		ownerName.setText(menu.getClient().getUserProperties().getLastName());
-
-		password = new JPasswordField();
-		password.setPreferredSize(new Dimension(200, 25));
-		password.setMinimumSize(password.getPreferredSize());
 
 		boardSize = new JTextField();
 		boardSize.setPreferredSize(new Dimension(200, 25));
@@ -124,7 +116,7 @@ public class HostForm extends JPanel
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.LINE_END;
-		add(passwordLabel, constraints);
+		add(boardSizeLabel, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 3;
@@ -132,26 +124,10 @@ public class HostForm extends JPanel
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.LINE_START;
-		add(password, constraints);
-
-		constraints.gridx = 0;
-		constraints.gridy = 4;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.LINE_END;
-		add(boardSizeLabel, constraints);
-
-		constraints.gridx = 1;
-		constraints.gridy = 4;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.anchor = GridBagConstraints.LINE_START;
 		add(boardSize, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 7;
+		constraints.gridy = 4;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -159,7 +135,7 @@ public class HostForm extends JPanel
 		add(maxPlayersLabel, constraints);
 
 		constraints.gridx = 1;
-		constraints.gridy = 7;
+		constraints.gridy = 4;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.NONE;
@@ -168,7 +144,7 @@ public class HostForm extends JPanel
 
 
 		constraints.gridx = 1;
-		constraints.gridy = 8;
+		constraints.gridy = 5;
 		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.anchor = GridBagConstraints.CENTER;
@@ -222,7 +198,6 @@ public class HostForm extends JPanel
 		properties.setMaxPlayers(maxPlayers);
 		properties.setBoardWidth(boardSize);
 		properties.setBoardHeight(boardSize);
-		properties.setPassword(new String(password.getPassword()));
 		properties.setSuperPassword("");
 		properties.setEnableConsole(false);
 		properties.setSavingStats(false);
@@ -250,7 +225,7 @@ public class HostForm extends JPanel
 		new Thread(() -> {
 			try
 			{
-				menu.getClient().getConnection().connectTo("localhost:1254", new String(password.getPassword()), name);
+				menu.getClient().getConnection().connectTo("localhost:1254", name);
 				server.getPlayer(name).setSuperUser(true);
 			}
 			catch(TimeoutException | IOException ex)

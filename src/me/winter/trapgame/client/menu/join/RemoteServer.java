@@ -47,7 +47,10 @@ public class RemoteServer
 			String[] parts = connectionString.split(":");
 
 			this.address = InetAddress.getByName(parts[0]);
-			this.port = Integer.parseInt(parts[1]);
+			if(parts.length > 1)
+				this.port = Integer.parseInt(parts[1]);
+			else
+				this.port = 1254;
 		}
 		catch(Exception ex)
 		{
@@ -143,9 +146,14 @@ public class RemoteServer
 
 		if(name.length() > 20)
 			name = name.substring(0, 20);
-		client.getConnection().connectTo(address, port, name, null);
+		client.getConnection().connectTo(address, port, name);
 
 		display.getJoinButton().setForeground(new Color(0, 0, 0, 0));
+	}
+
+	public boolean isValid()
+	{
+		return address != null && port > 0;
 	}
 
 	public ServerPanel getDisplay()

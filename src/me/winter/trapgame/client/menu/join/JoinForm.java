@@ -7,9 +7,19 @@ import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.RenderingHints;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 
@@ -26,7 +36,6 @@ public class JoinForm extends JPanel
 	private ServerList list;
 
 	private JTextField playerName, address;
-	private JPasswordField password;
 	private JComboBox<String> sorter;
 
 	public JoinForm(TrapGameMenu menu)
@@ -122,8 +131,8 @@ public class JoinForm extends JPanel
 
 		//bottom elements declaration
 
-		JLabel privateServer = new JLabel(getMenu().getLangLine("client_privateserver"));
-		privateServer.setFont(new Font("Arial", Font.BOLD, 18));
+		JLabel addserverLabel = new JLabel(getMenu().getLangLine("client_privateserver"));
+		addserverLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
 		JLabel addressLabel = new JLabel(getMenu().getLangLine("client_privateserver_address") + " ");
 		addressLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -131,20 +140,12 @@ public class JoinForm extends JPanel
 		address = new JTextField();
 		address.setPreferredSize(new Dimension(150, 25));
 		address.setMinimumSize(address.getPreferredSize());
-		address.setText(getMenu().getClient().getUserProperties().getLastServer());
 		//playerName.setBackground(new Color(230, 230, 230));
 
-		JLabel passwordLabel = new JLabel(getMenu().getLangLine("client_privateserver_password") + " ");
-		passwordLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
-		password = new JPasswordField();
-		password.setPreferredSize(new Dimension(150, 25));
-		password.setMinimumSize(playerName.getPreferredSize());
-		password.setText(getMenu().getClient().getUserProperties().getLastPassword());
-
-		JButton connect = new JButton(getMenu().getLangLine("client_privateserver_connect"));
-		connect.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		connect.addActionListener(event -> this.privateConnect());
+		JButton add = new JButton(getMenu().getLangLine("client_privateserver_connect"));
+		add.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		add.addActionListener(event -> this.addServer());
 
 		//Bottom elements add
 
@@ -155,7 +156,7 @@ public class JoinForm extends JPanel
 		constraints.weightx = 0;
 		constraints.anchor = GridBagConstraints.LINE_START;
 
-		bottom.add(privateServer, constraints);
+		bottom.add(addserverLabel, constraints);
 
 		constraints.gridx = 2;
 		constraints.gridwidth = 1;
@@ -165,19 +166,11 @@ public class JoinForm extends JPanel
 
 		bottom.add(addressLabel, constraints);
 
-		constraints.gridy = 1;
-
-		bottom.add(passwordLabel, constraints);
-
 		constraints.gridy = 0;
 		constraints.gridx = 3;
 		constraints.anchor = GridBagConstraints.LINE_START;
 
 		bottom.add(address, constraints);
-
-		constraints.gridy = 1;
-
-		bottom.add(password, constraints);
 
 		constraints.gridx = 4;
 		constraints.gridy = 0;
@@ -185,7 +178,7 @@ public class JoinForm extends JPanel
 		constraints.weightx = 0;
 		constraints.anchor = GridBagConstraints.LINE_END;
 
-		bottom.add(connect, constraints);
+		bottom.add(add, constraints);
 
 		//dark
 
@@ -222,32 +215,29 @@ public class JoinForm extends JPanel
 		add(dark, SimpleLayout.constraints(100, 100, 11.5, 11.5, 80, 80));
 	}
 
-	public void privateConnect()
+	public void addServer()
 	{
-		UserProperties settings = getMenu().getClient().getUserProperties();
-		settings.setLastName(getPlayerName().getText());
-		settings.setLastServer(address.getText());
-		settings.setLastPassword(new String(password.getPassword()));
-		settings.save();
+		List<String> servers = new ArrayList<>(getMenu().getClient().getUserProperties().getServers());
 
-		new Thread(() -> {
-			try
-			{
-				getMenu().getClient().getConnection().connectTo(address.getText(), new String(password.getPassword()), playerName.getText());
-			}
-			catch(TimeoutException | IOException ex)
-			{
-				JOptionPane.showMessageDialog(getMenu().getClient(),
-						getMenu().getClient().getLang().getLine("client_connection_failed_message"),
-						getMenu().getClient().getLang().getLine("client_connection_failed_title"),
-						JOptionPane.ERROR_MESSAGE);
+		String newServerAddress = address.getText().trim();
 
-				if(getMenu().getClient().getUserProperties().isDebugMode())
-					getMenu().getClient().getLogger().log(Level.INFO, "Couldn't connect to server", ex);
-				else
-					getMenu().getClient().getLogger().log(Level.INFO, "Couldn't connect to server");
-			}
-		}).start();
+		servers.add(newServerAddress);
+		RemoteServer server = new RemoteServer(list, newServerAddress);
+
+		if(!server.isValid())
+		{
+			JOptionPane.showMessageDialog(getMenu().getClient(),
+					getMenu().getClient().getLang().getLine("client_invalidserver"),
+					getMenu().getClient().getLang().getLine("client_invalidserver_title"),
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		list.addServer(server);
+		list.update();
+		address.setText("");
+		getMenu().getClient().getUserProperties().setServers(servers);
+		getMenu().getClient().getUserProperties().save();
 	}
 
 	@Override

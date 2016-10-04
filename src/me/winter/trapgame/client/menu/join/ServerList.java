@@ -39,7 +39,6 @@ public class ServerList extends JPanel
 		servers = new ArrayList<>();
 
 		setBorder(new EmptyBorder(0, 0, 0, 0));
-
 		setLayout(new BorderLayout());
 
 		JScrollPane scroller = new JScrollPane();
@@ -57,14 +56,7 @@ public class ServerList extends JPanel
 
 		add(scroller, BorderLayout.CENTER);
 
-
-		servers.add(new RemoteServer(this, "127.0.0.1:1254"));
-
-
-		//joinForm.getMenu().getClient().getConnection().broadcast(, 1254, 10)
-
-		//updateDisplay();
-		//update();
+		joinForm.getMenu().getClient().getUserProperties().getServers().forEach(x -> addServer(new RemoteServer(this, x)));
 	}
 
 	public void update()
@@ -122,8 +114,11 @@ public class ServerList extends JPanel
 		content.repaint();
 	}
 
-	private void addServer(RemoteServer server)
+	public void addServer(RemoteServer server)
 	{
+		if(server.getAddress() == null)
+			return;
+
 		if(NetUtil.isLocal(server.getAddress()) && !server.getAddress().isLoopbackAddress())
 			return;
 

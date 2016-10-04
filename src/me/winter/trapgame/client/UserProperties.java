@@ -1,12 +1,16 @@
 package me.winter.trapgame.client;
 
 import me.winter.trapgame.util.FileUtil;
+import me.winter.trapgame.util.StringUtil;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Client-side properties file used to save some user settings
@@ -16,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class UserProperties extends Properties
 {
-	private Optional<Logger> logger;
+	private Optional<Logger> logger; //noob but anyway
 	private File file;
 
 	public UserProperties(File file)
@@ -74,26 +78,6 @@ public class UserProperties extends Properties
 		setProperty("last-name", lastName);
 	}
 
-	public String getLastServer()
-	{
-		return getProperty("last-server", "");
-	}
-
-	public void setLastServer(String lastServer)
-	{
-		setProperty("last-server", lastServer);
-	}
-
-	public String getLastPassword()
-	{
-		return getProperty("last-password", "");
-	}
-
-	public void setLastPassword(String lastPassword)
-	{
-		setProperty("last-password", lastPassword);
-	}
-
 	public boolean isDebugMode()
 	{
 		return Boolean.parseBoolean(getProperty("debug-mode"));
@@ -112,5 +96,15 @@ public class UserProperties extends Properties
 	public void setLanguage(String language)
 	{
 		setProperty("language", language);
+	}
+
+	public List<String> getServers()
+	{
+		return Arrays.asList(getProperty("user-servers", "").split(",")).stream().filter(x -> x != null && x.length() > 0).collect(Collectors.toList());
+	}
+
+	public void setServers(List<String> servers)
+	{
+		setProperty("user-servers", StringUtil.join(servers, ","));
 	}
 }

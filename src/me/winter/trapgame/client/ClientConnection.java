@@ -47,11 +47,11 @@ public class ClientConnection
 		keepAliveTask = new Task(4000, true, this::keepAlive);
 	}
 
-	public void connectTo(InetAddress first, int port, String playerName, String password)
+	public void connectTo(InetAddress first, int port, String playerName)
 	{
 		try
 		{
-			client.getConnection().connectTo(first, port, password, playerName, 3000);
+			client.getConnection().connectTo(first, port, playerName, 3000);
 		}
 		catch(Exception publicEx)
 		{
@@ -65,7 +65,7 @@ public class ClientConnection
 		}
 	}
 
-	public void connectTo(String addressName, String password, String playerName) throws IOException, TimeoutException
+	public void connectTo(String addressName, String playerName) throws IOException, TimeoutException
 	{
 		String[] parts = addressName.split(":");
 		int port = 1254;
@@ -76,10 +76,10 @@ public class ClientConnection
 			port = Integer.parseInt(parts[1]);
 		}
 
-		connectTo(InetAddress.getByName(addressName), port, password, playerName, 2000);
+		connectTo(InetAddress.getByName(addressName), port, playerName, 2000);
 	}
 
-	public synchronized void connectTo(InetAddress address, int port, String password, String playerName, int timeout) throws IOException, TimeoutException
+	public synchronized void connectTo(InetAddress address, int port, String playerName, int timeout) throws IOException, TimeoutException
 	{
 		if(address == null)
 			throw new IllegalArgumentException("Address cannot be null !");
@@ -92,7 +92,7 @@ public class ClientConnection
 
 		udpSocket = new DatagramSocket();
 		udpSocket.setSoTimeout(30_000);
-		sendPacket(new PacketInJoin(password, playerName));
+		sendPacket(new PacketInJoin(playerName));
 
 		welcomed = false;
 		new Thread(this::acceptInput).start();

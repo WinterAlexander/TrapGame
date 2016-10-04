@@ -17,7 +17,7 @@ client_host_button=Host Game
 client_leave_button=Quit
 
 client_username=Your name:
-client_serverlist=Public game list
+client_serverlist=Game list
 client_sort=Order by
 client_join_emptylist=Looking for games...
 client_join_invalidip=Invalid IP Address
@@ -26,10 +26,12 @@ client_sort_players=Amount of players
 client_sort_name=Game name (A to Z)
 client_sort_ping=Connection
 
-client_privateserver=Private game
+client_privateserver=Add server to list
 client_privateserver_address=Address:
-client_privateserver_password=Password:
-client_privateserver_connect=Connect
+client_privateserver_connect=Add
+
+client_invalidserver=The server address you inserted is not a valid IP address. Please make sure to enter it correctly.
+client_invalidserver_title=Invalid server address.
 
 client_host_title=Host your game
 client_host_warning=Warning, if you want to make a public game, you will need to open the server port from your router. This can be really complicated for people that aren't confortable with computers or networking. Although, you still can play in local (LAN) with your port closed or you can use hamachi to bypass your router.

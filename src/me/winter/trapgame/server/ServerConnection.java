@@ -98,12 +98,6 @@ public class ServerConnection
 			if(!(packet instanceof PacketInJoin) || !isAcceptingNewClients())
 				continue;
 
-			if(server.getPassword() != null && server.getPassword().length() > 0 && !server.getPassword().equals(((PacketInJoin)packet).getPassword()))
-			{
-				sendPacketToGuest(new PacketOutKick("Invalid password."), bufPacket.getAddress(), bufPacket.getPort());
-				continue;
-			}
-
 			String name = ((PacketInJoin)packet).getPlayerName();
 
 			String invalidReason = getInvalidNameReason(name);

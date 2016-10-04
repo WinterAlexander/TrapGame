@@ -133,7 +133,7 @@ public class TrapGameServer
 
 
 	private String name, welcomeMessage;
-	private String password, superPassword;
+	private String superPassword;
 	private int minPlayers, maxPlayers;
 	private int boardWidth, boardHeight;
 	private int waitingTimer;
@@ -198,7 +198,6 @@ public class TrapGameServer
 
 		this.name = properties.getServerName();
 		this.welcomeMessage = properties.getWelcomeMessage();
-		this.password = properties.getPassword();
 		this.superPassword = properties.getSuperPassword();
 		setMaxPlayers(properties.getMaxPlayers());
 		setMinPlayers(properties.getMinPlayers());
@@ -380,11 +379,6 @@ public class TrapGameServer
 	public void setWelcomeMessage(String welcomeMessage)
 	{
 		this.welcomeMessage = welcomeMessage;
-	}
-
-	public String getPassword()
-	{
-		return password;
 	}
 
 	public String getSuperPassword()
