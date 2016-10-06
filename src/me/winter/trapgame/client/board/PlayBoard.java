@@ -7,10 +7,18 @@ import me.winter.trapgame.shared.packet.PacketInCursorMove;
 import me.winter.trapgame.util.ColorTransformer;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -36,11 +44,14 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	private boolean specialSounds = false;
 	private Random rand = new Random();
 
+	private List<FailAnimation> fails;
+
 	public PlayBoard(TrapGameBoard container, int width, int height)
 	{
 		this.container = container;
 		this.scores = new HashMap<>();
 		preloaded = new HashMap<>();
+		fails = new ArrayList<>();
 		mouseIn = false;
 		boardLocked = true;
 		lastFreeze = 0;
@@ -163,6 +174,20 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 					(int)(player.getCursorX() * getWidth()) - 16,
 					(int)(player.getCursorY() * getHeight()) - 16, null);
 		}
+
+		for(int i = 0; i < fails.size(); i++)
+		{
+			if(fails.get(i).finished())
+			{
+				fails.remove(i);
+				continue;
+			}
+
+			int x = fails.get(i).getLocation().x;
+			int y = fails.get(i).getLocation().y;
+
+			g2draw.drawImage(container.getContainer().getResourceManager().getImage("fail-icon"), (int)(x - buttonWidth / 2), (int)(y - buttonHeight / 2), (int)buttonWidth, (int)buttonHeight, null);
+		}
 	}
 
 	public BufferedImage getCursorImage(Color color, boolean transparency)
@@ -284,14 +309,14 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 		if(lastFreeze - System.nanoTime() > 0)
 		{
-			playFailSound();
+			fail();
 			return;
 		}
 
 		if(getScores().containsKey(point))
 		{
 			lastFreeze = System.nanoTime() + 500_000_000;
-			playFailSound();
+			fail();
 			return;
 		}
 
@@ -302,7 +327,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		&& scores.get(new Point(point.x, point.y - 1)) != container.getClient())
 		{
 			lastFreeze = System.nanoTime() + 500_000_000;
-			playFailSound();
+			fail();
 			return;
 		}
 
@@ -315,6 +340,20 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 			repaint();
 			container.getScoreboard().build();
 		});
+	}
+
+	private void fail()
+	{
+		FailAnimation anim = new FailAnimation(new Point((int)(container.getClient().getCursorX() * getWidth()) + rand.nextInt(10), (int)(container.getClient().getCursorY() * getHeight()) + rand.nextInt(10)), System.nanoTime());
+		fails.add(anim);
+		container.getContainer().getScheduler().addTask(() -> {
+			if(this.isShowing())
+			{
+				revalidate();
+				repaint();
+			}
+		}, anim.getLength(), false);
+		playFailSound();
 	}
 
 	@Override
@@ -380,6 +419,10 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		|| event.getKeyCode() == KeyEvent.VK_E)
 		{
 			click(new Point((int)(container.getClient().getCursorX() * getBoardWidth()), (int)(container.getClient().getCursorY() * getBoardHeight())));
+		}
+		else if(event.getKeyCode() == KeyEvent.VK_F8)
+		{
+			specialSounds = !specialSounds;
 		}
 	}
 
