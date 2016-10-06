@@ -15,7 +15,7 @@ Screenshots:
 <img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot2.png" width="128px" />
 <img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot3.png" width="128px" />
 
-Current version: 1.1.0
+Current version: 1.1.1
 
 Official builds:
 

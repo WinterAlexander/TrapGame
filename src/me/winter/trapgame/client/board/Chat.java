@@ -32,7 +32,7 @@ public class Chat extends JPanel implements KeyListener
 
 		setBackground(new Color(0, 0, 0, 0));
 
-		messages = new ArrayList<>();
+		messages = new ArrayList<>(100);
 
 		textField = new JTextField()
 		{
@@ -96,7 +96,11 @@ public class Chat extends JPanel implements KeyListener
 
 	public void sendMessage(String message)
 	{
+		if(messages.size() >= 100)
+			messages.remove(0);
+
 		messages.add(message);
+
 		StringBuilder builder = new StringBuilder("<!DOCTYPE html><html>");
 
 		builder.append("<head><style>");
