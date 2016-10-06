@@ -90,11 +90,7 @@ public class DemoPlayBoard extends JPanel
 		revalidate();
 		repaint();
 
-		if(!menu.getClient().getResourceManager().getSound("click").isRunning())
-		{
-			menu.getClient().getResourceManager().getSound("click").setFramePosition(0);
-			menu.getClient().getResourceManager().getSound("click").start();
-		}
+		menu.getClient().getResourceManager().getSound("click0").play();
 	}
 
 	public void reset()

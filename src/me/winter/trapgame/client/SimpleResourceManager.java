@@ -3,6 +3,7 @@ package me.winter.trapgame.client;
 import me.winter.trapgame.util.FileUtil;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
@@ -69,9 +70,8 @@ public class SimpleResourceManager implements ResourceManager
 					break;
 
 				case "sound":
-					Clip clip = AudioSystem.getClip();
-					clip.open(AudioSystem.getAudioInputStream(new BufferedInputStream(FileUtil.resourceAsStream(path))));
-					resources.put(name, clip);
+
+					resources.put(name, new Sound(logger, AudioSystem.getAudioInputStream(new BufferedInputStream(FileUtil.resourceAsStream(path))), 3));
 					logger.info("Sound " + name + " has been loaded properly.");
 					break;
 
@@ -123,24 +123,16 @@ public class SimpleResourceManager implements ResourceManager
 	}
 
 	@Override
-	public Clip getSound(String name)
+	public Sound getSound(String name)
 	{
 		try
 		{
 			resources.get(name).getClass();
-			return (Clip)resources.get(name);
+			return (Sound)resources.get(name);
 		}
 		catch(ClassCastException | NullPointerException ex)
 		{
-			try
-			{
-				return AudioSystem.getClip();
-			}
-			catch(LineUnavailableException lineUnavailable)
-			{
-				logger.log(Level.WARNING, "An internal exception occurred while making an empty clip.", ex);
-				return null;
-			}
+			return null;
 		}
 	}
 

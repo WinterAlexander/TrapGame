@@ -44,6 +44,6 @@ public interface ResourceManager
 	void dispose();
 
 	Image getImage(String name);
-	Clip getSound(String name);
+	Sound getSound(String name);
 	String getText(String name);
 }

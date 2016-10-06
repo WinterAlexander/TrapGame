@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Represents the panel where players clicks and contains the buttons
@@ -28,7 +29,12 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 	private int boardWidth, boardHeight;
 	private boolean boardLocked, spectator, mouseIn;
 
+	private long lastFreeze; //last time the player missed
+
 	private Map<Color, BufferedImage> preloaded;
+
+	private boolean specialSounds = false;
+	private Random rand = new Random();
 
 	public PlayBoard(TrapGameBoard container, int width, int height)
 	{
@@ -37,6 +43,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 		preloaded = new HashMap<>();
 		mouseIn = false;
 		boardLocked = true;
+		lastFreeze = 0;
 
 		addMouseMotionListener(this);
 		addMouseListener(this);
@@ -109,7 +116,7 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 							height - (int)(3 * buttonHeight / 128),
 							width / 6, height / 6);
 				}
-				else if(!isSpectator() && !isBoardLocked() && mouseIn && isHover(new Point(x, y)))
+				else if(!isSpectator() && !isBoardLocked() && lastFreeze - System.nanoTime() < 0 && mouseIn && isHover(new Point(x, y)))
 				{
 					boolean aroundOwn = false;
 					boolean atLeastOne = false;
@@ -275,15 +282,29 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 		this.requestFocusInWindow();
 
-		if(getScores().containsKey(point))
+		if(lastFreeze - System.nanoTime() > 0)
+		{
+			playFailSound();
 			return;
+		}
+
+		if(getScores().containsKey(point))
+		{
+			lastFreeze = System.nanoTime() + 500_000_000;
+			playFailSound();
+			return;
+		}
 
 		if(scores.values().contains(container.getClient())
 		&& scores.get(new Point(point.x + 1, point.y)) != container.getClient()
 		&& scores.get(new Point(point.x - 1, point.y)) != container.getClient()
 		&& scores.get(new Point(point.x, point.y + 1)) != container.getClient()
 		&& scores.get(new Point(point.x, point.y - 1)) != container.getClient())
+		{
+			lastFreeze = System.nanoTime() + 500_000_000;
+			playFailSound();
 			return;
+		}
 
 		container.getContainer().getConnection().sendPacketLater(new PacketInClick(point));
 		scores.put(point, container.getClient());
@@ -370,8 +391,12 @@ public class PlayBoard extends JPanel implements MouseMotionListener, MouseListe
 
 	public void playClickSound()
 	{
-		container.getContainer().getResourceManager().getSound("click").setFramePosition(0);
-		container.getContainer().getResourceManager().getSound("click").start();
+		container.getContainer().getResourceManager().getSound((specialSounds ? "special-" : "") + "click" + rand.nextInt(3)).play();
+	}
+
+	public void playFailSound()
+	{
+		container.getContainer().getResourceManager().getSound((specialSounds ? "special-" : "") + "fail").play();
 	}
 
 	public Map<Point, PlayerInfo> getScores()
