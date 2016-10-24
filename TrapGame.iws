@@ -7,13 +7,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1fee9220-2597-4e37-adc9-761efedba5d3" name="Default" comment="Version 1.1.2">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+    <list default="true" id="1fee9220-2597-4e37-adc9-761efedba5d3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TrapGame.iws" afterPath="$PROJECT_DIR$/TrapGame.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/ClientConnection.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/ClientConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Chat.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/client/board/Chat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/ServerConnection.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/ServerConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/server/TrapGameServer.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/server/TrapGameServer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/winter/trapgame/shared/TrapGameVersion.java" afterPath="$PROJECT_DIR$/src/me/winter/trapgame/shared/TrapGameVersion.java" />
     </list>
     <ignored path="TrapGame.iws" />
@@ -85,8 +80,8 @@
       <file leaf-file-name="TrapGameVersion.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/shared/TrapGameVersion.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="40" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
+            <state relative-caret-position="378">
+              <caret line="21" column="73" selection-start-line="21" selection-start-column="73" selection-end-line="21" selection-end-column="73" />
               <folding />
             </state>
           </provider>
@@ -141,16 +136,6 @@
                 <element signature="e#9407#9408#0" expanded="true" />
                 <element signature="e#9450#9451#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ServerConsole.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/server/ServerConsole.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -795,13 +780,6 @@
       <workItem from="1476033284167" duration="319000" />
       <workItem from="1477101043323" duration="142000" />
     </task>
-    <task id="LOCAL-00039" summary="Background color and chat font changed.">
-      <created>1460055516275</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1460055516275</updated>
-    </task>
     <task id="LOCAL-00040" summary="Made a new layout and tried some new way of organizing leader board.">
       <created>1460080021478</created>
       <option name="number" value="00040" />
@@ -1138,7 +1116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1475768759105</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="Version 1.1.2 Improved server performance, lowered client chat limit to prevent client side lags">
+      <created>1477329160494</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1477329160495</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1156,7 +1141,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17244612" sideWeight="0.5063966" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289597" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34489223" sideWeight="0.4936034" order="2" side_tool="false" content_ui="tabs" x="1031" y="640" width="427" height="126" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34489223" sideWeight="0.4936034" order="2" side_tool="false" content_ui="tabs" x="1031" y="640" width="427" height="126" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1197,7 +1182,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Web server list is now working ! Need lots of optimization and fixes but it's here !" />
     <MESSAGE value="Fixed webserver's list" />
     <MESSAGE value="Ping is now working, servers are correctly listed connection is now optimized determining which ip to use (lan or public) with the ping" />
     <MESSAGE value="The server list is now complete. The update button, the sorter and the name input are here. There's only the private server connection remaining." />
@@ -1222,7 +1206,8 @@
     <MESSAGE value="Fixed problem with last commit (Partially commited)" />
     <MESSAGE value="Version 1.1.0 added a fail icon and made and hotkey to enable special sounds" />
     <MESSAGE value="Version 1.1.1 Fixed a memory leak with chat causing the game to slow down a lot when playing for a long time" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 1.1.1 Fixed a memory leak with chat causing the game to slow down a lot when playing for a long time" />
+    <MESSAGE value="Version 1.1.2 Improved server performance, lowered client chat limit to prevent client side lags" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 1.1.2 Improved server performance, lowered client chat limit to prevent client side lags" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1265,7 +1250,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_92/src.zip!/java/lang/String.java" />
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/client/TrapGameClient.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -1541,10 +1525,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_92/src.zip!/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="975" column="19" selection-start-line="975" selection-start-column="19" selection-end-line="975" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/me/winter/trapgame/shared/TrapGameVersion.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="40" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
+        <state relative-caret-position="378">
+          <caret line="21" column="73" selection-start-line="21" selection-start-column="73" selection-end-line="21" selection-end-column="73" />
           <folding />
         </state>
       </provider>

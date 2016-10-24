@@ -19,6 +19,6 @@ public class TrapGameVersion
 	{
 		String[] verParts = version.split("\\.");
 
-		return verParts[0].equals(MAJOR) && verParts[1].equals(MINOR); //for now, everything is compatible TODO: 2016-10-01 check version changes and protect
+		return verParts[0].equals("" + MAJOR) && verParts[1].equals("" + MINOR);
 	}
 }
