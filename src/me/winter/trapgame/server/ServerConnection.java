@@ -145,59 +145,42 @@ public class ServerConnection
 
 	public void keepAlive(InetAddress address, int port)
 	{
-		try
-		{
-			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-			new DataOutputStream(byteStream).writeUTF("KeepAlive");
+		new Thread(() -> {
+			try
+			{
+				ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+				new DataOutputStream(byteStream).writeUTF("KeepAlive");
 
-			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
-
-			new Thread(() -> {
-				try
-				{
-					getUdpSocket().send(data);
-				}
-				catch(Exception ex)
-				{
-					if(server.isDebugMode())
-						server.getLogger().log(Level.WARNING, "An exception occurred while sending data to keep alive a player", ex);
-				}
-			}).start();
-		}
-		catch(Exception ex)
-		{
-			if(server.isDebugMode())
-				server.getLogger().log(Level.WARNING, "An exception occurred while trying to keep alive a player", ex);
-		}
+				DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+				getUdpSocket().send(data);
+			}
+			catch(Exception ex)
+			{
+				if(server.isDebugMode())
+					server.getLogger().log(Level.WARNING, "An exception occurred while sending data to keep alive a player", ex);
+			}
+		}).start();
 	}
 
 	public void sendPacketToGuest(Packet packet, InetAddress address, int port)
 	{
-		try
-		{
-			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-			new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
-			packet.writeTo(byteStream);
+		new Thread(() -> {
+			try
+			{
+				ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+				new DataOutputStream(byteStream).writeUTF(packet.getClass().getSimpleName());
+				packet.writeTo(byteStream);
 
-			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
+				DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
 
-			new Thread(() -> {
-				try
-				{
-					getUdpSocket().send(data);
-				}
-				catch(Exception ex)
-				{
-					if(server.isDebugMode())
-						server.getLogger().log(Level.WARNING, "An exception occurred while sending data to guest", ex);
-				}
-			}).start();
-		}
-		catch(Exception ex)
-		{
-			if(server.isDebugMode())
-				server.getLogger().log(Level.WARNING, "An exception occurred while packing data to guest", ex);
-		}
+				getUdpSocket().send(data);
+			}
+			catch(Exception ex)
+			{
+				if(server.isDebugMode())
+					server.getLogger().log(Level.WARNING, "An exception occurred while sending data to guest", ex);
+			}
+		}).start();
 	}
 
 	public void sendToAll(Packet packet)

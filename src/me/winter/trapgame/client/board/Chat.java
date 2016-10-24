@@ -96,7 +96,7 @@ public class Chat extends JPanel implements KeyListener
 
 	public void sendMessage(String message)
 	{
-		if(messages.size() >= 100)
+		if(messages.size() >= 20)
 			messages.remove(0);
 
 		messages.add(message);

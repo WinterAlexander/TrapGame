@@ -7,8 +7,8 @@ package me.winter.trapgame.shared;
 public class TrapGameVersion
 {
 	private static final char MAJOR = '1';
-	private static final char MINOR = '0';
-	private static final char FIX   = '4';
+	private static final char MINOR = '1';
+	private static final char FIX   = '2';
 	private static final char BUILD = '0';
 	public static final String GAME_VERSION = "" + MAJOR + '.' + MINOR + '.' + FIX + '.' + BUILD;
 

@@ -221,9 +221,9 @@ public class TrapGameServer
 			return;
 		}
 
-		getConnection().sendToAll(new PacketOutJoin(player.getInfo()));
+		getConnection().sendToAllLater(new PacketOutJoin(player.getInfo()));
 		getPlayers().add(player);
-		player.getConnection().sendPacket(new PacketOutWelcome(player.getId(), getPlayersInfo(), boardWidth, boardHeight));
+		player.getConnection().sendPacketLater(new PacketOutWelcome(player.getId(), getPlayersInfo(), boardWidth, boardHeight));
 		broadcast(player.getFormattedName() + " has joined the game.");
 		player.sendMessage(getWelcomeMessage().replace("${SERVER}", getName()).replace("${PLAYER}", player.getName()));
 		getState().join(player);

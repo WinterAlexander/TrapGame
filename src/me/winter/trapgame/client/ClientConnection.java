@@ -267,6 +267,7 @@ public class ClientConnection
 
 			DatagramPacket data = new DatagramPacket(byteStream.toByteArray(), byteStream.size(), address, port);
 
+
 			udpSocket.send(data);
 		}
 		catch(Exception ex)
@@ -434,11 +435,12 @@ public class ClientConnection
 	{
 		while(isOpen())
 		{
-			for(Packet packet : new ArrayList<>(toSend))
+			while(toSend.size() != 0)
 			{
+				Packet packet = toSend.get(0);
 				if(packet != null)
 					sendPacket(packet);
-				toSend.remove(packet);
+				toSend.remove(0);
 			}
 
 			synchronized(this)
