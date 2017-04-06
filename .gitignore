@@ -2,3 +2,11 @@
 .gitignore
 logs/
 out/
+.idea
+gradle/
+.gradle/
+lib/
+classes/
+*.iml
+*.ipr
+*.iws
