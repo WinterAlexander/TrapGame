@@ -16,9 +16,7 @@ The goal of this game was to get experience making my own networking engine for 
 
 ### Screenshots (click) :
 
-<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot1.png" width="200px" /> 
-<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot2.png" width="200px" />
-<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot3.png" width="200px" />
+<img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot1.png" width="200px" /> <img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot2.png" width="200px" /> <img src="https://raw.githubusercontent.com/WinterGuardian/TrapGame/master/dev/screenshot3.png" width="200px" />
 
 Current version: 1.1.2
 
